@@ -51,7 +51,7 @@ class _ActivationFormState extends State<ActivationForm> {
             height: 50,
           ),
           ApplicationButton(
-            color: Style.buttonGrey,
+            color: Style.grey,
             title: 'تفعيل',
             horPad: 100,
             verPad: 5,

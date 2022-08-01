@@ -26,9 +26,11 @@ class ApplicationButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(50),
           color: color,
         ),
-        child: Text(
-          title,
-          style: const TextStyle(color: Colors.white, fontSize: 20),
+        child: Center(
+          child: Text(
+            title,
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+          ),
         ),
       ),
     );
