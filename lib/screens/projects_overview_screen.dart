@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pfe_project_tracking_ennachat_redwan/style/style.dart';
 
 import '../widgets/appbar.dart';
 import '../widgets/card.dart';
 import '../widgets/search_banner.dart';
-import '../widgets/button.dart';
 
 class ProjectScreen extends StatelessWidget {
   const ProjectScreen({Key? key}) : super(key: key);
@@ -23,12 +21,42 @@ class ProjectScreen extends StatelessWidget {
           children: [
             const SearchBanner(),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
+              child: GridView(
+                padding: const EdgeInsets.only(left: 10,right: 10,top: 20),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    maxCrossAxisExtent: 650,
+                    childAspectRatio: 3 / 2),
                 children: const [
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
+                  ProjectCard(),
                   ProjectCard(),
                 ],
               ),
+              // child: ListView(
+              //   padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
+              //   children: const [
+              //     ProjectCard(),
+              //   ],
+              // ),
             ),
           ],
         ),
@@ -36,4 +64,3 @@ class ProjectScreen extends StatelessWidget {
     );
   }
 }
-

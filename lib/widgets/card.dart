@@ -21,6 +21,7 @@ class ProjectCard extends StatelessWidget {
           ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const SizedBox(
             width: double.infinity,
@@ -54,7 +55,7 @@ class ProjectCard extends StatelessWidget {
               textAlign: TextAlign.end,
             ),
           ),
-          Center(
+          const Center(
             child: LevelBar(
               level: .50,
               width: 300,

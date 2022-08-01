@@ -8,28 +8,26 @@ class SearchBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return SizedBox(
+    return Container(
+      color: Colors.transparent,
       height: 60,
       child: Stack(
         children: [
           Container(
-            height: 40,
+            height: 60,
             decoration: const BoxDecoration(
               color: Style.primaryColor,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(60),
                 bottomRight: Radius.circular(60),
               ),
-              boxShadow: [
-                BoxShadow(
-                    color: Style.primaryColor, blurRadius: 50, spreadRadius: 10)
-              ],
+            
             ),
           ),
           SizedBox(
             width: double.infinity,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   width: size.width*.65,
