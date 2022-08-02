@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../style/style.dart';
 import './button.dart';
@@ -7,10 +8,30 @@ import './level_bar.dart';
 class ProjectCard extends StatelessWidget {
   const ProjectCard({
     Key? key,
+    required this.title,
+    required this.type,
+    this.startingDate,
+    this.endingDate,
+    this.buttons,
   }) : super(key: key);
+
+  final String title;
+  final String type;
+  final DateTime? startingDate;
+  final DateTime? endingDate;
+  final List<Widget>? buttons;
 
   @override
   Widget build(BuildContext context) {
+    String projectPeriod;
+    if (startingDate == null) {
+      projectPeriod = 'لم تبدأ بعد';
+    } else if (endingDate == null) {
+      projectPeriod = 'بدأت في ${DateFormat.yMMMd().format(startingDate!)}';
+    } else {
+      projectPeriod =
+          'بدأت في ${DateFormat.yMMMd().format(startingDate!)} وانتهى في ${DateFormat.yMMMd().format(endingDate!)}';
+    }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
@@ -23,32 +44,32 @@ class ProjectCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(
+          SizedBox(
             width: double.infinity,
             child: Text(
-              'New tracking web application',
-              style: TextStyle(
+              title,
+              style: const TextStyle(
                 fontSize: 23,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.end,
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: double.infinity,
             child: Text(
-              'لم تبدأ بعدن',
-              style: TextStyle(
+              projectPeriod,
+              style: const TextStyle(
                 color: Style.grey,
                 fontSize: 15,
               ),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             width: double.infinity,
             child: Text(
-              'Application mobile',
-              style: TextStyle(
+              type,
+              style: const TextStyle(
                 color: Style.grey,
                 fontSize: 15,
               ),

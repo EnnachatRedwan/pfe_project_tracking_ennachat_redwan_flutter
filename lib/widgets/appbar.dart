@@ -15,7 +15,7 @@ class ApplicationAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         centerTitle: true,
         actions: [
-          Center(child: Text(title)),
+          Center(child: Text(title,style: const TextStyle(fontSize: 18),)),
           const SizedBox(
             width: 10,
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import './screens/auth.dart';
 import './screens/projects_overview_screen.dart';
+import './screens/project_archive.dart';
 import './style/style.dart';
 
 void main() {
@@ -34,10 +35,11 @@ class MyApp extends StatelessWidget {
           background: Style.backgroundColor,
         ),
       ),
-      initialRoute: ProjectScreen.routeName,
+      initialRoute: ProjectArchiveScreen.routeName,
       routes: {
         AuthScreen.routeName: (context) => const AuthScreen(),
         ProjectScreen.routeName:(context) => const ProjectScreen(),
+        ProjectArchiveScreen.routeName:(context) => const ProjectArchiveScreen()
       },
       debugShowCheckedModeBanner: false,
     );

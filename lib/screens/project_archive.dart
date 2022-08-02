@@ -5,10 +5,10 @@ import '../widgets/appbar.dart';
 import '../widgets/card.dart';
 import '../widgets/search_banner.dart';
 
-class ProjectScreen extends StatelessWidget {
-  const ProjectScreen({Key? key}) : super(key: key);
+class ProjectArchiveScreen extends StatelessWidget {
+  const ProjectArchiveScreen({Key? key}) : super(key: key);
 
-  static const String routeName = '/projects';
+  static const String routeName = '/projects-archive';
 
   void _openProjectBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -77,7 +77,7 @@ class ProjectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const ApplicationAppBar(
-        title: 'المشاريع',
+        title: 'الأرشيف',
       ),
       body: Directionality(
         textDirection: TextDirection.rtl,
@@ -93,20 +93,17 @@ class ProjectScreen extends StatelessWidget {
                   maxCrossAxisExtent: 650,
                   childAspectRatio: 3 / 2,
                 ),
-                children: const [
-                  ProjectCard(title: 'New tracking web application',type:'Application mobile'),
+                children: [
+                  ProjectCard(
+                    title: 'New tracking web application',
+                    type: 'Application mobile',
+                    startingDate: DateTime.now(),
+                    endingDate: DateTime.now(),
+                  ),
                 ],
               ),
             ),
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _openProjectBottomSheet(context),
-        backgroundColor: Style.primaryColor,
-        child: const Icon(
-          Icons.add,
-          color: Style.secondaryColor,
         ),
       ),
     );
