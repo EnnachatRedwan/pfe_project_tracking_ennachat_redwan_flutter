@@ -4,22 +4,54 @@ import 'package:intl/intl.dart';
 import '../style/style.dart';
 import './button.dart';
 import './level_bar.dart';
+import '../models/state.dart';
+import '../models/card_type.dart';
 
-class ProjectCard extends StatelessWidget {
-  const ProjectCard({
-    Key? key,
-    required this.title,
-    required this.type,
-    this.startingDate,
-    this.endingDate,
-    this.buttons,
-  }) : super(key: key);
+class ApplicationCard extends StatelessWidget {
+  const ApplicationCard.project(
+      {Key? key,
+      required this.title,
+      required this.type,
+      required this.state,
+      this.level = 0,
+      this.startingDate,
+      this.endingDate,
+      this.buttons,
+      this.carsType = CardType.project})
+      : super(key: key);
+
+  const ApplicationCard.archive(
+      {Key? key,
+      required this.title,
+      required this.type,
+      required this.state,
+      this.level = 0,
+      this.startingDate,
+      this.endingDate,
+      this.buttons,
+      this.carsType = CardType.archive})
+      : super(key: key);
+
+  const ApplicationCard.task(
+      {Key? key,
+      required this.title,
+      required this.type,
+      required this.state,
+      this.level = 0,
+      this.startingDate,
+      this.endingDate,
+      this.buttons,
+      this.carsType = CardType.task})
+      : super(key: key);
 
   final String title;
   final String type;
+  final double level;
+  final ProgressState state;
   final DateTime? startingDate;
   final DateTime? endingDate;
   final List<Widget>? buttons;
+  final CardType carsType;
 
   @override
   Widget build(BuildContext context) {
@@ -76,32 +108,60 @@ class ProjectCard extends StatelessWidget {
               textAlign: TextAlign.end,
             ),
           ),
-          const Center(
-            child: LevelBar(
-              level: .50,
-              width: 300,
+          if (state != ProgressState.notStarted)
+            Center(
+              child: LevelBar(
+                level: level,
+                width: 300,
+              ),
             ),
-          ),
           const SizedBox(
             height: 10,
           ),
           Row(
             children: [
-              Expanded(
+              if (state == ProgressState.notStarted)
+                Expanded(
+                  child: ApplicationButton(
+                    color: Style.green,
+                    title: 'بدء',
+                    onClick: () {},
+                    verPad: 5,
+                  ),
+                ),
+              if (state == ProgressState.inProgress)
+                Expanded(
+                  child: ApplicationButton(
+                    color: Style.secondaryColor,
+                    title: 'قيد الإنجاز',
+                    onClick: () {},
+                    verPad: 5,
+                  ),
+                ),
+              if (state == ProgressState.done)
+                Expanded(
+                  child: ApplicationButton(
+                    color: Style.blue,
+                    title: 'منجز',
+                    onClick: () {},
+                    verPad: 5,
+                  ),
+                ),
+              const SizedBox(
+                width: 10,
+              ),
+              if(carsType==CardType.project) Expanded(
                 child: ApplicationButton(
-                  color: Style.green,
-                  title: 'بدء',
+                  color: Style.grey,
+                  title: 'أرشيف',
                   onClick: () {},
                   verPad: 5,
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
+              if(carsType==CardType.archive) Expanded(
                 child: ApplicationButton(
-                  color: Style.grey,
-                  title: 'أرشيف',
+                  color: Style.secondaryColor,
+                  title: 'إرجاع',
                   onClick: () {},
                   verPad: 5,
                 ),

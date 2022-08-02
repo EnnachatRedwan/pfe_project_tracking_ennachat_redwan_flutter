@@ -3,7 +3,9 @@ import 'package:pfe_project_tracking_ennachat_redwan/style/style.dart';
 
 import '../widgets/appbar.dart';
 import '../widgets/card.dart';
+import '../widgets/drawer.dart';
 import '../widgets/search_banner.dart';
+import '../models/state.dart';
 
 class ProjectScreen extends StatelessWidget {
   const ProjectScreen({Key? key}) : super(key: key);
@@ -79,6 +81,7 @@ class ProjectScreen extends StatelessWidget {
       appBar: const ApplicationAppBar(
         title: 'المشاريع',
       ),
+      drawer: const ApplicationDrawer(),
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: Column(
@@ -94,7 +97,7 @@ class ProjectScreen extends StatelessWidget {
                   childAspectRatio: 3 / 2,
                 ),
                 children: const [
-                  ProjectCard(title: 'New tracking web application',type:'Application mobile'),
+                  ApplicationCard.project(title: 'New tracking web application',type:'Application mobile',state: ProgressState.inProgress,),
                 ],
               ),
             ),
