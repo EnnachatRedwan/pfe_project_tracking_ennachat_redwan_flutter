@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pfe_project_tracking_ennachat_redwan/style/style.dart';
 
 import '../widgets/appbar.dart';
 import '../widgets/card.dart';
@@ -12,68 +11,6 @@ class ProjectArchiveScreen extends StatelessWidget {
 
   static const String routeName = '/projects-archive';
 
-  void _openProjectBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return Directionality(
-            textDirection: TextDirection.rtl,
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Form(
-                  child: ListView(
-                    padding: const EdgeInsets.all(20),
-                    children: [
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'عنوان المشروع',
-                        ),
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'نوع المشروع',
-                        ),
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'تاريخ البدء',
-                        ),
-                        readOnly: true,
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (ctx) {
-                                return DatePickerDialog(
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime.now()
-                                        .add(const Duration(days: -365)),
-                                    lastDate: DateTime.now()
-                                        .add(const Duration(days: 365)));
-                              }).then((value) => print(value));
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.save),
-                        label: const Text('حفظ'),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Style.secondaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
