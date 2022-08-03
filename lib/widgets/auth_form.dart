@@ -50,7 +50,6 @@ class _AuthFormState extends State<AuthForm> {
           ApplicationButton(
             color: Style.grey,
             title: 'دخول',
-            horPad: 100,
             verPad: 5,
             onClick: () {},
           ),

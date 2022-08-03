@@ -36,3 +36,50 @@ class ApplicationButton extends StatelessWidget {
     );
   }
 }
+
+// if (state == ProgressState.notStarted)
+                //   Expanded(
+                //     child: ApplicationButton(
+                //       color: Style.green,
+                //       title: 'بدء',
+                //       onClick: () {},
+                //       verPad: 5,
+                //     ),
+                //   ),
+                // if (state == ProgressState.inProgress)
+                //   Expanded(
+                //     child: ApplicationButton(
+                //       color: Style.secondaryColor,
+                //       title: 'قيد الإنجاز',
+                //       onClick: () {},
+                //       verPad: 5,
+                //     ),
+                //   ),
+                // if (state == ProgressState.done)
+                //   Expanded(
+                //     child: ApplicationButton(
+                //       color: Style.blue,
+                //       title: 'منجز',
+                //       onClick: () {},
+                //       verPad: 5,
+                //     ),
+                //   ),
+                // const SizedBox(
+                //   width: 10,
+                // ),
+                // if(carsType==CardType.project) Expanded(
+                //   child: ApplicationButton(
+                //     color: Style.grey,
+                //     title: 'أرشيف',
+                //     onClick: () {},
+                //     verPad: 5,
+                //   ),
+                // ),
+                // if(carsType==CardType.archive) Expanded(
+                //   child: ApplicationButton(
+                //     color: Style.secondaryColor,
+                //     title: 'إرجاع',
+                //     onClick: () {},
+                //     verPad: 5,
+                //   ),
+                // ),

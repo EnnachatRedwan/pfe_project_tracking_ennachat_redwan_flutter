@@ -1,5 +1,6 @@
 enum CardType{
   project,
-  archive,
+  archiveProject,
+  archiveTask,
   task
 }

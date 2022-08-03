@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './screens/auth.dart';
 import './screens/projects_overview_screen.dart';
 import './screens/project_archive.dart';
+import './screens/project_task.dart';
 import './style/style.dart';
 
 void main() {
@@ -35,11 +36,12 @@ class MyApp extends StatelessWidget {
           background: Style.backgroundColor,
         ),
       ),
-      initialRoute: ProjectArchiveScreen.routeName,
+      initialRoute: ProjectTaskScreen.routeName,
       routes: {
         AuthScreen.routeName: (context) => const AuthScreen(),
         ProjectScreen.routeName:(context) => const ProjectScreen(),
-        ProjectArchiveScreen.routeName:(context) => const ProjectArchiveScreen()
+        ProjectArchiveScreen.routeName:(context) => const ProjectArchiveScreen(),
+        ProjectTaskScreen.routeName:(context) => const ProjectTaskScreen()
       },
       debugShowCheckedModeBanner: false,
     );

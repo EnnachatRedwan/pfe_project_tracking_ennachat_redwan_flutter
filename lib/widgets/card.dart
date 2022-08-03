@@ -17,10 +17,10 @@ class ApplicationCard extends StatelessWidget {
       this.startingDate,
       this.endingDate,
       this.buttons,
-      this.carsType = CardType.project})
+      this.cardType = CardType.project})
       : super(key: key);
 
-  const ApplicationCard.archive(
+  const ApplicationCard.projectArchive(
       {Key? key,
       required this.title,
       required this.type,
@@ -29,7 +29,19 @@ class ApplicationCard extends StatelessWidget {
       this.startingDate,
       this.endingDate,
       this.buttons,
-      this.carsType = CardType.archive})
+      this.cardType = CardType.archiveProject})
+      : super(key: key);
+
+      const ApplicationCard.taskArchive(
+      {Key? key,
+      required this.title,
+      required this.type,
+      required this.state,
+      this.level = 0,
+      this.startingDate,
+      this.endingDate,
+      this.buttons,
+      this.cardType = CardType.archiveTask})
       : super(key: key);
 
   const ApplicationCard.task(
@@ -41,7 +53,7 @@ class ApplicationCard extends StatelessWidget {
       this.startingDate,
       this.endingDate,
       this.buttons,
-      this.carsType = CardType.task})
+      this.cardType = CardType.task})
       : super(key: key);
 
   final String title;
@@ -51,7 +63,7 @@ class ApplicationCard extends StatelessWidget {
   final DateTime? startingDate;
   final DateTime? endingDate;
   final List<Widget>? buttons;
-  final CardType carsType;
+  final CardType cardType;
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +109,7 @@ class ApplicationCard extends StatelessWidget {
               ),
             ),
           ),
+          if(cardType!=CardType.task&&cardType!=CardType.archiveTask)
           SizedBox(
             width: double.infinity,
             child: Text(
@@ -150,7 +163,7 @@ class ApplicationCard extends StatelessWidget {
               const SizedBox(
                 width: 10,
               ),
-              if(carsType==CardType.project) Expanded(
+              if(cardType==CardType.project) Expanded(
                 child: ApplicationButton(
                   color: Style.grey,
                   title: 'أرشيف',
@@ -158,7 +171,23 @@ class ApplicationCard extends StatelessWidget {
                   verPad: 5,
                 ),
               ),
-              if(carsType==CardType.archive) Expanded(
+              if(cardType==CardType.task) Expanded(
+                child: ApplicationButton(
+                  color: Style.grey,
+                  title: 'أرشيف',
+                  onClick: () {},
+                  verPad: 5,
+                ),
+              ),
+              if(cardType==CardType.archiveProject) Expanded(
+                child: ApplicationButton(
+                  color: Style.secondaryColor,
+                  title: 'إرجاع',
+                  onClick: () {},
+                  verPad: 5,
+                ),
+              ),
+              if(cardType==CardType.archiveTask) Expanded(
                 child: ApplicationButton(
                   color: Style.secondaryColor,
                   title: 'إرجاع',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_project_tracking_ennachat_redwan/style/style.dart';
 
 import '../widgets/appbar.dart';
 import '../widgets/card.dart';
@@ -6,17 +7,16 @@ import '../widgets/drawer.dart';
 import '../widgets/search_banner.dart';
 import '../models/state.dart';
 
-class ProjectArchiveScreen extends StatelessWidget {
-  const ProjectArchiveScreen({Key? key}) : super(key: key);
+class ProjectTaskScreen extends StatelessWidget {
+  const ProjectTaskScreen({Key? key}) : super(key: key);
 
-  static const String routeName = '/projects-archive';
-
+  static const String routeName = '/projects-task';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const ApplicationAppBar(
-        title: 'الأرشيف',
+        title: 'المهام',
       ),
       drawer: const ApplicationDrawer(),
       body: Directionality(
@@ -33,19 +33,20 @@ class ProjectArchiveScreen extends StatelessWidget {
                   maxCrossAxisExtent: 650,
                   childAspectRatio: 3 / 2,
                 ),
-                children: [
-                  ApplicationCard.projectArchive(
-                    title: 'New tracking web application',
-                    type: 'Application mobile',
-                    startingDate: DateTime.now(),
-                    endingDate: DateTime.now(),
-                    level: .30,
-                    state: ProgressState.inProgress,
-                  ),
+                children: const [
+                  ApplicationCard.task(title: 'New tracking web application',type:'Application mobile',state: ProgressState.inProgress,),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){},
+        backgroundColor: Style.primaryColor,
+        child: const Icon(
+          Icons.add,
+          color: Style.secondaryColor,
         ),
       ),
     );
