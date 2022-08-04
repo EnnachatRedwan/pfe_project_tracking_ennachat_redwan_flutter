@@ -4,6 +4,7 @@ import './screens/auth.dart';
 import './screens/projects_overview_screen.dart';
 import './screens/project_archive.dart';
 import './screens/project_task.dart';
+import './screens/employees_overview_screen.dart';
 import './style/style.dart';
 
 void main() {
@@ -41,7 +42,8 @@ class MyApp extends StatelessWidget {
         AuthScreen.routeName: (context) => const AuthScreen(),
         ProjectScreen.routeName:(context) => const ProjectScreen(),
         ProjectArchiveScreen.routeName:(context) => const ProjectArchiveScreen(),
-        ProjectTaskScreen.routeName:(context) => const ProjectTaskScreen()
+        ProjectTaskScreen.routeName:(context) => const ProjectTaskScreen(),
+        EmployeesScreen.routeName:(context) => const EmployeesScreen()
       },
       debugShowCheckedModeBanner: false,
     );
