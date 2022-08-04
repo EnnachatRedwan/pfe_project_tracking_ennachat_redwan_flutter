@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../widgets/appbar.dart';
-import '../widgets/card.dart';
+import '../widgets/cards/project_archive_card.dart';
 import '../widgets/drawer.dart';
 import '../widgets/search_banner.dart';
 import '../models/state.dart';
@@ -34,7 +34,7 @@ class ProjectArchiveScreen extends StatelessWidget {
                   childAspectRatio: 3 / 2,
                 ),
                 children: [
-                  ApplicationCard.projectArchive(
+                  ProjectArchiveCard(
                     title: 'New tracking web application',
                     type: 'Application mobile',
                     startingDate: DateTime.now(),

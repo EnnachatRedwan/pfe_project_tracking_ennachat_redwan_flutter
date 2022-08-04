@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pfe_project_tracking_ennachat_redwan/style/style.dart';
 
 import '../widgets/appbar.dart';
-import '../widgets/card.dart';
+import '../widgets/cards/task_card.dart';
 import '../widgets/drawer.dart';
 import '../widgets/search_banner.dart';
 import '../models/state.dart';
@@ -34,7 +34,10 @@ class ProjectTaskScreen extends StatelessWidget {
                   childAspectRatio: 3 / 2,
                 ),
                 children: const [
-                  ApplicationCard.task(title: 'New tracking web application',type:'Application mobile',state: ProgressState.inProgress,),
+                  TaskCard(
+                    title: 'New tracking web application',
+                    state: ProgressState.inProgress,
+                  ),
                 ],
               ),
             ),
@@ -42,7 +45,7 @@ class ProjectTaskScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {},
         backgroundColor: Style.primaryColor,
         child: const Icon(
           Icons.add,

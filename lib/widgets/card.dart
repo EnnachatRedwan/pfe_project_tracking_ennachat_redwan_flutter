@@ -32,7 +32,7 @@ class ApplicationCard extends StatelessWidget {
       this.cardType = CardType.archiveProject})
       : super(key: key);
 
-      const ApplicationCard.taskArchive(
+  const ApplicationCard.taskArchive(
       {Key? key,
       required this.title,
       required this.type,
@@ -79,11 +79,10 @@ class ApplicationCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Style.backgroundColor,
-          boxShadow: const [
-            BoxShadow(blurRadius: 18, color: Style.shadowColor)
-          ]),
+        borderRadius: BorderRadius.circular(30),
+        color: Style.backgroundColor,
+        boxShadow: const [BoxShadow(blurRadius: 18, color: Style.shadowColor)],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -109,18 +108,18 @@ class ApplicationCard extends StatelessWidget {
               ),
             ),
           ),
-          if(cardType!=CardType.task&&cardType!=CardType.archiveTask)
-          SizedBox(
-            width: double.infinity,
-            child: Text(
-              type,
-              style: const TextStyle(
-                color: Style.grey,
-                fontSize: 15,
+          if (cardType != CardType.task && cardType != CardType.archiveTask)
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                type,
+                style: const TextStyle(
+                  color: Style.grey,
+                  fontSize: 15,
+                ),
+                textAlign: TextAlign.end,
               ),
-              textAlign: TextAlign.end,
             ),
-          ),
           if (state != ProgressState.notStarted)
             Center(
               child: LevelBar(
@@ -163,38 +162,42 @@ class ApplicationCard extends StatelessWidget {
               const SizedBox(
                 width: 10,
               ),
-              if(cardType==CardType.project) Expanded(
-                child: ApplicationButton(
-                  color: Style.grey,
-                  title: 'أرشيف',
-                  onClick: () {},
-                  verPad: 5,
+              if (cardType == CardType.project)
+                Expanded(
+                  child: ApplicationButton(
+                    color: Style.grey,
+                    title: 'أرشيف',
+                    onClick: () {},
+                    verPad: 5,
+                  ),
                 ),
-              ),
-              if(cardType==CardType.task) Expanded(
-                child: ApplicationButton(
-                  color: Style.grey,
-                  title: 'أرشيف',
-                  onClick: () {},
-                  verPad: 5,
+              if (cardType == CardType.task)
+                Expanded(
+                  child: ApplicationButton(
+                    color: Style.grey,
+                    title: 'أرشيف',
+                    onClick: () {},
+                    verPad: 5,
+                  ),
                 ),
-              ),
-              if(cardType==CardType.archiveProject) Expanded(
-                child: ApplicationButton(
-                  color: Style.secondaryColor,
-                  title: 'إرجاع',
-                  onClick: () {},
-                  verPad: 5,
+              if (cardType == CardType.archiveProject)
+                Expanded(
+                  child: ApplicationButton(
+                    color: Style.secondaryColor,
+                    title: 'إرجاع',
+                    onClick: () {},
+                    verPad: 5,
+                  ),
                 ),
-              ),
-              if(cardType==CardType.archiveTask) Expanded(
-                child: ApplicationButton(
-                  color: Style.secondaryColor,
-                  title: 'إرجاع',
-                  onClick: () {},
-                  verPad: 5,
+              if (cardType == CardType.archiveTask)
+                Expanded(
+                  child: ApplicationButton(
+                    color: Style.secondaryColor,
+                    title: 'إرجاع',
+                    onClick: () {},
+                    verPad: 5,
+                  ),
                 ),
-              ),
             ],
           ),
         ],
