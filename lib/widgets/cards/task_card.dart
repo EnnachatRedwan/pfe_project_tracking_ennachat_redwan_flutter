@@ -1,37 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../style/style.dart';
 import '../button.dart';
 import '../level_bar.dart';
 import '../../models/state.dart';
+import '../../providers/task.dart';
+import '../../providers/tasks.dart';
 
 class TaskCard extends StatelessWidget {
-  const TaskCard({
-    Key? key,
-    required this.title,
-    required this.state,
-    this.level = 0,
-    this.startingDate,
-    this.endingDate,
-  }) : super(key: key);
+  const TaskCard({Key? key}) : super(key: key);
 
-  final String title;
-  final double level;
-  final ProgressState state;
-  final DateTime? startingDate;
-  final DateTime? endingDate;
 
   @override
   Widget build(BuildContext context) {
+    final TaskProvider task = Provider.of<TaskProvider>(context);
     String projectPeriod;
-    if (startingDate == null) {
+    if (task.startingDate == null) {
       projectPeriod = 'لم تبدأ بعد';
-    } else if (endingDate == null) {
-      projectPeriod = 'بدأت في ${DateFormat.yMMMd().format(startingDate!)}';
+    } else if (task.endingDate == null) {
+      projectPeriod =
+          'بدأت في ${DateFormat.yMMMd().format(task.startingDate!)}';
     } else {
       projectPeriod =
-          'بدأت في ${DateFormat.yMMMd().format(startingDate!)} وانتهى في ${DateFormat.yMMMd().format(endingDate!)}';
+          'بدأت في ${DateFormat.yMMMd().format(task.startingDate!)} وانتهى في ${DateFormat.yMMMd().format(task.endingDate!)}';
     }
     return Dismissible(
       background: Container(
@@ -51,6 +44,9 @@ class TaskCard extends StatelessWidget {
           ],
         ),
       ),
+      onDismissed: (_){
+        Provider.of<TasksProvider>(context,listen: false).deleteTask(task);
+      },
       direction: DismissDirection.startToEnd,
       key: Key(DateTime.now().toString()),
       child: Container(
@@ -69,7 +65,7 @@ class TaskCard extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: Text(
-                title,
+                task.title,
                 style: const TextStyle(
                   fontSize: 23,
                   fontWeight: FontWeight.bold,
@@ -87,10 +83,10 @@ class TaskCard extends StatelessWidget {
                 ),
               ),
             ),
-            if (state != ProgressState.notStarted)
+            if (task.state != ProgressState.notStarted)
               Center(
                 child: LevelBar(
-                  level: level,
+                  level: task.level,
                   width: 300,
                 ),
               ),
@@ -99,7 +95,7 @@ class TaskCard extends StatelessWidget {
             ),
             Row(
               children: [
-                if (state == ProgressState.notStarted)
+                if (task.state == ProgressState.notStarted)
                   Expanded(
                     child: ApplicationButton(
                       color: Style.green,
@@ -108,7 +104,7 @@ class TaskCard extends StatelessWidget {
                       verPad: 5,
                     ),
                   ),
-                if (state == ProgressState.inProgress)
+                if (task.state == ProgressState.inProgress)
                   Expanded(
                     child: ApplicationButton(
                       color: Style.secondaryColor,
@@ -117,7 +113,7 @@ class TaskCard extends StatelessWidget {
                       verPad: 5,
                     ),
                   ),
-                if (state == ProgressState.done)
+                if (task.state == ProgressState.done)
                   Expanded(
                     child: ApplicationButton(
                       color: Style.blue,

@@ -29,7 +29,7 @@ class LevelBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${level * 100}%',
+            '${(level * 100).toStringAsFixed(2)}%',
             style: TextStyle(color: color, fontSize: 17),
           ),
           Stack(

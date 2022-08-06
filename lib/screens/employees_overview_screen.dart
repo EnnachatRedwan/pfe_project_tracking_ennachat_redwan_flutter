@@ -1,10 +1,13 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../style/style.dart';
 import '../widgets/appbar.dart';
 import '../widgets/drawer.dart';
+
+import '../providers/emplyees.dart';
+import '../widgets/employee_tile.dart';
 
 class EmployeesScreen extends StatelessWidget {
   const EmployeesScreen({Key? key}) : super(key: key);
@@ -60,6 +63,8 @@ class EmployeesScreen extends StatelessWidget {
       Color.fromARGB(255, 11, 174, 46),
       Color.fromARGB(255, 180, 188, 12),
     ];
+    final EmployeesProvider employeesProvider =
+        Provider.of<EmployeesProvider>(context);
     return Scaffold(
       appBar: const ApplicationAppBar(title: 'الموظفين'),
       drawer: const ApplicationDrawer(),
@@ -95,46 +100,13 @@ class EmployeesScreen extends StatelessWidget {
               ),
               Expanded(
                 child: ListView.builder(
-                  itemBuilder: (ctx, i) => Dismissible(
-                    background: Container(
-                      decoration: const BoxDecoration(
-                        color: Style.red,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: const [
-                          Icon(
-                            Icons.delete,
-                            color: Style.backgroundColor,
-                            size: 30,
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                        ],
-                      ),
-                    ),
-                    direction: DismissDirection.endToStart,
-                    key: Key(DateTime.now().toString()),
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor:
-                                colors[Random().nextInt(colors.length)],
-                            radius: 30,
-                            child: const Icon(
-                              Icons.person,
-                              color: Style.backgroundColor,
-                            ),
-                          ),
-                          title: const Text('ENNACHAT Redwan'),
-                        ),
-                        const Divider()
-                      ],
+                  itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                    value: employeesProvider.emplyees[i],
+                    child: EmployeeTile(
+                      color: colors[Random().nextInt(colors.length)],
                     ),
                   ),
-                  itemCount: 20,
+                  itemCount: employeesProvider.emplyees.length,
                 ),
               )
             ],

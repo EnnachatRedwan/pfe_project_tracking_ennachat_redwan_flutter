@@ -20,7 +20,7 @@ class ApplicationDrawer extends StatelessWidget {
             title: 'المشاريع',
             icon: Icons.work,
             action: () => Navigator.of(context)
-                .pushReplacementNamed(ProjectScreen.routeName),
+                .pushReplacementNamed(ProjectsScreen.routeName),
           ),
           DraweItem(
             title: 'الأرشيف',
