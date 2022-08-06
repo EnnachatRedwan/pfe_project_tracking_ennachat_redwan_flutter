@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import './screens/auth.dart';
 import './screens/projects_overview_screen.dart';
 import './screens/project_archive.dart';
-import './screens/project_tasks_overview.dart';
+import 'screens/tasks_overview.dart';
 import './screens/employees_overview_screen.dart';
 import './screens/employee_details.dart';
 

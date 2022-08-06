@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../style/style.dart';
@@ -8,24 +7,15 @@ import '../level_bar.dart';
 import '../../models/state.dart';
 import '../../providers/task.dart';
 import '../../providers/tasks.dart';
+import '../../screens/task_details_screen.dart';
+import '../../models/period.dart';
 
 class TaskCard extends StatelessWidget {
   const TaskCard({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     final TaskProvider task = Provider.of<TaskProvider>(context);
-    String projectPeriod;
-    if (task.startingDate == null) {
-      projectPeriod = 'لم تبدأ بعد';
-    } else if (task.endingDate == null) {
-      projectPeriod =
-          'بدأت في ${DateFormat.yMMMd().format(task.startingDate!)}';
-    } else {
-      projectPeriod =
-          'بدأت في ${DateFormat.yMMMd().format(task.startingDate!)} وانتهى في ${DateFormat.yMMMd().format(task.endingDate!)}';
-    }
     return Dismissible(
       background: Container(
         decoration: const BoxDecoration(
@@ -44,8 +34,8 @@ class TaskCard extends StatelessWidget {
           ],
         ),
       ),
-      onDismissed: (_){
-        Provider.of<TasksProvider>(context,listen: false).deleteTask(task);
+      onDismissed: (_) {
+        Provider.of<TasksProvider>(context, listen: false).deleteTask(task);
       },
       direction: DismissDirection.startToEnd,
       key: Key(DateTime.now().toString()),
@@ -58,84 +48,98 @@ class TaskCard extends StatelessWidget {
             BoxShadow(blurRadius: 18, color: Style.shadowColor)
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: Text(
-                task.title,
-                style: const TextStyle(
-                  fontSize: 23,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.end,
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: Text(
-                projectPeriod,
-                style: const TextStyle(
-                  color: Style.grey,
-                  fontSize: 15,
-                ),
-              ),
-            ),
-            if (task.state != ProgressState.notStarted)
-              Center(
-                child: LevelBar(
-                  level: task.level,
-                  width: 300,
-                ),
-              ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                if (task.state == ProgressState.notStarted)
-                  Expanded(
-                    child: ApplicationButton(
-                      color: Style.green,
-                      title: 'بدء',
-                      onClick: () {},
-                      verPad: 5,
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context)
+                .push(
+                  MaterialPageRoute(
+                    builder: (ctx) => ChangeNotifierProvider.value(
+                      value: task,
+                      child: const TaskDetailsScreen(),
                     ),
                   ),
-                if (task.state == ProgressState.inProgress)
-                  Expanded(
-                    child: ApplicationButton(
-                      color: Style.secondaryColor,
-                      title: 'قيد الإنجاز',
-                      onClick: () {},
-                      verPad: 5,
-                    ),
+                )
+                .then((value) => task.refresh());
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  task.title,
+                  style: const TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.bold,
                   ),
-                if (task.state == ProgressState.done)
-                  Expanded(
-                    child: ApplicationButton(
-                      color: Style.blue,
-                      title: 'منجز',
-                      onClick: () {},
-                      verPad: 5,
-                    ),
-                  ),
-                const SizedBox(
-                  width: 10,
+                  textAlign: TextAlign.end,
                 ),
-                Expanded(
-                  child: ApplicationButton(
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  getPeriod(task.endingDate, task.endingDate),
+                  style: const TextStyle(
                     color: Style.grey,
-                    title: 'أرشيف',
-                    onClick: () {},
-                    verPad: 5,
+                    fontSize: 15,
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              if (task.state != ProgressState.notStarted)
+                Center(
+                  child: LevelBar(
+                    level: task.level,
+                    width: 300,
+                  ),
+                ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  if (task.state == ProgressState.notStarted)
+                    Expanded(
+                      child: ApplicationButton(
+                        color: Style.green,
+                        title: 'بدء',
+                        onClick: () {},
+                        verPad: 5,
+                      ),
+                    ),
+                  if (task.state == ProgressState.inProgress)
+                    Expanded(
+                      child: ApplicationButton(
+                        color: Style.secondaryColor,
+                        title: 'قيد الإنجاز',
+                        onClick: () {},
+                        verPad: 5,
+                      ),
+                    ),
+                  if (task.state == ProgressState.done)
+                    Expanded(
+                      child: ApplicationButton(
+                        color: Style.blue,
+                        title: 'منجز',
+                        onClick: () {},
+                        verPad: 5,
+                      ),
+                    ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: ApplicationButton(
+                      color: Style.grey,
+                      title: 'أرشيف',
+                      onClick: () {},
+                      verPad: 5,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

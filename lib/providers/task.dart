@@ -45,4 +45,8 @@ class TaskProvider with ChangeNotifier {
         steps.where((t) => t.isCompleted).length;
     return completedTasks / steps.length;
   }
+
+  void refresh(){
+    notifyListeners();
+  }
 }

@@ -38,7 +38,7 @@ class ProjectTaskScreen extends StatelessWidget {
                 itemCount: tasksProvider.tasks.length,
                 itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
                   value: tasksProvider.tasks[i],
-                  child: TaskCard(),
+                  child: const TaskCard(),
                 ),
               ),
             ),
