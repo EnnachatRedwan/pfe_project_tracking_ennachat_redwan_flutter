@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../style/style.dart';
-import '../button.dart';
+import '../project_buttons.dart';
 import '../level_bar.dart';
-import '../../models/state.dart';
 import '../../providers/project.dart';
 import '../../screens/tasks_overview.dart';
 import '../../providers/projects.dart';
@@ -98,7 +97,7 @@ class ProjectCard extends StatelessWidget {
                   textAlign: TextAlign.end,
                 ),
               ),
-              if (project.state != ProgressState.notStarted)
+              if (project.isStarted)
                 Center(
                   child: LevelBar(
                     level: project.tasks.level,
@@ -108,48 +107,7 @@ class ProjectCard extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Row(
-                children: [
-                  if (project.state == ProgressState.notStarted)
-                    Expanded(
-                      child: ApplicationButton(
-                        color: Style.green,
-                        title: 'بدء',
-                        onClick: () {},
-                        verPad: 5,
-                      ),
-                    ),
-                  if (project.state == ProgressState.inProgress)
-                    Expanded(
-                      child: ApplicationButton(
-                        color: Style.secondaryColor,
-                        title: 'قيد الإنجاز',
-                        onClick: () {},
-                        verPad: 5,
-                      ),
-                    ),
-                  if (project.state == ProgressState.done)
-                    Expanded(
-                      child: ApplicationButton(
-                        color: Style.blue,
-                        title: 'منجز',
-                        onClick: () {},
-                        verPad: 5,
-                      ),
-                    ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: ApplicationButton(
-                      color: Style.grey,
-                      title: 'أرشيف',
-                      onClick: () {},
-                      verPad: 5,
-                    ),
-                  ),
-                ],
-              ),
+              const ProjectButtons(),
             ],
           ),
         ),

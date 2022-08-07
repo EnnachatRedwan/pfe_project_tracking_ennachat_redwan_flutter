@@ -4,6 +4,7 @@ import './project.dart';
 import '../models/state.dart';
 import './tasks.dart';
 import './task.dart';
+import './step.dart';
 
 class ProjectsProvider with ChangeNotifier {
   final List<ProjectProvider> _projects = [
@@ -33,13 +34,17 @@ class ProjectsProvider with ChangeNotifier {
           TaskProvider(
             title: 'Front-end',
             state: ProgressState.inProgress,
-            steps: [],
+            steps: [
+              StepProvider('Making AppBar'),
+            ],
             employees: [],
           ),
           TaskProvider(
             title: 'Back-end',
             state: ProgressState.done,
-            steps: [],
+            steps: [
+              
+            ],
             employees: [],
           ),
           TaskProvider(

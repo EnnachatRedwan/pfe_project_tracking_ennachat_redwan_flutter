@@ -4,7 +4,6 @@ import '../models/state.dart';
 import './tasks.dart';
 
 class ProjectProvider with ChangeNotifier {
-
   ProjectProvider({
     required this.id,
     required this.title,
@@ -15,11 +14,11 @@ class ProjectProvider with ChangeNotifier {
     this.endingDate,
   });
 
-  final ProgressState state;
+  ProgressState state;
 
-  final DateTime? startingDate;
+  DateTime? startingDate;
 
-  final DateTime? endingDate;
+  DateTime? endingDate;
 
   final String title;
 
@@ -27,13 +26,30 @@ class ProjectProvider with ChangeNotifier {
 
   final String type;
 
+  bool isStarted=false;
+
   bool isArchived = false;
 
   final TasksProvider tasks;
 
-  void refresh(){
+  void updateState() {
+    if (tasks.level == 1) {
+      state = ProgressState.done;
+      endingDate=DateTime.now();
+    } else {
+      state = ProgressState.inProgress;
+    }
+  }
+
+  void start() {
+    isStarted = true;
+    updateState();
+    startingDate=DateTime.now();
     notifyListeners();
   }
 
-  
+  void refresh() {
+    updateState();
+    notifyListeners();
+  }
 }

@@ -4,9 +4,7 @@ import 'package:provider/provider.dart';
 import '../widgets/appbar.dart';
 import '../widgets/cards/task_card.dart';
 import '../widgets/search_banner.dart';
-import '../models/state.dart';
 import '../providers/tasks.dart';
-import '../providers/task.dart';
 import '../style/style.dart';
 
 class ProjectTaskScreen extends StatelessWidget {

@@ -1,7 +1,12 @@
 import 'package:flutter/cupertino.dart';
 
-class Step with ChangeNotifier{
+class StepProvider with ChangeNotifier{
   final String title;
   bool isCompleted=false;
-  Step(this.title);
+  StepProvider(this.title);
+
+  void toggleState(){
+    isCompleted=!isCompleted;
+    notifyListeners();
+  }
 }

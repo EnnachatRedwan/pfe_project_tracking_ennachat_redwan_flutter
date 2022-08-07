@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_project_tracking_ennachat_redwan/widgets/task_buttons.dart';
 import 'package:provider/provider.dart';
 
 import '../../style/style.dart';
-import '../button.dart';
 import '../level_bar.dart';
-import '../../models/state.dart';
 import '../../providers/task.dart';
 import '../../providers/tasks.dart';
 import '../../screens/task_details_screen.dart';
@@ -86,7 +85,7 @@ class TaskCard extends StatelessWidget {
                   ),
                 ),
               ),
-              if (task.state != ProgressState.notStarted)
+              if (task.isStarted)
                 Center(
                   child: LevelBar(
                     level: task.level,
@@ -96,48 +95,7 @@ class TaskCard extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Row(
-                children: [
-                  if (task.state == ProgressState.notStarted)
-                    Expanded(
-                      child: ApplicationButton(
-                        color: Style.green,
-                        title: 'بدء',
-                        onClick: () {},
-                        verPad: 5,
-                      ),
-                    ),
-                  if (task.state == ProgressState.inProgress)
-                    Expanded(
-                      child: ApplicationButton(
-                        color: Style.secondaryColor,
-                        title: 'قيد الإنجاز',
-                        onClick: () {},
-                        verPad: 5,
-                      ),
-                    ),
-                  if (task.state == ProgressState.done)
-                    Expanded(
-                      child: ApplicationButton(
-                        color: Style.blue,
-                        title: 'منجز',
-                        onClick: () {},
-                        verPad: 5,
-                      ),
-                    ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: ApplicationButton(
-                      color: Style.grey,
-                      title: 'أرشيف',
-                      onClick: () {},
-                      verPad: 5,
-                    ),
-                  ),
-                ],
-              ),
+              const TaskButtons(),
             ],
           ),
         ),

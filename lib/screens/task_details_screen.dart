@@ -5,9 +5,9 @@ import '../style/style.dart';
 import '../widgets/appbar.dart';
 import '../providers/task.dart';
 import '../models/period.dart';
-import '../widgets/button.dart';
-import '../models/state.dart';
+import '../widgets/task_buttons.dart';
 import '../widgets/level_bar.dart';
+import '../widgets/step_tile.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
   const TaskDetailsScreen({Key? key}) : super(key: key);
@@ -88,8 +88,19 @@ class TaskDetailsScreen extends StatelessWidget {
                 ),
                 textAlign: TextAlign.right,
               ),
-              Expanded(child: Container()),
-              if (task.state != ProgressState.notStarted)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: task.steps.length,
+                  itemBuilder: (ctx, i) => InkWell(
+                    onTap: () {},
+                    child: ChangeNotifierProvider.value(
+                      value: task.steps[i],
+                      child: const StepTile(),
+                    ),
+                  ),
+                ),
+              ),
+              if (task.isStarted)
                 Center(
                   child: LevelBar(
                     level: task.level,
@@ -97,50 +108,9 @@ class TaskDetailsScreen extends StatelessWidget {
                   ),
                 ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
-              Row(
-                children: [
-                  if (task.state == ProgressState.notStarted)
-                    Expanded(
-                      child: ApplicationButton(
-                        color: Style.green,
-                        title: 'بدء',
-                        onClick: () {},
-                        verPad: 5,
-                      ),
-                    ),
-                  if (task.state == ProgressState.inProgress)
-                    Expanded(
-                      child: ApplicationButton(
-                        color: Style.secondaryColor,
-                        title: 'قيد الإنجاز',
-                        onClick: () {},
-                        verPad: 5,
-                      ),
-                    ),
-                  if (task.state == ProgressState.done)
-                    Expanded(
-                      child: ApplicationButton(
-                        color: Style.blue,
-                        title: 'منجز',
-                        onClick: () {},
-                        verPad: 5,
-                      ),
-                    ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: ApplicationButton(
-                      color: Style.grey,
-                      title: 'أرشيف',
-                      onClick: () {},
-                      verPad: 5,
-                    ),
-                  ),
-                ],
-              ),
+              const TaskButtons(),
             ],
           ),
         ),

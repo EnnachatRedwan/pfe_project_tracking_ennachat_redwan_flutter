@@ -56,8 +56,8 @@ class MyApp extends StatelessWidget {
         routes: {
           AuthScreen.routeName: (context) => const AuthScreen(),
           ProjectsScreen.routeName: (context) => const ProjectsScreen(),
-          ProjectArchiveScreen.routeName: (context) =>
-              const ProjectArchiveScreen(),
+          // ProjectArchiveScreen.routeName: (context) =>
+          //     const ProjectArchiveScreen(),
           ProjectTaskScreen.routeName: (context) => const ProjectTaskScreen(),
           EmployeesScreen.routeName: (context) => const EmployeesScreen(),
           EmployeeDetailsScreen.routeName: (context) =>

@@ -22,12 +22,12 @@ class ApplicationDrawer extends StatelessWidget {
             action: () => Navigator.of(context)
                 .pushReplacementNamed(ProjectsScreen.routeName),
           ),
-          DraweItem(
-            title: 'الأرشيف',
-            icon: Icons.archive,
-            action: () => Navigator.of(context)
-                .pushReplacementNamed(ProjectArchiveScreen.routeName),
-          ),
+          // DraweItem(
+          //   title: 'الأرشيف',
+          //   icon: Icons.archive,
+          //   action: () => Navigator.of(context)
+          //       .pushReplacementNamed(ProjectArchiveScreen.routeName),
+          // ),
           DraweItem(
             title: 'الموظفين',
             icon: Icons.people,
