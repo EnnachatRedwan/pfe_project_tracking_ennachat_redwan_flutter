@@ -14,6 +14,7 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final TaskProvider task = Provider.of<TaskProvider>(context);
     return Dismissible(
       background: Container(
@@ -78,7 +79,7 @@ class TaskCard extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: Text(
-                  getPeriod(task.endingDate, task.endingDate),
+                  getPeriod(task.startingDate, task.endingDate),
                   style: const TextStyle(
                     color: Style.grey,
                     fontSize: 15,

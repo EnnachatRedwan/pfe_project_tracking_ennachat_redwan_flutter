@@ -81,7 +81,7 @@ class TaskDetailsScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                getPeriod(task.endingDate, task.endingDate),
+                getPeriod(task.startingDate, task.endingDate),
                 style: const TextStyle(
                   color: Style.grey,
                   fontSize: 15,
@@ -110,7 +110,10 @@ class TaskDetailsScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const TaskButtons(),
+              const Directionality(
+                textDirection: TextDirection.rtl,
+                child: TaskButtons(),
+              ),
             ],
           ),
         ),

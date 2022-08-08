@@ -20,9 +20,9 @@ class TaskProvider with ChangeNotifier {
 
   ProgressState state;
 
- DateTime? startingDate;
+  DateTime? startingDate;
 
-   DateTime? endingDate;
+  DateTime? endingDate;
 
   final String title;
 
@@ -49,7 +49,7 @@ class TaskProvider with ChangeNotifier {
   void updateState() {
     if (level == 1) {
       state = ProgressState.done;
-      endingDate=DateTime.now();
+      endingDate = DateTime.now();
     } else {
       state = ProgressState.inProgress;
     }
@@ -57,7 +57,7 @@ class TaskProvider with ChangeNotifier {
 
   void start() {
     isStarted = true;
-    startingDate=DateTime.now();
+    startingDate = DateTime.now();
     updateState();
     notifyListeners();
   }
