@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import './emplyee.dart';
 import './step.dart';
 import '../models/state.dart';
+import './emplyees.dart';
 
 class TaskProvider with ChangeNotifier {
   TaskProvider({
@@ -30,12 +31,13 @@ class TaskProvider with ChangeNotifier {
 
   bool isStarted = false;
 
-  List<EmployeeProvider> get Employees {
-    return [...employees];
-  }
-
-  List<StepProvider> get Steps {
-    return [...steps];
+  List<EmployeeProvider> getEmployees(EmployeesProvider emp) {
+    List<EmployeeProvider> emps = [];
+    emps.addAll(emp.emplyees.where((element) => !employees.contains(element)));
+    for (var element in employees) {
+      emps.insert(0, element);
+    }
+    return emps;
   }
 
   double get level {
@@ -64,6 +66,33 @@ class TaskProvider with ChangeNotifier {
 
   void refresh() {
     updateState();
+    notifyListeners();
+  }
+
+  void deleteTaskStep(StepProvider s) {
+    steps.remove(s);
+    notifyListeners();
+  }
+
+  void addTaskStep(String title, String desc) {
+    steps.add(StepProvider(UniqueKey().toString(),title, desc));
+    notifyListeners();
+  }
+
+  void addTaskEmployee(EmployeeProvider emp) {
+    employees.add(emp);
+    notifyListeners();
+  }
+
+  void deleteTaskEmployee(EmployeeProvider emp) {
+    employees.remove(emp);
+    notifyListeners();
+  }
+
+  void updateStep(String id,String newTitle,String newDesc){
+    final stp=steps.firstWhere((step) => step.id==id);
+    stp.title=newTitle;
+    stp.details=newDesc;
     notifyListeners();
   }
 }

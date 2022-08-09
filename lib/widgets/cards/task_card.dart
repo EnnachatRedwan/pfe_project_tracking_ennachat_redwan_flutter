@@ -8,13 +8,14 @@ import '../../providers/task.dart';
 import '../../providers/tasks.dart';
 import '../../screens/task_details_screen.dart';
 import '../../models/period.dart';
+import '../../providers/tasks.dart';
 
 class TaskCard extends StatelessWidget {
   const TaskCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
+    final TasksProvider tasks = Provider.of<TasksProvider>(context);
     final TaskProvider task = Provider.of<TaskProvider>(context);
     return Dismissible(
       background: Container(
@@ -35,7 +36,7 @@ class TaskCard extends StatelessWidget {
         ),
       ),
       onDismissed: (_) {
-        Provider.of<TasksProvider>(context, listen: false).deleteTask(task);
+        tasks.deleteTask(task);
       },
       direction: DismissDirection.startToEnd,
       key: Key(DateTime.now().toString()),
@@ -53,8 +54,13 @@ class TaskCard extends StatelessWidget {
             Navigator.of(context)
                 .push(
                   MaterialPageRoute(
-                    builder: (ctx) => ChangeNotifierProvider.value(
-                      value: task,
+                    builder: (ctx) => MultiProvider(
+                      providers: [
+                        ChangeNotifierProvider.value(
+                          value: task,
+                        ),
+                        ChangeNotifierProvider.value(value: tasks)
+                      ],
                       child: const TaskDetailsScreen(),
                     ),
                   ),

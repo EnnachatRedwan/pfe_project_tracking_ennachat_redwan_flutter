@@ -34,17 +34,13 @@ class ProjectsProvider with ChangeNotifier {
           TaskProvider(
             title: 'Front-end',
             state: ProgressState.inProgress,
-            steps: [
-              StepProvider('Making AppBar'),
-            ],
+            steps: [],
             employees: [],
           ),
           TaskProvider(
             title: 'Back-end',
             state: ProgressState.done,
-            steps: [
-              
-            ],
+            steps: [],
             employees: [],
           ),
           TaskProvider(
