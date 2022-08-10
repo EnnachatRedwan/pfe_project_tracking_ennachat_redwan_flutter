@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_project_tracking_ennachat_redwan/style/style.dart';
 
 class ApplicationAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const ApplicationAppBar({
-    Key? key,
-    required this.title,
-    this.acts,
-  }) : super(key: key);
+  const ApplicationAppBar({Key? key, required this.title, this.acts, this.tabs})
+      : super(key: key);
 
   final String title;
   final List<Widget>? acts;
+  final List<Tab>? tabs;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +27,29 @@ class ApplicationAppBar extends StatelessWidget implements PreferredSizeWidget {
         const SizedBox(
           width: 10,
         ),
-        if (acts != null) ...acts!.map((e) => e).toList(),
+        if (acts != null) ...acts!.map((act) => act).toList(),
       ],
       elevation: 0.0,
+      bottom: tabs != null
+          ? TabBar(
+              tabs: tabs!.map((tab) => tab).toList(),
+              indicatorColor: Style.secondaryColor,
+              indicatorSize: TabBarIndicatorSize.label,
+            )
+          : null,
     );
   }
 
   @override
-  Size get preferredSize => AppBar().preferredSize;
+  Size get preferredSize => tabs != null
+      ? AppBar(
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                text: 'dd',
+              )
+            ],
+          ),
+        ).preferredSize
+      : AppBar().preferredSize;
 }

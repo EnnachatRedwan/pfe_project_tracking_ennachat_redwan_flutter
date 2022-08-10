@@ -4,7 +4,6 @@ import './project.dart';
 import '../models/state.dart';
 import './tasks.dart';
 import './task.dart';
-import './step.dart';
 
 class ProjectsProvider with ChangeNotifier {
   final List<ProjectProvider> _projects = [
@@ -88,6 +87,22 @@ class ProjectsProvider with ChangeNotifier {
 
   List<ProjectProvider> get projects {
     return [..._projects];
+  }
+
+  int get tasksLength{
+    int tasks=0;
+    for(var p in projects){
+      tasks+=p.tasks.tasks.length;
+    }
+    return tasks;
+  }
+
+  List<TaskProvider> get tasks{
+    List<TaskProvider> tasks=[];
+    for(var p in projects){
+      tasks.addAll(p.tasks.tasks);
+    }
+    return tasks;
   }
 
   void deleteProject(ProjectProvider p) {

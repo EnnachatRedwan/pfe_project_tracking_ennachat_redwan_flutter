@@ -8,7 +8,6 @@ import '../../providers/task.dart';
 import '../../providers/tasks.dart';
 import '../../screens/task_details_screen.dart';
 import '../../models/period.dart';
-import '../../providers/tasks.dart';
 
 class TaskCard extends StatelessWidget {
   const TaskCard({Key? key}) : super(key: key);

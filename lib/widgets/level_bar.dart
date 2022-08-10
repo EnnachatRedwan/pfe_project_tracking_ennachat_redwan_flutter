@@ -23,32 +23,35 @@ class LevelBar extends StatelessWidget {
     else{
       color=Style.green;
     }
-    return SizedBox(
-      width: width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${(level * 100).toStringAsFixed(2)}%',
-            style: TextStyle(color: color, fontSize: 17),
-          ),
-          Stack(
-            children: [
-              Container(
-                height: 3,
-                color: Style.grey,
-              ),
-              Positioned(
-                left: 0,
-                child: Container(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: SizedBox(
+        width: width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${(level * 100).toStringAsFixed(2)}%',
+              style: TextStyle(color: color, fontSize: 17),
+            ),
+            Stack(
+              children: [
+                Container(
                   height: 3,
-                  color: color,
-                  width: width*level,
+                  color: Style.grey,
                 ),
-              ),
-            ],
-          ),
-        ],
+                Positioned(
+                  left: 0,
+                  child: Container(
+                    height: 3,
+                    color: color,
+                    width: width*level,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

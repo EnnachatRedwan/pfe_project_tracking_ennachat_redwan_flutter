@@ -26,49 +26,27 @@ class ChooseEmployeeTile extends StatelessWidget {
 
     return InkWell(
       onTap: toggleSelection,
-      child: Dismissible(
-        background: Container(
-          decoration: const BoxDecoration(
-            color: Style.grey,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: const [
-              Icon(
-                Icons.delete,
+      child: Column(
+        children: [
+          ListTile(
+            leading: const CircleAvatar(
+              backgroundColor: Style.blue,
+              radius: 30,
+              child: Icon(
+                Icons.person,
                 color: Style.backgroundColor,
-                size: 30,
-              ),
-              SizedBox(
-                width: 20,
-              ),
-            ],
-          ),
-        ),
-        direction: DismissDirection.endToStart,
-        key: Key(DateTime.now().toString()),
-        child: Column(
-          children: [
-            ListTile(
-              leading: const CircleAvatar(
-                backgroundColor: Style.blue,
-                radius: 30,
-                child: Icon(
-                  Icons.person,
-                  color: Style.backgroundColor,
-                ),
-              ),
-              title: Text(employee.fullName),
-              trailing: Checkbox(
-                value: isSelected,
-                onChanged: (_) {
-                  toggleSelection();
-                },
               ),
             ),
-            const Divider()
-          ],
-        ),
+            title: Text(employee.fullName),
+            trailing: Checkbox(
+              value: isSelected,
+              onChanged: (_) {
+                toggleSelection();
+              },
+            ),
+          ),
+          const Divider()
+        ],
       ),
     );
   }

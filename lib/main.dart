@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_project_tracking_ennachat_redwan/screens/archive_screen.dart';
 import 'package:provider/provider.dart';
 
 import './screens/auth.dart';
 import './screens/projects_overview_screen.dart';
-import './screens/project_archive.dart';
 import 'screens/tasks_overview.dart';
 import './screens/employees_overview_screen.dart';
 import './screens/employee_details.dart';
@@ -56,8 +56,8 @@ class MyApp extends StatelessWidget {
         routes: {
           AuthScreen.routeName: (context) => const AuthScreen(),
           ProjectsScreen.routeName: (context) => const ProjectsScreen(),
-          // ProjectArchiveScreen.routeName: (context) =>
-          //     const ProjectArchiveScreen(),
+          ArchiveScreen.routeName: (context) =>
+              const ArchiveScreen(),
           ProjectTaskScreen.routeName: (context) => const ProjectTaskScreen(),
           EmployeesScreen.routeName: (context) => const EmployeesScreen(),
           EmployeeDetailsScreen.routeName: (context) =>
