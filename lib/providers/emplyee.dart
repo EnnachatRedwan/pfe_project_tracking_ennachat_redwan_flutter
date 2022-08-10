@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 
 class EmployeeProvider with ChangeNotifier {
-  final String id;
-  final String fullName;
-  final String secWord;
+  final String userID;
+  String fullName;
+  String secWord;
 
   EmployeeProvider({
-    required this.id,
+    required this.userID,
     required this.fullName,
     required this.secWord,
   });
+
+  void refresh(){
+    notifyListeners();
+  }
 }

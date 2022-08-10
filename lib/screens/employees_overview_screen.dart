@@ -15,43 +15,66 @@ class EmployeesScreen extends StatelessWidget {
   static const String routeName = '/emplyees';
 
   void _openEmployeeBottomSheet(BuildContext context) {
+    String fullName = '';
+    final formKey = GlobalKey<FormState>();
+
+    void save() {
+      if (formKey.currentState!.validate()) {
+        formKey.currentState!.save();
+        Provider.of<EmployeesProvider>(context, listen: false)
+            .addEmployee(fullName);
+        Navigator.of(context).pop();
+      }
+    }
+
     showModalBottomSheet(
-        context: context,
-        builder: (ctx) {
-          return Directionality(
-            textDirection: TextDirection.rtl,
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Form(
-                  child: ListView(
-                    padding: const EdgeInsets.all(20),
-                    children: [
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          labelText: 'الاسم الكامل',
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.save),
-                        label: const Text('حفظ'),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            Style.secondaryColor,
-                          ),
-                        ),
-                      ),
-                    ],
+      context: context,
+      builder: (ctx) {
+        return Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Form(
+              key: formKey,
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'الاسم الكامل',
+                      hintTextDirection: TextDirection.rtl
+                    ),
+                    autofocus: true,
+                    onFieldSubmitted: (_) => save(),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'يرجى تقديم اسم كامل صالح';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      fullName = value!;
+                    },
                   ),
-                ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: save,
+                    icon: const Icon(Icons.save),
+                    label: const Text('حفظ'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        Style.secondaryColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -101,12 +124,12 @@ class EmployeesScreen extends StatelessWidget {
               Expanded(
                 child: ListView.builder(
                   itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                    value: employeesProvider.emplyees[i],
+                    value: employeesProvider.employees[i],
                     child: EmployeeTile(
                       color: colors[Random().nextInt(colors.length)],
                     ),
                   ),
-                  itemCount: employeesProvider.emplyees.length,
+                  itemCount: employeesProvider.employees.length,
                 ),
               )
             ],

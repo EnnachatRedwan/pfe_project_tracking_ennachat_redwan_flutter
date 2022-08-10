@@ -53,7 +53,7 @@ class ChooseEmployeesScreen extends StatelessWidget {
                   itemBuilder: (ctx, i) => MultiProvider(
                     providers: [
                       ChangeNotifierProvider.value(
-                        value: employeesProvider.emplyees[i],
+                        value: employeesProvider.employees[i],
                       ),
                       ChangeNotifierProvider.value(
                         value: task,
@@ -62,7 +62,7 @@ class ChooseEmployeesScreen extends StatelessWidget {
                     child: const ChooseEmployeeTile(
                     ),
                   ),
-                  itemCount: employeesProvider.emplyees.length,
+                  itemCount: employeesProvider.employees.length,
                 ),
               )
             ],

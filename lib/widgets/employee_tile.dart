@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/emplyee.dart';
+import '../providers/emplyees.dart';
 import '../style/style.dart';
 import '../screens/employee_details.dart';
 
@@ -28,6 +29,10 @@ class EmployeeTile extends StatelessWidget {
         );
       },
       child: Dismissible(
+        onDismissed: (_){
+          Provider.of<EmployeesProvider>(context, listen: false)
+                        .deleteEmployee(employee);
+        },
         background: Container(
           decoration: const BoxDecoration(
             color: Style.red,

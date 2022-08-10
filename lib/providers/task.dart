@@ -33,7 +33,7 @@ class TaskProvider with ChangeNotifier {
 
   List<EmployeeProvider> getEmployees(EmployeesProvider emp) {
     List<EmployeeProvider> emps = [];
-    emps.addAll(emp.emplyees.where((element) => !employees.contains(element)));
+    emps.addAll(emp.employees.where((element) => !employees.contains(element)));
     for (var element in employees) {
       emps.insert(0, element);
     }

@@ -23,16 +23,16 @@ class ApplicationDrawer extends StatelessWidget {
                 .pushReplacementNamed(ProjectsScreen.routeName),
           ),
           DraweItem(
-            title: 'الأرشيف',
-            icon: Icons.archive,
-            action: () => Navigator.of(context)
-                .pushReplacementNamed(ArchiveScreen.routeName),
-          ),
-          DraweItem(
             title: 'الموظفين',
             icon: Icons.people,
             action: () => Navigator.of(context)
                 .pushReplacementNamed(EmployeesScreen.routeName),
+          ),
+          DraweItem(
+            title: 'الأرشيف',
+            icon: Icons.archive,
+            action: () => Navigator.of(context)
+                .pushReplacementNamed(ArchiveScreen.routeName),
           ),
         ],
       ),
