@@ -22,9 +22,9 @@ class ProjectArchiveScreen extends StatelessWidget {
           maxCrossAxisExtent: 650,
           childAspectRatio: 3 / 2,
         ),
-        itemCount: projectsProvider.projects.length,
+        itemCount: projectsProvider.archivedProjects.length,
         itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-          value: projectsProvider.projects[i],
+          value: projectsProvider.archivedProjects[i],
           child: const ProjectArchiveCard(),
         ),
       ),

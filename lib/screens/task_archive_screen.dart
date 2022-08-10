@@ -11,7 +11,7 @@ class TaskArchiveScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final projectsProvider=Provider.of<ProjectsProvider>(context);
-    final List<TaskProvider> tasks=Provider.of<ProjectsProvider>(context).tasks;
+    final List<TaskProvider> tasks=Provider.of<ProjectsProvider>(context).archivedProjectTasks;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: GridView.builder(
@@ -23,7 +23,7 @@ class TaskArchiveScreen extends StatelessWidget {
           maxCrossAxisExtent: 650,
           childAspectRatio: 3 / 2,
         ),
-        itemCount: projectsProvider.tasksLength,
+        itemCount: projectsProvider.archivedProjectTasks.length,
         itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
           value: tasks[i],
           child: const TaskArchiveCard(),

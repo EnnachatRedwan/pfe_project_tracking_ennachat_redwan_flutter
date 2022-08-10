@@ -33,9 +33,9 @@ class ProjectTaskScreen extends StatelessWidget {
                   maxCrossAxisExtent: 650,
                   childAspectRatio: 3 / 2,
                 ),
-                itemCount: tasksProvider.tasks.length,
+                itemCount: tasksProvider.notArchivedTasks.length,
                 itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                  value: tasksProvider.tasks[i],
+                  value: tasksProvider.notArchivedTasks[i],
                   child: const TaskCard(),
                 ),
               ),

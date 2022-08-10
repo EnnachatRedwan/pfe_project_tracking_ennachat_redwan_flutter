@@ -95,4 +95,14 @@ class TaskProvider with ChangeNotifier {
     stp.details=newDesc;
     notifyListeners();
   }
+
+  void archive(){
+    isArchived=true;
+    notifyListeners();
+  }
+
+  void unArchive(){
+    isArchived=false;
+    notifyListeners();
+  }
 }

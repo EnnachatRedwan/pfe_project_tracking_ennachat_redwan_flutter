@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../style/style.dart';
 import '../button.dart';
 import '../level_bar.dart';
+import '../../providers/projects.dart';
 import '../../providers/project.dart';
 import '../../models/period.dart';
 
@@ -69,7 +70,10 @@ class ProjectArchiveCard extends StatelessWidget {
           ApplicationButton(
             color: Style.secondaryColor,
             title: 'إرجاع',
-            onClick: () {},
+            onClick: () {
+              project.disArchive();
+              Provider.of<ProjectsProvider>(context,listen: false).refresh();
+            },
             verPad: 5,
           ),
         ],

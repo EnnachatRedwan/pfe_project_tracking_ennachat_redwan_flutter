@@ -101,9 +101,9 @@ class ProjectsScreen extends StatelessWidget {
                   maxCrossAxisExtent: 650,
                   childAspectRatio: 3 / 2,
                 ),
-                itemCount: projectsProvider.projects.length,
+                itemCount: projectsProvider.notArchivedProjects.length,
                 itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                  value: projectsProvider.projects[i],
+                  value: projectsProvider.notArchivedProjects[i],
                   child: const ProjectCard(),
                 ),
               ),

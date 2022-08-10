@@ -5,6 +5,7 @@ import '../../style/style.dart';
 import '../button.dart';
 import '../level_bar.dart';
 import '../../providers/task.dart';
+import '../../providers/projects.dart';
 import '../../models/period.dart';
 
 class TaskArchiveCard extends StatelessWidget {
@@ -58,7 +59,10 @@ class TaskArchiveCard extends StatelessWidget {
           ApplicationButton(
             color: Style.secondaryColor,
             title: 'إرجاع',
-            onClick: () {},
+            onClick: () {
+              task.unArchive();
+              Provider.of<ProjectsProvider>(context, listen: false).refresh();
+            },
             verPad: 5,
           ),
         ],

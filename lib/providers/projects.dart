@@ -85,28 +85,28 @@ class ProjectsProvider with ChangeNotifier {
     ),
   ];
 
-  List<ProjectProvider> get projects {
-    return [..._projects];
+  List<ProjectProvider> get notArchivedProjects {
+    return _projects.where((p) => !p.isArchived).toList();
   }
 
-  int get tasksLength{
-    int tasks=0;
-    for(var p in projects){
-      tasks+=p.tasks.tasks.length;
-    }
-    return tasks;
+  List<ProjectProvider> get archivedProjects {
+    return _projects.where((p) => p.isArchived).toList();
   }
 
-  List<TaskProvider> get tasks{
-    List<TaskProvider> tasks=[];
-    for(var p in projects){
-      tasks.addAll(p.tasks.tasks);
+  List<TaskProvider> get archivedProjectTasks {
+    List<TaskProvider> tasks = [];
+    for (var p in _projects) {
+      tasks.addAll(p.tasks.tasks.where((t) => t.isArchived));
     }
     return tasks;
   }
 
   void deleteProject(ProjectProvider p) {
     _projects.remove(p);
+    notifyListeners();
+  }
+
+  void refresh(){
     notifyListeners();
   }
 }

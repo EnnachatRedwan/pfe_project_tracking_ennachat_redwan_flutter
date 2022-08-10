@@ -19,8 +19,20 @@ class TasksProvider with ChangeNotifier{
     return completedTasks / tasks.length;
   }
 
+  List<TaskProvider> get notArchivedTasks{
+    return tasks.where((t) => !t.isArchived).toList();
+  }
+
+  List<TaskProvider> get archivedTasks{
+    return tasks.where((t) => t.isArchived).toList();
+  }
+
   void deleteTask(TaskProvider t){
     tasks.remove(t);
+    notifyListeners();
+  }
+  
+  void refresh(){
     notifyListeners();
   }
 

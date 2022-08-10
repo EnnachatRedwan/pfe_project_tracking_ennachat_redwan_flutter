@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/state.dart';
 import '../providers/project.dart';
+import '../providers/projects.dart';
 import '../style/style.dart';
 import 'button.dart';
 
@@ -50,7 +51,10 @@ class ProjectButtons extends StatelessWidget {
           child: ApplicationButton(
             color: Style.grey,
             title: 'أرشيف',
-            onClick: () {},
+            onClick: () {
+              project.archive();
+              Provider.of<ProjectsProvider>(context,listen: false).refresh();
+            },
             verPad: 5,
           ),
         ),

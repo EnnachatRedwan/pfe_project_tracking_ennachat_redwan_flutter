@@ -48,6 +48,16 @@ class ProjectProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void archive(){
+    isArchived=true;
+    notifyListeners();
+  }
+
+  void disArchive(){
+    isArchived=false;
+    notifyListeners();
+  }
+
   void refresh() {
     updateState();
     notifyListeners();

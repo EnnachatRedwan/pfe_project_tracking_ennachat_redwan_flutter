@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../style/style.dart';
 import './button.dart';
 import '../providers/task.dart';
+import '../providers/tasks.dart';
 import '../models/state.dart';
 
 class TaskButtons extends StatelessWidget {
@@ -50,7 +51,10 @@ class TaskButtons extends StatelessWidget {
           child: ApplicationButton(
             color: Style.grey,
             title: 'أرشيف',
-            onClick: () {},
+            onClick: () {
+              task.archive();
+              Provider.of<TasksProvider>(context,listen: false).refresh();
+            },
             verPad: 5,
           ),
         ),
