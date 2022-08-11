@@ -54,6 +54,7 @@ class TaskProvider with ChangeNotifier {
       endingDate = DateTime.now();
     } else {
       state = ProgressState.inProgress;
+      endingDate=null;
     }
   }
 

@@ -31,6 +31,11 @@ class TasksProvider with ChangeNotifier{
     tasks.remove(t);
     notifyListeners();
   }
+
+  void addTask(title){
+    tasks.add(TaskProvider(title: title, state: ProgressState.inProgress, steps: [], employees: []));
+    notifyListeners();
+  }
   
   void refresh(){
     notifyListeners();

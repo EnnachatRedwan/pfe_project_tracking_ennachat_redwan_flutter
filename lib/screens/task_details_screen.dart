@@ -26,6 +26,7 @@ class TaskDetailsScreen extends StatelessWidget {
         formKey.currentState!.save();
         Provider.of<TaskProvider>(context, listen: false)
             .addTaskStep(title, desc);
+        Provider.of<TasksProvider>(context, listen: false).refresh();
         Navigator.of(context).pop();
       }
     }

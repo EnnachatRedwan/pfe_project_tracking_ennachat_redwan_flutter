@@ -34,6 +34,7 @@ class StepTile extends StatelessWidget {
       child: Dismissible(
         onDismissed: (_) {
           task.deleteTaskStep(step);
+          task.refresh();
         },
         background: Container(
           decoration: const BoxDecoration(
