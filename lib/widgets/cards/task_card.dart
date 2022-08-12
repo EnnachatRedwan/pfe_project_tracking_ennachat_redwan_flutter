@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pfe_project_tracking_ennachat_redwan/widgets/task_buttons.dart';
 import 'package:provider/provider.dart';
 
@@ -85,6 +86,16 @@ class TaskCard extends StatelessWidget {
                 width: double.infinity,
                 child: Text(
                   getPeriod(task.startingDate, task.endingDate),
+                  style: const TextStyle(
+                    color: Style.grey,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'أضيف في ${DateFormat.yMMMd().format(task.addedIn)}',
                   style: const TextStyle(
                     color: Style.grey,
                     fontSize: 15,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart' as intl;
 
 import '../widgets/appbar.dart';
 import '../widgets/cards/task_card.dart';
@@ -14,12 +15,14 @@ class ProjectTaskScreen extends StatelessWidget {
 
   void _openTaskBottomSheet(BuildContext context) {
     String taskTitle = '';
+    DateTime addedIn = DateTime.now();
+    final dateController=TextEditingController();
     final formKey = GlobalKey<FormState>();
 
     void save() {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
-        Provider.of<TasksProvider>(context, listen: false).addTask(taskTitle);
+        Provider.of<TasksProvider>(context, listen: false).addTask(taskTitle,addedIn);
         Navigator.of(context).pop();
       }
     }
@@ -27,45 +30,80 @@ class ProjectTaskScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (ctx) {
-        return Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: Form(
-              key: formKey,
-              child: ListView(
-                padding: const EdgeInsets.all(20),
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'عنوان المهمة',
-                      hintTextDirection: TextDirection.rtl
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(20),
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'عنوان المهمة',
+                      ),
+                      textAlign: TextAlign.end,
+                      autofocus: true,
+                      onFieldSubmitted: (_) => save(),
+                      maxLength: 50,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'يرجى تقديم عنوان مهمة صالح';
+                        }
+                        if(value.length>50){
+                          return 'يجب ألا يزيد عنوان المهمة عن 50 حرفًا';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        taskTitle = value!;
+                      },
                     ),
-                    autofocus: true,
-                    onFieldSubmitted: (_) => save(),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'يرجى تقديم عنوان المهمة صالح';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      taskTitle = value!;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: save,
-                    icon: const Icon(Icons.save),
-                    label: const Text('حفظ'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Style.secondaryColor,
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'أضيف في',
+                      ),
+                      textAlign: TextAlign.end,
+                      controller: dateController,
+                      readOnly: true,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) {
+                            return DatePickerDialog(
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime.now()
+                                    .add(const Duration(days: -365)),
+                                lastDate: DateTime.now()
+                                    .add(const Duration(days: 365)));
+                          },
+                        ).then(
+                          (value) {
+                            if (value != null) {
+                              addedIn = DateTime.tryParse(value.toString())!;
+                              dateController.text=intl.DateFormat.yMMMd().format(addedIn).toString();
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: save,
+                      icon: const Icon(Icons.save),
+                      label: const Text('حفظ'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Style.secondaryColor,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

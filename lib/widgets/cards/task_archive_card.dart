@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../style/style.dart';
@@ -46,6 +47,16 @@ class TaskArchiveCard extends StatelessWidget {
               ),
             ),
           ),
+          SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'أضيف في ${DateFormat.yMMMd().format(task.addedIn)}',
+                  style: const TextStyle(
+                    color: Style.grey,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
           if (task.isStarted)
             Center(
               child: LevelBar(

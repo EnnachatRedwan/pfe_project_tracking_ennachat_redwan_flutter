@@ -7,13 +7,17 @@ import './emplyees.dart';
 
 class TaskProvider with ChangeNotifier {
   TaskProvider({
+    required this.id,
     required this.title,
     required this.state,
     required this.steps,
     required this.employees,
+    required this.addedIn,
     this.startingDate,
     this.endingDate,
   });
+
+  final String id;
 
   final List<EmployeeProvider> employees;
 
@@ -24,6 +28,8 @@ class TaskProvider with ChangeNotifier {
   DateTime? startingDate;
 
   DateTime? endingDate;
+
+  final DateTime addedIn;
 
   final String title;
 

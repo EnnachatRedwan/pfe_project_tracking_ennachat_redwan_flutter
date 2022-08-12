@@ -10,6 +10,7 @@ class ProjectProvider with ChangeNotifier {
     required this.state,
     required this.type,
     required this.tasks,
+    required this.createdIn,
     this.startingDate,
     this.endingDate,
   });
@@ -25,6 +26,8 @@ class ProjectProvider with ChangeNotifier {
   final String id;
 
   final String type;
+
+  final DateTime createdIn;
 
   bool isStarted=false;
 

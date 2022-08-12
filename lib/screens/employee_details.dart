@@ -25,7 +25,8 @@ class EmployeeDetailsScreen extends StatelessWidget {
       void save() {
         if (formKey.currentState!.validate()) {
           formKey.currentState!.save();
-          Provider.of<EmployeesProvider>(context, listen: false).updateEmployee(employee.userID, fullName);
+          Provider.of<EmployeesProvider>(context, listen: false)
+              .updateEmployee(employee.userID, fullName);
           employee.refresh();
           Navigator.of(context).pop();
         }
@@ -51,9 +52,13 @@ class EmployeeDetailsScreen extends StatelessWidget {
                         textDirection: TextDirection.ltr,
                         initialValue: employee.fullName,
                         autofocus: true,
+                        maxLength: 50,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'يرجى تقديم اسم الموظف صحيح';
+                          }
+                          if (value.length > 50) {
+                            return 'يجب ألا يزيد الاسم الكامل عن 50 حرفًا';
                           }
                           return null;
                         },
@@ -127,9 +132,10 @@ class EmployeeDetailsScreen extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Text(
+                SelectableText(
                   employee.secWord,
                   style: const TextStyle(
+                    
                     fontSize: 18,
                   ),
                   textAlign: TextAlign.center,

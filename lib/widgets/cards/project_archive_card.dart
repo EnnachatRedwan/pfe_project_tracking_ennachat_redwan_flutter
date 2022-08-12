@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../style/style.dart';
@@ -57,6 +58,16 @@ class ProjectArchiveCard extends StatelessWidget {
               textAlign: TextAlign.end,
             ),
           ),
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              'أضيف في ${DateFormat.yMMMd().format(project.createdIn)}',
+              style: const TextStyle(
+                color: Style.grey,
+                fontSize: 15,
+              ),
+            ),
+          ),
           if (project.isStarted)
             Center(
               child: LevelBar(
@@ -72,7 +83,7 @@ class ProjectArchiveCard extends StatelessWidget {
             title: 'إرجاع',
             onClick: () {
               project.disArchive();
-              Provider.of<ProjectsProvider>(context,listen: false).refresh();
+              Provider.of<ProjectsProvider>(context, listen: false).refresh();
             },
             verPad: 5,
           ),

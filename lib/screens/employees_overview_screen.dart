@@ -40,14 +40,17 @@ class EmployeesScreen extends StatelessWidget {
                 children: [
                   TextFormField(
                     decoration: const InputDecoration(
-                      labelText: 'الاسم الكامل',
-                      hintTextDirection: TextDirection.rtl
-                    ),
+                        labelText: 'الاسم الكامل',
+                        hintTextDirection: TextDirection.rtl),
                     autofocus: true,
                     onFieldSubmitted: (_) => save(),
+                    maxLength: 50,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'يرجى تقديم اسم كامل صالح';
+                      }
+                      if (value.length > 50) {
+                        return 'يجب ألا يزيد الاسم الكامل عن 50 حرفًا';
                       }
                       return null;
                     },
@@ -80,12 +83,7 @@ class EmployeesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    const List<Color> colors = [
-      Color.fromARGB(255, 11, 174, 174),
-      Color.fromARGB(255, 174, 11, 101),
-      Color.fromARGB(255, 11, 174, 46),
-      Color.fromARGB(255, 180, 188, 12),
-    ];
+
     final EmployeesProvider employeesProvider =
         Provider.of<EmployeesProvider>(context);
     return Scaffold(
@@ -122,14 +120,13 @@ class EmployeesScreen extends StatelessWidget {
                 height: 20,
               ),
               Expanded(
-                child: ListView.builder(
+                child: ListView.separated(
                   itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
                     value: employeesProvider.employees[i],
-                    child: EmployeeTile(
-                      color: colors[Random().nextInt(colors.length)],
-                    ),
+                    child: const EmployeeTile(),
                   ),
                   itemCount: employeesProvider.employees.length,
+                  separatorBuilder: (ctx,i)=> const Divider(),
                 ),
               )
             ],

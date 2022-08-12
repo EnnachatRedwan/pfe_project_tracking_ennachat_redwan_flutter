@@ -9,10 +9,7 @@ import '../screens/employee_details.dart';
 class EmployeeTile extends StatelessWidget {
   const EmployeeTile({
     Key? key,
-    required this.color,
   }) : super(key: key);
-
-  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +22,13 @@ class EmployeeTile extends StatelessWidget {
                     value: employee,
                     child: const EmployeeDetailsScreen(),
                   ),
-              settings: RouteSettings(arguments: color)),
+              settings: const RouteSettings(arguments: Style.greeishYellow)),
         );
       },
       child: Dismissible(
-        onDismissed: (_){
+        onDismissed: (_) {
           Provider.of<EmployeesProvider>(context, listen: false)
-                        .deleteEmployee(employee);
+              .deleteEmployee(employee);
         },
         background: Container(
           decoration: const BoxDecoration(
@@ -53,21 +50,16 @@ class EmployeeTile extends StatelessWidget {
         ),
         direction: DismissDirection.endToStart,
         key: Key(DateTime.now().toString()),
-        child: Column(
-          children: [
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: color,
-                radius: 30,
-                child: const Icon(
-                  Icons.person,
-                  color: Style.backgroundColor,
-                ),
-              ),
-              title: Text(employee.fullName),
+        child: ListTile(
+          leading: const CircleAvatar(
+            backgroundColor: Style.greeishYellow,
+            radius: 30,
+            child: Icon(
+              Icons.person,
+              color: Style.backgroundColor,
             ),
-            const Divider()
-          ],
+          ),
+          title: Text(employee.fullName),
         ),
       ),
     );

@@ -32,8 +32,8 @@ class TasksProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  void addTask(title){
-    tasks.add(TaskProvider(title: title, state: ProgressState.inProgress, steps: [], employees: []));
+  void addTask(String title,DateTime addedIn){
+    tasks.add(TaskProvider(id: UniqueKey().toString(),title: title, state: ProgressState.inProgress, steps: [], employees: [],addedIn:addedIn));
     notifyListeners();
   }
   

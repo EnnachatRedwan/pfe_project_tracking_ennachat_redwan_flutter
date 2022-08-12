@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pfe_project_tracking_ennachat_redwan/style/style.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart' as intl;
 
 import '../providers/projects.dart';
 
@@ -15,6 +16,21 @@ class ProjectsScreen extends StatelessWidget {
   static const String routeName = '/projects';
 
   void _openProjectBottomSheet(BuildContext context) {
+    String title='';
+    String type='';
+    DateTime createdIn = DateTime.now();
+    final dateController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+    final typeFocusNode=FocusNode();
+
+    void save() {
+      if (formKey.currentState!.validate()) {
+        formKey.currentState!.save();
+        Provider.of<ProjectsProvider>(context, listen: false).addProject(title, type, createdIn);
+        Navigator.of(context).pop();
+      }
+    }
+
     showModalBottomSheet(
         context: context,
         builder: (ctx) {
@@ -24,23 +40,61 @@ class ProjectsScreen extends StatelessWidget {
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 600),
                 child: Form(
+                  key: formKey,
                   child: ListView(
                     padding: const EdgeInsets.all(20),
                     children: [
+                      
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'عنوان المشروع',
                         ),
+                        textAlign: TextAlign.end,
+                        autofocus: true,
+                        onFieldSubmitted: (_){
+                          typeFocusNode.requestFocus();
+                        },
+                        maxLength: 50,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'يرجى تقديم عنوان مشروع صالح';
+                        }
+                        if(value.length>50){
+                          return 'يجب ألا يزيد عنوان المشروع عن 50 حرفًا';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        title = value!;
+                      },
                       ),
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'نوع المشروع',
                         ),
+                        focusNode: typeFocusNode,
+                        textAlign: TextAlign.end,
+                        onFieldSubmitted: (_) => save(),
+                        maxLength: 50,
+                        validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'يرجى تقديم نوع مشروع صالح';
+                        }
+                        if(value.length>50){
+                          return 'يجب ألا يزيد نوع المشروع عن 50 حرفًا';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        type = value!;
+                      },
                       ),
                       TextFormField(
                         decoration: const InputDecoration(
-                          labelText: 'تاريخ البدء',
+                          labelText: 'أضيف في',
                         ),
+                        controller: dateController,
+                        textAlign: TextAlign.end,
                         readOnly: true,
                         onTap: () {
                           showDialog(
@@ -52,14 +106,21 @@ class ProjectsScreen extends StatelessWidget {
                                         .add(const Duration(days: -365)),
                                     lastDate: DateTime.now()
                                         .add(const Duration(days: 365)));
-                              }).then((value) => print(value));
+                              }).then(
+                          (value) {
+                            if (value != null) {
+                              createdIn = DateTime.tryParse(value.toString())!;
+                              dateController.text=intl.DateFormat.yMMMd().format(createdIn).toString();
+                            }
+                          },
+                        );
                         },
                       ),
                       const SizedBox(
                         height: 20,
                       ),
                       ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: save,
                         icon: const Icon(Icons.save),
                         label: const Text('حفظ'),
                         style: ButtonStyle(

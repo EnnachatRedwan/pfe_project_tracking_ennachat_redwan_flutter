@@ -12,11 +12,14 @@ class ProjectsProvider with ChangeNotifier {
       title: 'New Web Application',
       state: ProgressState.inProgress,
       type: 'Web application',
+      createdIn: DateTime.now(),
       tasks: TasksProvider(
         tasks: [
           TaskProvider(
+            id: UniqueKey().toString(),
             title: 'front-end',
             state: ProgressState.inProgress,
+            addedIn: DateTime.now(),
             steps: [],
             employees: [],
           )
@@ -28,23 +31,30 @@ class ProjectsProvider with ChangeNotifier {
       title: 'New Web Application',
       state: ProgressState.inProgress,
       type: 'Web application',
+      createdIn: DateTime.now(),
       tasks: TasksProvider(
         tasks: [
           TaskProvider(
+            id: UniqueKey().toString(),
             title: 'Front-end',
             state: ProgressState.inProgress,
+            addedIn: DateTime.now(),
             steps: [],
             employees: [],
           ),
           TaskProvider(
+            id: UniqueKey().toString(),
             title: 'Back-end',
             state: ProgressState.done,
+            addedIn: DateTime.now(),
             steps: [],
             employees: [],
           ),
           TaskProvider(
+            id: UniqueKey().toString(),
             title: 'Database',
             state: ProgressState.done,
+            addedIn: DateTime.now(),
             steps: [],
             employees: [],
           ),
@@ -56,11 +66,14 @@ class ProjectsProvider with ChangeNotifier {
       title: 'New Web Application',
       state: ProgressState.inProgress,
       type: 'Web application',
+      createdIn: DateTime.now(),
       tasks: TasksProvider(
         tasks: [
           TaskProvider(
+            id: UniqueKey().toString(),
             title: 'front-end',
             state: ProgressState.inProgress,
+            addedIn: DateTime.now(),
             steps: [],
             employees: [],
           )
@@ -72,11 +85,14 @@ class ProjectsProvider with ChangeNotifier {
       title: 'New Web Application',
       state: ProgressState.inProgress,
       type: 'Web application',
+      createdIn: DateTime.now(),
       tasks: TasksProvider(
         tasks: [
           TaskProvider(
+            id: UniqueKey().toString(),
             title: 'front-end',
             state: ProgressState.inProgress,
+            addedIn: DateTime.now(),
             steps: [],
             employees: [],
           )
@@ -106,7 +122,21 @@ class ProjectsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void refresh(){
+  void addProject(String title, String type, DateTime createdIn) {
+    _projects.add(
+      ProjectProvider(
+        id: UniqueKey().toString(),
+        title: title,
+        state: ProgressState.inProgress,
+        type: type,
+        tasks: TasksProvider(tasks: []),
+        createdIn: createdIn,
+      ),
+    );
+    notifyListeners();
+  }
+
+  void refresh() {
     notifyListeners();
   }
 }

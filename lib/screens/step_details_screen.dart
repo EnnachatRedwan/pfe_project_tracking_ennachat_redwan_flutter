@@ -49,10 +49,14 @@ class StepDetailsScreen extends StatelessWidget {
                       initialValue: title,
                       textDirection: TextDirection.ltr,
                       autofocus: true,
+                      maxLength: 50,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'يرجى تقديم عنوان صالح';
                         }
+                        if (value.length > 50) {
+                            return 'يجب ألا يزيد عنوان الخطوة عن 50 حرفًا';
+                          }
                         return null;
                       },
                       onFieldSubmitted: (_) {
@@ -69,9 +73,14 @@ class StepDetailsScreen extends StatelessWidget {
                       initialValue: desc,
                       textDirection: TextDirection.ltr,
                       focusNode: descNode,
+                      maxLength: 150,
+                      maxLines: 3,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'يرجى تقديم وصف صحيح';
+                        }
+                        if(value.length>150){
+                          return 'يجب ألا يزيد وصف الخطوة عن 50 حرفًا';
                         }
                         return null;
                       },

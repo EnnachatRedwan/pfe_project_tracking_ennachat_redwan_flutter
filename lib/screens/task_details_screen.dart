@@ -50,9 +50,13 @@ class TaskDetailsScreen extends StatelessWidget {
                         ),
                         textDirection: TextDirection.ltr,
                         autofocus: true,
+                        maxLength: 50,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'يرجى تقديم عنوان صالح';
+                            return 'يرجى تقديم عنوان خطوة صالح';
+                          }
+                          if (value.length > 50) {
+                            return 'يجب ألا يزيد عنوان الخطوة عن 50 حرفًا';
                           }
                           return null;
                         },
@@ -69,10 +73,15 @@ class TaskDetailsScreen extends StatelessWidget {
                         ),
                         textDirection: TextDirection.ltr,
                         focusNode: descNode,
+                        maxLines: 3,
+                        maxLength: 150,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'يرجى تقديم وصف صحيح';
                           }
+                          if(value.length>150){
+                          return 'يجب ألا يزيد وصف الخطوة عن 50 حرفًا';
+                        }
                           return null;
                         },
                         onFieldSubmitted: (_) {
