@@ -10,23 +10,29 @@ import '../widgets/cards/project_card.dart';
 import '../widgets/drawer.dart';
 import '../widgets/search_banner.dart';
 
-class ProjectsScreen extends StatelessWidget {
+class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/projects';
 
+  @override
+  State<ProjectsScreen> createState() => _ProjectsScreenState();
+}
+
+class _ProjectsScreenState extends State<ProjectsScreen> {
   void _openProjectBottomSheet(BuildContext context) {
-    String title='';
-    String type='';
+    String title = '';
+    String type = '';
     DateTime createdIn = DateTime.now();
     final dateController = TextEditingController();
     final formKey = GlobalKey<FormState>();
-    final typeFocusNode=FocusNode();
+    final typeFocusNode = FocusNode();
 
     void save() {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
-        Provider.of<ProjectsProvider>(context, listen: false).addProject(title, type, createdIn);
+        Provider.of<ProjectsProvider>(context, listen: false)
+            .addProject(title, type, createdIn);
         Navigator.of(context).pop();
       }
     }
@@ -44,29 +50,28 @@ class ProjectsScreen extends StatelessWidget {
                   child: ListView(
                     padding: const EdgeInsets.all(20),
                     children: [
-                      
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'عنوان المشروع',
                         ),
                         textAlign: TextAlign.end,
                         autofocus: true,
-                        onFieldSubmitted: (_){
+                        onFieldSubmitted: (_) {
                           typeFocusNode.requestFocus();
                         },
                         maxLength: 50,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'يرجى تقديم عنوان مشروع صالح';
-                        }
-                        if(value.length>50){
-                          return 'يجب ألا يزيد عنوان المشروع عن 50 حرفًا';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        title = value!;
-                      },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'يرجى تقديم عنوان مشروع صالح';
+                          }
+                          if (value.length > 50) {
+                            return 'يجب ألا يزيد عنوان المشروع عن 50 حرفًا';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          title = value!;
+                        },
                       ),
                       TextFormField(
                         decoration: const InputDecoration(
@@ -77,17 +82,17 @@ class ProjectsScreen extends StatelessWidget {
                         onFieldSubmitted: (_) => save(),
                         maxLength: 50,
                         validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'يرجى تقديم نوع مشروع صالح';
-                        }
-                        if(value.length>50){
-                          return 'يجب ألا يزيد نوع المشروع عن 50 حرفًا';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        type = value!;
-                      },
+                          if (value!.isEmpty) {
+                            return 'يرجى تقديم نوع مشروع صالح';
+                          }
+                          if (value.length > 50) {
+                            return 'يجب ألا يزيد نوع المشروع عن 50 حرفًا';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          type = value!;
+                        },
                       ),
                       TextFormField(
                         decoration: const InputDecoration(
@@ -107,13 +112,16 @@ class ProjectsScreen extends StatelessWidget {
                                     lastDate: DateTime.now()
                                         .add(const Duration(days: 365)));
                               }).then(
-                          (value) {
-                            if (value != null) {
-                              createdIn = DateTime.tryParse(value.toString())!;
-                              dateController.text=intl.DateFormat.yMMMd().format(createdIn).toString();
-                            }
-                          },
-                        );
+                            (value) {
+                              if (value != null) {
+                                createdIn =
+                                    DateTime.tryParse(value.toString())!;
+                                dateController.text = intl.DateFormat.yMMMd()
+                                    .format(createdIn)
+                                    .toString();
+                              }
+                            },
+                          );
                         },
                       ),
                       const SizedBox(
@@ -138,10 +146,18 @@ class ProjectsScreen extends StatelessWidget {
         });
   }
 
+  String projectToSearch = '';
+
   @override
   Widget build(BuildContext context) {
     final ProjectsProvider projectsProvider =
         Provider.of<ProjectsProvider>(context);
+
+    void search(String value) {
+      projectToSearch = value;
+      projectsProvider.refresh();
+    }
+
     return Scaffold(
       appBar: const ApplicationAppBar(
         title: 'المشاريع',
@@ -151,7 +167,7 @@ class ProjectsScreen extends StatelessWidget {
         textDirection: TextDirection.rtl,
         child: Column(
           children: [
-            const SearchBanner(),
+            SearchBanner(search: search),
             Expanded(
               child: GridView.builder(
                 physics: const ScrollPhysics(),
@@ -162,9 +178,10 @@ class ProjectsScreen extends StatelessWidget {
                   maxCrossAxisExtent: 650,
                   childAspectRatio: 3 / 2,
                 ),
-                itemCount: projectsProvider.notArchivedProjects.length,
+                itemCount: projectsProvider.notArchivedProjects(projectToSearch).length,
                 itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                  value: projectsProvider.notArchivedProjects[i],
+                  value:
+                      projectsProvider.notArchivedProjects(projectToSearch)[i],
                   child: const ProjectCard(),
                 ),
               ),

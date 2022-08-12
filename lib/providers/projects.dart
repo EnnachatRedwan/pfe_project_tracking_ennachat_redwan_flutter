@@ -101,18 +101,28 @@ class ProjectsProvider with ChangeNotifier {
     ),
   ];
 
-  List<ProjectProvider> get notArchivedProjects {
-    return _projects.where((p) => !p.isArchived).toList();
+  List<ProjectProvider> notArchivedProjects(String tag) {
+    if (tag.isEmpty) {
+      return _projects.where((p) => !p.isArchived).toList();
+    }
+    return _projects.where((p) => !p.isArchived&&p.title.toLowerCase().contains(tag.toLowerCase())).toList();
   }
 
-  List<ProjectProvider> get archivedProjects {
-    return _projects.where((p) => p.isArchived).toList();
+  // List<ProjectProvider> get archivedProjects {
+  //   return _projects.where((p) => p.isArchived).toList();
+  // }
+
+  List<ProjectProvider> archivedProjects(String tag) {
+    if (tag.isEmpty) {
+      return _projects.where((p) => p.isArchived).toList();
+    }
+    return _projects.where((p) => p.isArchived&&p.title.toLowerCase().contains(tag.toLowerCase())).toList();
   }
 
-  List<TaskProvider> get archivedProjectTasks {
+  List<TaskProvider> archivedProjectTasks(String tag) {
     List<TaskProvider> tasks = [];
     for (var p in _projects) {
-      tasks.addAll(p.tasks.tasks.where((t) => t.isArchived));
+      tasks.addAll(p.tasks.archivedTasks(tag));
     }
     return tasks;
   }

@@ -9,6 +9,7 @@ import '../../providers/task.dart';
 import '../../providers/tasks.dart';
 import '../../screens/task_details_screen.dart';
 import '../../models/period.dart';
+import '../../providers/project.dart';
 
 class TaskCard extends StatelessWidget {
   const TaskCard({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final TasksProvider tasks = Provider.of<TasksProvider>(context);
     final TaskProvider task = Provider.of<TaskProvider>(context);
+    final project = Provider.of<ProjectProvider>(context);
     return Dismissible(
       background: Container(
         decoration: const BoxDecoration(
@@ -56,10 +58,9 @@ class TaskCard extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (ctx) => MultiProvider(
                       providers: [
-                        ChangeNotifierProvider.value(
-                          value: task,
-                        ),
-                        ChangeNotifierProvider.value(value: tasks)
+                        ChangeNotifierProvider.value(value: task),
+                        ChangeNotifierProvider.value(value: tasks),
+                        ChangeNotifierProvider.value(value: project),
                       ],
                       child: const TaskDetailsScreen(),
                     ),

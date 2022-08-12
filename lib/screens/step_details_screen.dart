@@ -24,7 +24,7 @@ class StepDetailsScreen extends StatelessWidget {
         formKey.currentState!.save();
         Provider.of<TaskProvider>(context, listen: false)
             .updateStep(step.id, title, desc);
-            step.refresh();
+        step.refresh();
         Navigator.of(context).pop();
       }
     }
@@ -55,8 +55,8 @@ class StepDetailsScreen extends StatelessWidget {
                           return 'يرجى تقديم عنوان صالح';
                         }
                         if (value.length > 50) {
-                            return 'يجب ألا يزيد عنوان الخطوة عن 50 حرفًا';
-                          }
+                          return 'يجب ألا يزيد عنوان الخطوة عن 50 حرفًا';
+                        }
                         return null;
                       },
                       onFieldSubmitted: (_) {
@@ -79,7 +79,7 @@ class StepDetailsScreen extends StatelessWidget {
                         if (value!.isEmpty) {
                           return 'يرجى تقديم وصف صحيح';
                         }
-                        if(value.length>150){
+                        if (value.length > 150) {
                           return 'يجب ألا يزيد وصف الخطوة عن 50 حرفًا';
                         }
                         return null;
@@ -120,6 +120,7 @@ class StepDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final StepProvider step = Provider.of<StepProvider>(context);
+    final task = Provider.of<TaskProvider>(context);
 
     return Scaffold(
       appBar: const ApplicationAppBar(title: 'خطوة'),
@@ -173,7 +174,9 @@ class StepDetailsScreen extends StatelessWidget {
                   Checkbox(
                     value: step.isCompleted,
                     onChanged: (_) {
-                      step.toggleState();
+                      if (task.isStarted) {
+                        step.toggleState();
+                      }
                     },
                   )
                 ],
@@ -188,8 +191,7 @@ class StepDetailsScreen extends StatelessWidget {
                       color: Style.red,
                       title: 'حذف',
                       onClick: () {
-                        Provider.of<TaskProvider>(context, listen: false)
-                            .deleteTaskStep(step);
+                        task.deleteTaskStep(step);
                         Navigator.of(context).pop();
                       },
                       verPad: 5,
@@ -203,7 +205,7 @@ class StepDetailsScreen extends StatelessWidget {
                       color: Style.green,
                       title: 'تعديل',
                       onClick: () {
-                        _openStepBottomSheet(context,step);
+                        _openStepBottomSheet(context, step);
                       },
                       verPad: 5,
                     ),

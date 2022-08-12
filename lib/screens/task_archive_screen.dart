@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:pfe_project_tracking_ennachat_redwan/widgets/cards/task_archive_card.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/task.dart';
 import '../providers/projects.dart';
 
 class TaskArchiveScreen extends StatelessWidget {
-  const TaskArchiveScreen({Key? key}) : super(key: key);
+  const TaskArchiveScreen({
+    Key? key,
+    required this.tasksToSearch,
+  }) : super(key: key);
+
+  final String tasksToSearch;
 
   @override
   Widget build(BuildContext context) {
-    final projectsProvider=Provider.of<ProjectsProvider>(context);
-    final List<TaskProvider> tasks=Provider.of<ProjectsProvider>(context).archivedProjectTasks;
+    final projectsProvider = Provider.of<ProjectsProvider>(context);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: GridView.builder(
@@ -23,9 +26,9 @@ class TaskArchiveScreen extends StatelessWidget {
           maxCrossAxisExtent: 650,
           childAspectRatio: 3 / 2,
         ),
-        itemCount: projectsProvider.archivedProjectTasks.length,
+        itemCount: projectsProvider.archivedProjectTasks(tasksToSearch).length,
         itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-          value: tasks[i],
+          value: projectsProvider.archivedProjectTasks(tasksToSearch)[i],
           child: const TaskArchiveCard(),
         ),
       ),

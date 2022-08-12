@@ -8,21 +8,27 @@ import '../widgets/search_banner.dart';
 import '../providers/tasks.dart';
 import '../style/style.dart';
 
-class ProjectTaskScreen extends StatelessWidget {
+class ProjectTaskScreen extends StatefulWidget {
   const ProjectTaskScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/projects-task';
 
+  @override
+  State<ProjectTaskScreen> createState() => _ProjectTaskScreenState();
+}
+
+class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
   void _openTaskBottomSheet(BuildContext context) {
     String taskTitle = '';
     DateTime addedIn = DateTime.now();
-    final dateController=TextEditingController();
+    final dateController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
     void save() {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
-        Provider.of<TasksProvider>(context, listen: false).addTask(taskTitle,addedIn);
+        Provider.of<TasksProvider>(context, listen: false)
+            .addTask(taskTitle, addedIn);
         Navigator.of(context).pop();
       }
     }
@@ -52,7 +58,7 @@ class ProjectTaskScreen extends StatelessWidget {
                         if (value!.isEmpty) {
                           return 'يرجى تقديم عنوان مهمة صالح';
                         }
-                        if(value.length>50){
+                        if (value.length > 50) {
                           return 'يجب ألا يزيد عنوان المهمة عن 50 حرفًا';
                         }
                         return null;
@@ -83,7 +89,9 @@ class ProjectTaskScreen extends StatelessWidget {
                           (value) {
                             if (value != null) {
                               addedIn = DateTime.tryParse(value.toString())!;
-                              dateController.text=intl.DateFormat.yMMMd().format(addedIn).toString();
+                              dateController.text = intl.DateFormat.yMMMd()
+                                  .format(addedIn)
+                                  .toString();
                             }
                           },
                         );
@@ -112,9 +120,17 @@ class ProjectTaskScreen extends StatelessWidget {
     );
   }
 
+  String taskToSearch = '';
+
   @override
   Widget build(BuildContext context) {
     final TasksProvider tasksProvider = Provider.of<TasksProvider>(context);
+
+    void search(String value) {
+      taskToSearch = value;
+      tasksProvider.refresh();
+    }
+
     return Scaffold(
       appBar: const ApplicationAppBar(
         title: 'المهام',
@@ -123,7 +139,9 @@ class ProjectTaskScreen extends StatelessWidget {
         textDirection: TextDirection.rtl,
         child: Column(
           children: [
-            const SearchBanner(),
+            SearchBanner(
+              search: search,
+            ),
             Expanded(
               child: GridView.builder(
                 padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
@@ -133,9 +151,9 @@ class ProjectTaskScreen extends StatelessWidget {
                   maxCrossAxisExtent: 650,
                   childAspectRatio: 3 / 2,
                 ),
-                itemCount: tasksProvider.notArchivedTasks.length,
+                itemCount: tasksProvider.notArchivedTasks(taskToSearch).length,
                 itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                  value: tasksProvider.notArchivedTasks[i],
+                  value: tasksProvider.notArchivedTasks(taskToSearch)[i],
                   child: const TaskCard(),
                 ),
               ),

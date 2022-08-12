@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,11 +8,16 @@ import '../widgets/drawer.dart';
 import '../providers/emplyees.dart';
 import '../widgets/employee_tile.dart';
 
-class EmployeesScreen extends StatelessWidget {
+class EmployeesScreen extends StatefulWidget {
   const EmployeesScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/emplyees';
 
+  @override
+  State<EmployeesScreen> createState() => _EmployeesScreenState();
+}
+
+class _EmployeesScreenState extends State<EmployeesScreen> {
   void _openEmployeeBottomSheet(BuildContext context) {
     String fullName = '';
     final formKey = GlobalKey<FormState>();
@@ -80,6 +84,8 @@ class EmployeesScreen extends StatelessWidget {
     );
   }
 
+  String employeesToSearch = '';
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -114,6 +120,11 @@ class EmployeesScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      employeesToSearch = value;
+                    });
+                  },
                 ),
               ),
               const SizedBox(
@@ -122,11 +133,12 @@ class EmployeesScreen extends StatelessWidget {
               Expanded(
                 child: ListView.separated(
                   itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                    value: employeesProvider.employees[i],
+                    value: employeesProvider
+                        .employees(employeesToSearch)[i],
                     child: const EmployeeTile(),
                   ),
-                  itemCount: employeesProvider.employees.length,
-                  separatorBuilder: (ctx,i)=> const Divider(),
+                  itemCount: employeesProvider.employees(employeesToSearch).length,
+                  separatorBuilder: (ctx, i) => const Divider(),
                 ),
               )
             ],

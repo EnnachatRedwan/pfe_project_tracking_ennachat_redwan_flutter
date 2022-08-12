@@ -11,8 +11,12 @@ class EmployeesProvider with ChangeNotifier {
     EmployeeProvider(userID: '3', fullName: 'Abli Nawal', secWord: 'GD7DRS'),
   ];
 
-  List<EmployeeProvider> get employees {
-    return [..._employees];
+  // List<EmployeeProvider> get employees {
+  //   return [..._employees];
+  // }
+
+  List<EmployeeProvider> employees(String tag){
+    return _employees.where((e) => e.fullName.toLowerCase().contains(tag.toLowerCase())).toList();
   }
 
   void addEmployee(String fullName) {

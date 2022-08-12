@@ -54,8 +54,15 @@ class ProjectCard extends StatelessWidget {
             Navigator.of(context)
                 .push(
                   MaterialPageRoute(
-                    builder: (ctx) => ChangeNotifierProvider.value(
-                      value: project.tasks,
+                    builder: (ctx) => MultiProvider(
+                      providers: [
+                        ChangeNotifierProvider.value(
+                          value: project.tasks,
+                        ),
+                        ChangeNotifierProvider.value(
+                          value: project,
+                        ),
+                      ],
                       child: const ProjectTaskScreen(),
                     ),
                   ),

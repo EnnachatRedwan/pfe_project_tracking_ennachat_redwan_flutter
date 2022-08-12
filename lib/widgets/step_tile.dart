@@ -15,21 +15,25 @@ class StepTile extends StatelessWidget {
     final TaskProvider task = Provider.of<TaskProvider>(context, listen: false);
     return InkWell(
       onTap: () {
-        step.toggleState();
-        task.refresh();
+        if (task.isStarted) {
+          step.toggleState();
+          task.refresh();
+        }
       },
       onDoubleTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (ctx) => MultiProvider(
-              providers: [
-                ChangeNotifierProvider.value(value: step),
-                ChangeNotifierProvider.value(value: task),
-              ],
-              child: const StepDetailsScreen(),
-            ),
-          ),
-        ).then((value) => task.refresh());
+        Navigator.of(context)
+            .push(
+              MaterialPageRoute(
+                builder: (ctx) => MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider.value(value: step),
+                    ChangeNotifierProvider.value(value: task),
+                  ],
+                  child: const StepDetailsScreen(),
+                ),
+              ),
+            )
+            .then((value) => task.refresh());
       },
       child: Dismissible(
         onDismissed: (_) {
@@ -65,8 +69,10 @@ class StepTile extends StatelessWidget {
           trailing: Checkbox(
             value: step.isCompleted,
             onChanged: (_) {
-              step.toggleState();
-              Provider.of<TaskProvider>(context, listen: false).refresh();
+              if (task.isStarted) {
+                step.toggleState();
+                Provider.of<TaskProvider>(context, listen: false).refresh();
+              }
             },
           ),
         ),

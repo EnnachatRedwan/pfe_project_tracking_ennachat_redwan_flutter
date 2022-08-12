@@ -7,14 +7,22 @@ import '../providers/emplyees.dart';
 import '../widgets/choose_employee_tile.dart';
 import '../providers/task.dart';
 
-class ChooseEmployeesScreen extends StatelessWidget {
+class ChooseEmployeesScreen extends StatefulWidget {
   const ChooseEmployeesScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ChooseEmployeesScreen> createState() => _ChooseEmployeesScreenState();
+}
+
+class _ChooseEmployeesScreenState extends State<ChooseEmployeesScreen> {
+
+ String employeesToSearch='';
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final EmployeesProvider employeesProvider =
-        Provider.of<EmployeesProvider>(context);
+    final employees =
+        Provider.of<EmployeesProvider>(context).employees(employeesToSearch);
     final TaskProvider task = Provider.of<TaskProvider>(context);
     return Scaffold(
       appBar: const ApplicationAppBar(title: 'إضافة موظفين'),
@@ -43,6 +51,11 @@ class ChooseEmployeesScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      employeesToSearch = value;
+                    });
+                  },
                 ),
               ),
               const SizedBox(
@@ -53,7 +66,7 @@ class ChooseEmployeesScreen extends StatelessWidget {
                   itemBuilder: (ctx, i) => MultiProvider(
                     providers: [
                       ChangeNotifierProvider.value(
-                        value: employeesProvider.employees[i],
+                        value: employees[i],
                       ),
                       ChangeNotifierProvider.value(
                         value: task,
@@ -62,7 +75,7 @@ class ChooseEmployeesScreen extends StatelessWidget {
                     child: const ChooseEmployeeTile(
                     ),
                   ),
-                  itemCount: employeesProvider.employees.length,
+                  itemCount: employees.length,
                 ),
               )
             ],

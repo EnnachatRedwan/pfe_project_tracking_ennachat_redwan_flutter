@@ -5,6 +5,7 @@ import '../style/style.dart';
 import './button.dart';
 import '../providers/task.dart';
 import '../providers/tasks.dart';
+import '../providers/project.dart';
 import '../models/state.dart';
 
 class TaskButtons extends StatelessWidget {
@@ -13,15 +14,19 @@ class TaskButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TaskProvider task = Provider.of<TaskProvider>(context);
+    final bool isProjectStarted =
+        Provider.of<ProjectProvider>(context).isStarted;
     return Row(
       children: [
         if (!task.isStarted)
           Expanded(
             child: ApplicationButton(
-              color: Style.green,
+              color: isProjectStarted ? Style.green : Style.grey,
               title: 'بدء',
               onClick: () {
-                task.start();
+                if (isProjectStarted) {
+                  task.start();
+                }
               },
               verPad: 5,
             ),
@@ -53,7 +58,7 @@ class TaskButtons extends StatelessWidget {
             title: 'أرشيف',
             onClick: () {
               task.archive();
-              Provider.of<TasksProvider>(context,listen: false).refresh();
+              Provider.of<TasksProvider>(context, listen: false).refresh();
             },
             verPad: 5,
           ),
