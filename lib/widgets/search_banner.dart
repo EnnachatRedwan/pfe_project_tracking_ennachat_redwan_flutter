@@ -14,7 +14,7 @@ class SearchBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Directionality(
-      textDirection: TextDirection.ltr,
+      textDirection: TextDirection.rtl,
       child: Container(
         color: Colors.transparent,
         height: 60,
@@ -59,7 +59,9 @@ class SearchBanner extends StatelessWidget {
                         Expanded(
                           child: TextField(
                             decoration: const InputDecoration.collapsed(
-                                hintText: 'بحث'),
+                              hintText: 'بحث',
+                            ),
+                            textDirection: TextDirection.ltr,
                             onChanged: (value) {
                               if (search != null) {
                                 search!(value);

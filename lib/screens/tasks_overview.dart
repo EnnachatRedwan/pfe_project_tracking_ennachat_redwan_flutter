@@ -50,7 +50,7 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
                       decoration: const InputDecoration(
                         labelText: 'عنوان المهمة',
                       ),
-                      textAlign: TextAlign.end,
+                      textDirection: TextDirection.ltr,
                       autofocus: true,
                       onFieldSubmitted: (_) => save(),
                       maxLength: 50,
@@ -74,6 +74,7 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
                       textAlign: TextAlign.end,
                       controller: dateController,
                       readOnly: true,
+                      textDirection: TextDirection.ltr,
                       onTap: () {
                         showDialog(
                           context: context,

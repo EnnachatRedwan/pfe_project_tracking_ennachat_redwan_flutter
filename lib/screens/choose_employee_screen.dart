@@ -51,6 +51,7 @@ class _ChooseEmployeesScreenState extends State<ChooseEmployeesScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
+                  textDirection: TextDirection.ltr,
                   onChanged: (value) {
                     setState(() {
                       employeesToSearch = value;

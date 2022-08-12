@@ -35,47 +35,51 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
       context: context,
       builder: (ctx) {
         return Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: Form(
-              key: formKey,
-              child: ListView(
-                padding: const EdgeInsets.all(20),
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(20),
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
                         labelText: 'الاسم الكامل',
-                        hintTextDirection: TextDirection.rtl),
-                    autofocus: true,
-                    onFieldSubmitted: (_) => save(),
-                    maxLength: 50,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'يرجى تقديم اسم كامل صالح';
-                      }
-                      if (value.length > 50) {
-                        return 'يجب ألا يزيد الاسم الكامل عن 50 حرفًا';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      fullName = value!;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: save,
-                    icon: const Icon(Icons.save),
-                    label: const Text('حفظ'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        Style.secondaryColor,
+                      ),
+                      textDirection: TextDirection.ltr,
+                      autofocus: true,
+                      onFieldSubmitted: (_) => save(),
+                      maxLength: 50,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'يرجى تقديم اسم كامل صالح';
+                        }
+                        if (value.length > 50) {
+                          return 'يجب ألا يزيد الاسم الكامل عن 50 حرفًا';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        fullName = value!;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: save,
+                      icon: const Icon(Icons.save),
+                      label: const Text('حفظ'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Style.secondaryColor,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -120,6 +124,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
+                  textDirection: TextDirection.ltr,
                   onChanged: (value) {
                     setState(() {
                       employeesToSearch = value;
@@ -133,11 +138,11 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
               Expanded(
                 child: ListView.separated(
                   itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                    value: employeesProvider
-                        .employees(employeesToSearch)[i],
+                    value: employeesProvider.employees(employeesToSearch)[i],
                     child: const EmployeeTile(),
                   ),
-                  itemCount: employeesProvider.employees(employeesToSearch).length,
+                  itemCount:
+                      employeesProvider.employees(employeesToSearch).length,
                   separatorBuilder: (ctx, i) => const Divider(),
                 ),
               )

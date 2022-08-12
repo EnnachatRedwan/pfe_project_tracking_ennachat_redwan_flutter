@@ -54,7 +54,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                         decoration: const InputDecoration(
                           labelText: 'عنوان المشروع',
                         ),
-                        textAlign: TextAlign.end,
+                        textDirection: TextDirection.ltr,
                         autofocus: true,
                         onFieldSubmitted: (_) {
                           typeFocusNode.requestFocus();
@@ -77,8 +77,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                         decoration: const InputDecoration(
                           labelText: 'نوع المشروع',
                         ),
+                        textDirection: TextDirection.ltr,
                         focusNode: typeFocusNode,
-                        textAlign: TextAlign.end,
                         onFieldSubmitted: (_) => save(),
                         maxLength: 50,
                         validator: (value) {
@@ -99,8 +99,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                           labelText: 'أضيف في',
                         ),
                         controller: dateController,
-                        textAlign: TextAlign.end,
                         readOnly: true,
+                        textDirection: TextDirection.ltr,
                         onTap: () {
                           showDialog(
                               context: context,

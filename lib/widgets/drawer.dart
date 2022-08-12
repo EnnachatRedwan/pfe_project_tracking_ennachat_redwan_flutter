@@ -17,16 +17,16 @@ class ApplicationDrawer extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 30),
         children: [
           DraweItem(
-            title: 'المشاريع',
-            icon: Icons.work,
-            action: () => Navigator.of(context)
-                .pushReplacementNamed(ProjectsScreen.routeName),
-          ),
-          DraweItem(
             title: 'الموظفين',
             icon: Icons.people,
             action: () => Navigator.of(context)
                 .pushReplacementNamed(EmployeesScreen.routeName),
+          ),
+          DraweItem(
+            title: 'المشاريع',
+            icon: Icons.work,
+            action: () => Navigator.of(context)
+                .pushReplacementNamed(ProjectsScreen.routeName),
           ),
           DraweItem(
             title: 'الأرشيف',
