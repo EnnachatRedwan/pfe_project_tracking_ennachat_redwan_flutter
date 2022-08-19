@@ -55,7 +55,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                         maxLength: 50,
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return 'يرجى تقديم اسم الموظف صحيح';
+                            return 'يرجى تقديم اسم موظف صالح';
                           }
                           if (value.length > 50) {
                             return 'يجب ألا يزيد الاسم الكامل عن 50 حرفًا';
@@ -146,6 +146,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                 ApplicationButton(
                   color: Style.blue,
                   title: 'إعادة تعيين كلمة المرور',
+                  isLoading: false,
                   onClick: () {},
                   verPad: 5,
                 ),
@@ -155,6 +156,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                 ApplicationButton(
                   color: Style.green,
                   title: 'تعديل',
+                  isLoading: false,
                   onClick: () {
                     _openEmployeeBottomSheet(context);
                   },
@@ -166,6 +168,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                 ApplicationButton(
                   color: Style.red,
                   title: 'حذف الموظف',
+                  isLoading: false,
                   onClick: () {
                     Provider.of<EmployeesProvider>(context, listen: false)
                         .deleteEmployee(employee);

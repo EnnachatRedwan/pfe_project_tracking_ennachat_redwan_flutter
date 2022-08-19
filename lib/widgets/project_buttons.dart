@@ -20,6 +20,7 @@ class ProjectButtons extends StatelessWidget {
             child: ApplicationButton(
               color: Style.green,
               title: 'بدء',
+              isLoading: false,
               onClick: () {
                 project.start();
               },
@@ -29,6 +30,7 @@ class ProjectButtons extends StatelessWidget {
         if (project.isStarted && project.state == ProgressState.inProgress)
           Expanded(
             child: ApplicationButton(
+              isLoading: false,
               color: Style.secondaryColor,
               title: 'قيد الإنجاز',
               onClick: () {},
@@ -39,6 +41,7 @@ class ProjectButtons extends StatelessWidget {
           Expanded(
             child: ApplicationButton(
               color: Style.blue,
+              isLoading: false,
               title: 'منجز',
               onClick: () {},
               verPad: 5,
@@ -49,6 +52,7 @@ class ProjectButtons extends StatelessWidget {
         ),
         Expanded(
           child: ApplicationButton(
+            isLoading: false,
             color: Style.grey,
             title: 'أرشيف',
             onClick: () {

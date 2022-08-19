@@ -69,6 +69,7 @@ class TaskArchiveCard extends StatelessWidget {
           ),
           ApplicationButton(
             color: Style.secondaryColor,
+            isLoading: false,
             title: 'إرجاع',
             onClick: () {
               task.unArchive();

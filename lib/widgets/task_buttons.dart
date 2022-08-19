@@ -23,6 +23,7 @@ class TaskButtons extends StatelessWidget {
             child: ApplicationButton(
               color: isProjectStarted ? Style.green : Style.grey,
               title: 'بدء',
+              isLoading: false,
               onClick: () {
                 if (isProjectStarted) {
                   task.start();
@@ -36,6 +37,7 @@ class TaskButtons extends StatelessWidget {
             child: ApplicationButton(
               color: Style.secondaryColor,
               title: 'قيد الإنجاز',
+              isLoading: false,
               onClick: () {},
               verPad: 5,
             ),
@@ -44,6 +46,7 @@ class TaskButtons extends StatelessWidget {
           Expanded(
             child: ApplicationButton(
               color: Style.blue,
+              isLoading: false,
               title: 'منجز',
               onClick: () {},
               verPad: 5,
@@ -55,6 +58,7 @@ class TaskButtons extends StatelessWidget {
         Expanded(
           child: ApplicationButton(
             color: Style.grey,
+            isLoading: false,
             title: 'أرشيف',
             onClick: () {
               task.archive();

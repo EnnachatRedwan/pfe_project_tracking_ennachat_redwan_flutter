@@ -17,7 +17,13 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  bool isActivated = false;
+  bool isActivated = true;
+
+  void updateActivation(bool val) {
+    setState(() {
+      isActivated = val;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +53,14 @@ class _AuthScreenState extends State<AuthScreen> {
                         height: 50,
                       ),
                       isActivated
-                          ? AuthForm(size: size)
-                          : ActivationForm(size: size)
+                          ? AuthForm(
+                              size: size,
+                              update: updateActivation,
+                            )
+                          : ActivationForm(
+                              size: size,
+                              update: updateActivation,
+                            )
                     ],
                   ),
                 ),

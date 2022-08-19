@@ -188,6 +188,7 @@ class StepDetailsScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ApplicationButton(
+                      isLoading: false,
                       color: Style.red,
                       title: 'حذف',
                       onClick: () {
@@ -204,6 +205,7 @@ class StepDetailsScreen extends StatelessWidget {
                     child: ApplicationButton(
                       color: Style.green,
                       title: 'تعديل',
+                      isLoading: false,
                       onClick: () {
                         _openStepBottomSheet(context, step);
                       },
