@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/state.dart';
+import '../providers/auth.dart';
 import '../providers/project.dart';
 import '../providers/projects.dart';
 import '../style/style.dart';
@@ -12,17 +13,35 @@ class ProjectButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _showSnackBar(String message) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Style.red,
+        ),
+      );
+    }
+
     final ProjectProvider project = Provider.of<ProjectProvider>(context);
     return Row(
       children: [
-        if (!project.isStarted)
+        if (!project.isStarted&&Provider.of<AuthProvider>(context, listen: false).isLeader)
           Expanded(
             child: ApplicationButton(
               color: Style.green,
               title: 'بدء',
               isLoading: false,
-              onClick: () {
-                project.start();
+              onClick: () async {
+                try {
+                  await Provider.of<ProjectsProvider>(context, listen: false)
+                      .startProject(project);
+                } catch (err) {
+                  _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+                }
               },
               verPad: 5,
             ),
@@ -57,7 +76,7 @@ class ProjectButtons extends StatelessWidget {
             title: 'أرشيف',
             onClick: () {
               project.archive();
-              Provider.of<ProjectsProvider>(context,listen: false).refresh();
+              Provider.of<ProjectsProvider>(context, listen: false).refresh();
             },
             verPad: 5,
           ),

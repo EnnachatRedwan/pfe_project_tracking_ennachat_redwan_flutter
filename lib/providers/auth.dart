@@ -7,7 +7,7 @@ import '../models/host_ip.dart';
 
 class AuthProvider with ChangeNotifier {
   String username = '';
-  String fullname = '';
+  bool isLeader=false;
   String? token;
 
   Future<void> login(String username, String password) async {
@@ -26,7 +26,7 @@ class AuthProvider with ChangeNotifier {
       final user = result["User"];
       token = result["token"];
       this.username = user["username"];
-      fullname = user["fullname"];
+      isLeader=user["leader"]=='';
       notifyListeners();
     }
   }
@@ -45,5 +45,11 @@ class AuthProvider with ChangeNotifier {
         throw HttpException('500');
       }
     }
+  }
+
+  void logout(){
+    username='';
+    token=null;
+    notifyListeners();
   }
 }

@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' as intl;
 
 import '../providers/projects.dart';
+import '../providers/project.dart';
+import '../providers/auth.dart';
 
 import '../widgets/appbar.dart';
 import '../widgets/cards/project_card.dart';
@@ -20,6 +22,43 @@ class ProjectsScreen extends StatefulWidget {
 }
 
 class _ProjectsScreenState extends State<ProjectsScreen> {
+  bool isLoading = false;
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Style.red,
+      ),
+    );
+  }
+
+  Future<void> fetchProjects() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await Provider.of<ProjectsProvider>(context, listen: false)
+          .fetchProjects();
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    fetchProjects();
+    super.initState();
+  }
+
   void _openProjectBottomSheet(BuildContext context) {
     String title = '';
     String type = '';
@@ -28,12 +67,16 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     final formKey = GlobalKey<FormState>();
     final typeFocusNode = FocusNode();
 
-    void save() {
+    void save() async {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
-        Provider.of<ProjectsProvider>(context, listen: false)
-            .addProject(title, type, createdIn);
         Navigator.of(context).pop();
+        try {
+          await Provider.of<ProjectsProvider>(context, listen: false)
+              .addProject(title, type, createdIn);
+        } catch (err) {
+          _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+        }
       }
     }
 
@@ -158,9 +201,21 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       projectsProvider.refresh();
     }
 
+    void deleteProject(ProjectProvider project) async {
+      try {
+        await Provider.of<ProjectsProvider>(context, listen: false)
+            .deleteProject(project);
+      } catch (err) {
+        _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+      }
+    }
+
     return Scaffold(
-      appBar: const ApplicationAppBar(
+      appBar: ApplicationAppBar(
         title: 'المشاريع',
+        acts: [
+          IconButton(onPressed: fetchProjects, icon: const Icon(Icons.refresh))
+        ],
       ),
       drawer: const ApplicationDrawer(),
       body: Directionality(
@@ -168,35 +223,47 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         child: Column(
           children: [
             SearchBanner(search: search),
-            Expanded(
-              child: GridView.builder(
-                physics: const ScrollPhysics(),
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
-                  maxCrossAxisExtent: 650,
-                  childAspectRatio: 3 / 2,
-                ),
-                itemCount: projectsProvider.notArchivedProjects(projectToSearch).length,
-                itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                  value:
-                      projectsProvider.notArchivedProjects(projectToSearch)[i],
-                  child: const ProjectCard(),
-                ),
-              ),
-            ),
+            isLoading
+                ? const Expanded(
+                    child: Center(child: CircularProgressIndicator()))
+                : Expanded(
+                    child: GridView.builder(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        mainAxisSpacing: 15,
+                        crossAxisSpacing: 15,
+                        maxCrossAxisExtent: 650,
+                        childAspectRatio: 3 / 2,
+                      ),
+                      itemCount: projectsProvider
+                          .notArchivedProjects(projectToSearch)
+                          .length,
+                      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                        value: projectsProvider
+                            .notArchivedProjects(projectToSearch)[i],
+                        child: ProjectCard(
+                          delete: () => deleteProject(projectsProvider
+                              .notArchivedProjects(projectToSearch)[i]),
+                        ),
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _openProjectBottomSheet(context),
-        backgroundColor: Style.primaryColor,
-        child: const Icon(
-          Icons.add,
-          color: Style.secondaryColor,
-        ),
-      ),
+      floatingActionButton:
+          Provider.of<AuthProvider>(context, listen: false).isLeader
+              ? FloatingActionButton(
+                  onPressed: () => _openProjectBottomSheet(context),
+                  backgroundColor: Style.primaryColor,
+                  child: const Icon(
+                    Icons.add,
+                    color: Style.secondaryColor,
+                  ),
+                )
+              : null,
     );
   }
 }

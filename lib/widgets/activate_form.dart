@@ -146,7 +146,6 @@ class _ActivationFormState extends State<ActivationForm> {
               autocorrect: false,
               focusNode: confirmPassFocus,
               validator: (value) {
-                print(password.text);
                 if (value != password.text) {
                   return 'كلمة المرور غير مطابقة';
                 }

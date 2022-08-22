@@ -7,20 +7,30 @@ import '../project_buttons.dart';
 import '../level_bar.dart';
 import '../../providers/project.dart';
 import '../../screens/tasks_overview.dart';
-import '../../providers/projects.dart';
 import '../../models/period.dart';
 
 class ProjectCard extends StatelessWidget {
-  const ProjectCard({Key? key}) : super(key: key);
+  const ProjectCard({
+    Key? key,
+    required this.delete,
+  }) : super(key: key);
+
+  final Function delete;
 
   @override
   Widget build(BuildContext context) {
+
     final ProjectProvider project = Provider.of<ProjectProvider>(context);
     return Dismissible(
-      onDismissed: ((_) {
-        Provider.of<ProjectsProvider>(context, listen: false)
-            .deleteProject(project);
-      }),
+      // onDismissed: (_) async {
+      //   try {
+      //     await Provider.of<ProjectsProvider>(context, listen: false)
+      //         .deleteProject(project);
+      //   } catch (err) {
+      //     _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+      //   }
+      // },
+      onDismissed: (_)=>delete(),
       background: Container(
         decoration: const BoxDecoration(
           color: Style.red,
@@ -39,7 +49,7 @@ class ProjectCard extends StatelessWidget {
         ),
       ),
       direction: DismissDirection.startToEnd,
-      key: Key(project.id),
+      key: Key(project.id.toString()),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(

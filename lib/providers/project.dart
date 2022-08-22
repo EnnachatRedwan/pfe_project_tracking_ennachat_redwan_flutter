@@ -11,6 +11,7 @@ class ProjectProvider with ChangeNotifier {
     required this.type,
     required this.tasks,
     required this.createdIn,
+    this.isStarted=false,
     this.startingDate,
     this.endingDate,
   });
@@ -23,7 +24,7 @@ class ProjectProvider with ChangeNotifier {
 
   final String title;
 
-  final String id;
+  final int id;
 
   final String type;
 
@@ -49,6 +50,13 @@ class ProjectProvider with ChangeNotifier {
     isStarted = true;
     updateState();
     startingDate=DateTime.now();
+    notifyListeners();
+  }
+
+  void rollStartBack(){
+        isStarted = false;
+    updateState();
+    startingDate=null;
     notifyListeners();
   }
 

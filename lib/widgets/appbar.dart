@@ -19,6 +19,7 @@ class ApplicationAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       actions: [
+        if (acts != null) ...acts!.map((act) => act).toList(),
         Center(
             child: Text(
           title,
@@ -27,7 +28,7 @@ class ApplicationAppBar extends StatelessWidget implements PreferredSizeWidget {
         const SizedBox(
           width: 10,
         ),
-        if (acts != null) ...acts!.map((act) => act).toList(),
+        
       ],
       elevation: 0.0,
       bottom: tabs != null
