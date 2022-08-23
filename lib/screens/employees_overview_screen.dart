@@ -18,6 +18,43 @@ class EmployeesScreen extends StatefulWidget {
 }
 
 class _EmployeesScreenState extends State<EmployeesScreen> {
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Style.red,
+      ),
+    );
+  }
+
+  bool isLoading = false;
+
+  Future<void> fetchEmployees() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await Provider.of<EmployeesProvider>(context, listen: false)
+          .fetchEmployees();
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    fetchEmployees();
+    super.initState();
+  }
+
   void _openEmployeeBottomSheet(BuildContext context) {
     String fullName = '';
     final formKey = GlobalKey<FormState>();
@@ -97,7 +134,12 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     final EmployeesProvider employeesProvider =
         Provider.of<EmployeesProvider>(context);
     return Scaffold(
-      appBar: const ApplicationAppBar(title: 'الموظفين'),
+      appBar: ApplicationAppBar(
+        title: 'الموظفين',
+        acts: [
+          IconButton(onPressed: fetchEmployees, icon: const Icon(Icons.refresh))
+        ],
+      ),
       drawer: const ApplicationDrawer(),
       body: Center(
         child: Container(
@@ -136,15 +178,21 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                 height: 20,
               ),
               Expanded(
-                child: ListView.separated(
-                  itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                    value: employeesProvider.employees(employeesToSearch)[i],
-                    child: const EmployeeTile(),
-                  ),
-                  itemCount:
-                      employeesProvider.employees(employeesToSearch).length,
-                  separatorBuilder: (ctx, i) => const Divider(),
-                ),
+                child: isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.separated(
+                        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                          value:
+                              employeesProvider.employees(employeesToSearch)[i],
+                          child: const EmployeeTile(),
+                        ),
+                        itemCount: employeesProvider
+                            .employees(employeesToSearch)
+                            .length,
+                        separatorBuilder: (ctx, i) => const Divider(),
+                      ),
               )
             ],
           ),

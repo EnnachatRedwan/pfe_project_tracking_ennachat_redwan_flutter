@@ -26,7 +26,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
         if (formKey.currentState!.validate()) {
           formKey.currentState!.save();
           Provider.of<EmployeesProvider>(context, listen: false)
-              .updateEmployee(employee.userID, fullName);
+              .updateEmployee(employee.username, fullName);
           employee.refresh();
           Navigator.of(context).pop();
         }

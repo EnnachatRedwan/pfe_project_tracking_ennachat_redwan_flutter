@@ -116,7 +116,6 @@ class ProjectsProvider with ChangeNotifier {
       final response = await http.get(url);
       final data = jsonDecode(response.body);
       for (var p in data) {
-        print(p["addingDate"]);
         _projects.add(
           ProjectProvider(
             id: p["id_prj"],
