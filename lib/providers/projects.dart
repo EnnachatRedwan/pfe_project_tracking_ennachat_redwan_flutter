@@ -105,9 +105,9 @@ class ProjectsProvider with ChangeNotifier {
     //   ),
   ];
 
-  final String token;
+  final String? token;
 
-  ProjectsProvider(this.token);
+  ProjectsProvider({this.token});
 
   Future<void> fetchProjects() async {
     _projects.clear();

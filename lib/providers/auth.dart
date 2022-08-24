@@ -10,7 +10,8 @@ class AuthProvider with ChangeNotifier {
   bool isLeader=false;
   String? token;
 
-  Future<void> login(String username, String password) async {
+  Future<String> login(String username, String password) async {
+    String fullname='';
     final url = Uri.parse('$host/users/login');
     final body = json.encode({"username": username, "password": password});
 
@@ -27,8 +28,10 @@ class AuthProvider with ChangeNotifier {
       token = result["token"];
       this.username = user["username"];
       isLeader=user["leader"]=='';
+      fullname=user["fullname"];
       notifyListeners();
     }
+    return fullname;
   }
 
   Future<void> activateAccount(String key, String password) async {

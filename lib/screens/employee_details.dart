@@ -7,28 +7,55 @@ import '../providers/emplyee.dart';
 import '../providers/emplyees.dart';
 import '../widgets/button.dart';
 
-class EmployeeDetailsScreen extends StatelessWidget {
-  const EmployeeDetailsScreen({Key? key}) : super(key: key);
+class EmployeeDetailsScreen extends StatefulWidget {
+  const EmployeeDetailsScreen({
+    Key? key,
+    required this.delete,
+  }) : super(key: key);
 
   static const String routeName = '/emplyee-Details';
 
+  final Function delete;
+
+  @override
+  State<EmployeeDetailsScreen> createState() => _EmployeeDetailsScreenState();
+}
+
+class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
+  void _showSnackBar(String message, {Color color = Style.red}) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: color,
+      ),
+    );
+  }
+
+  bool isLoadingReset = false;
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final EmployeeProvider employee = Provider.of<EmployeeProvider>(context);
-    final Color color = ModalRoute.of(context)!.settings.arguments as Color;
+    final color = employee.isActivated ? Style.greeishYellow : Style.grey;
 
     void _openEmployeeBottomSheet(BuildContext context) {
       String fullName = '';
       final formKey = GlobalKey<FormState>();
 
-      void save() {
+      void save() async {
         if (formKey.currentState!.validate()) {
           formKey.currentState!.save();
-          Provider.of<EmployeesProvider>(context, listen: false)
-              .updateEmployee(employee.username, fullName);
-          employee.refresh();
           Navigator.of(context).pop();
+          try {
+            await Provider.of<EmployeesProvider>(context, listen: false)
+                .editName(employee, fullName);
+          } catch (err) {
+            _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+          }
         }
       }
 
@@ -133,21 +160,51 @@ class EmployeeDetailsScreen extends StatelessWidget {
                   height: 10,
                 ),
                 SelectableText(
-                  employee.secWord,
+                  employee.username,
                   style: const TextStyle(
-                    
-                    fontSize: 18,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(
                   height: 10,
                 ),
+                employee.secWord == null
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : SelectableText(
+                        employee.secWord!,
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                const SizedBox(
+                  height: 10,
+                ),
                 ApplicationButton(
                   color: Style.blue,
                   title: 'إعادة تعيين كلمة المرور',
-                  isLoading: false,
-                  onClick: () {},
+                  isLoading: isLoadingReset,
+                  onClick: () async {
+                    setState(() {
+                      isLoadingReset = true;
+                    });
+                    try {
+                      await Provider.of<EmployeesProvider>(context,
+                              listen: false)
+                          .resetKey(employee);
+                    } catch (err) {
+                      _showSnackBar(
+                          'حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+                    } finally {
+                      setState(() {
+                        isLoadingReset = false;
+                      });
+                    }
+                  },
                   verPad: 5,
                 ),
                 const SizedBox(
@@ -170,8 +227,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                   title: 'حذف الموظف',
                   isLoading: false,
                   onClick: () {
-                    Provider.of<EmployeesProvider>(context, listen: false)
-                        .deleteEmployee(employee);
+                    widget.delete();
                     Navigator.of(context).pop();
                   },
                   verPad: 5,

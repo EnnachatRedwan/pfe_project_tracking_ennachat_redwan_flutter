@@ -2,14 +2,15 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:pfe_project_tracking_ennachat_redwan/models/http_exception.dart';
 
 import './emplyee.dart';
 import '../models/host_ip.dart';
 
 class EmployeesProvider with ChangeNotifier {
-  final String token;
+  final String? token;
 
-  EmployeesProvider(this.token);
+  EmployeesProvider({this.token});
 
   final List<EmployeeProvider> _employees = [
     //   EmployeeProvider(
@@ -30,10 +31,57 @@ class EmployeesProvider with ChangeNotifier {
           username: emp["username"],
           fullName: emp["fullname"],
           secWord: emp["empKey"],
+          isActivated: emp["isActivated"] == 1,
         ));
       }
       notifyListeners();
     } catch (err) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteEmployee(EmployeeProvider emp) async {
+    final index = _employees.indexOf(emp);
+    _employees.remove(emp);
+    notifyListeners();
+    final url = Uri.parse('$host/employees/$token');
+    final body = jsonEncode({"username": emp.username});
+    try {
+      await http.delete(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      _employees.insert(index, emp);
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<void> resetKey(EmployeeProvider emp) async {
+    emp.toggleAcivation(false);
+    final url = Uri.parse('$host/employees/$token');
+    final body = jsonEncode({"username": emp.username});
+    try {
+      final response = await http.put(url,
+          headers: {'content-type': 'application/json'}, body: body);
+      final data = jsonDecode(response.body);
+      emp.setKey(data["key"]);
+    } catch (err) {
+      emp.toggleAcivation(true);
+      rethrow;
+    }
+  }
+
+  Future<void> editName(EmployeeProvider emp, String fullname) async {
+    final String oldFullname = emp.fullName;
+    emp.editFullname(fullname);
+
+    final url = Uri.parse('$host/employees/$token');
+    final body = jsonEncode({"username": emp.username, "fullname": fullname});
+    try {
+      await http.patch(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      emp.editFullname(oldFullname);
       rethrow;
     }
   }
@@ -44,21 +92,34 @@ class EmployeesProvider with ChangeNotifier {
         .toList();
   }
 
-  void addEmployee(String fullName) {
-    _employees.add(EmployeeProvider(
-        username: UniqueKey().toString(),
-        fullName: fullName,
-        secWord: UniqueKey().toString()));
+  Future<void> addEmployee(String username, String fullname) async {
+    final emp = EmployeeProvider(
+      username: username,
+      fullName: fullname,
+      isActivated: false,
+    );
+    _employees.add(emp);
     notifyListeners();
+    try {
+      final url = Uri.parse('$host/employees/$token');
+      final body = jsonEncode({"username": username, "fullname": fullname});
+      final response = await http.post(url,
+          headers: {'content-type': 'application/json'}, body: body);
+      if (response.statusCode == 409) {
+        throw HttpException('409');
+      }
+      final data = jsonDecode(response.body);
+      emp.setKey(data["key"]);
+    } catch (err) {
+      _employees.remove(emp);
+      notifyListeners();
+      rethrow;
+    }
   }
 
-  void deleteEmployee(EmployeeProvider e) {
-    _employees.remove(e);
-    notifyListeners();
-  }
-
-  void updateEmployee(String username, String newFullName) {
-    _employees.firstWhere((emp) => emp.username == username).fullName = newFullName;
-    notifyListeners();
-  }
+  // void updateEmployee(String username, String newFullName) {
+  //   _employees.firstWhere((emp) => emp.username == username).fullName =
+  //       newFullName;
+  //   notifyListeners();
+  // }
 }

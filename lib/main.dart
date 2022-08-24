@@ -6,7 +6,6 @@ import 'screens/auth_screen.dart';
 import './screens/projects_overview_screen.dart';
 import 'screens/tasks_overview.dart';
 import './screens/employees_overview_screen.dart';
-import './screens/employee_details.dart';
 
 import './style/style.dart';
 
@@ -30,14 +29,13 @@ class MyApp extends StatelessWidget {
           create: (ctx) => AuthProvider(),
         ),
         ChangeNotifierProxyProvider<AuthProvider, EmployeesProvider>(
-          create: (ctx) => EmployeesProvider(''),
-          update: (ctx, auth, _) =>
-              EmployeesProvider(auth.token == null ? '' : auth.token!),
+          create: (ctx) => EmployeesProvider(),
+          update: (ctx, auth, _) => EmployeesProvider(token: auth.token),
         ),
         ChangeNotifierProxyProvider<AuthProvider, ProjectsProvider>(
-          create: (ctx) => ProjectsProvider(''),
+          create: (ctx) => ProjectsProvider(),
           update: (ctx, auth, _) =>
-              ProjectsProvider(auth.token == null ? '' : auth.token!),
+              ProjectsProvider(token:  auth.token),
         )
       ],
       child: Consumer<AuthProvider>(
@@ -71,8 +69,6 @@ class MyApp extends StatelessWidget {
                 ProjectTaskScreen.routeName: (context) =>
                     const ProjectTaskScreen(),
                 EmployeesScreen.routeName: (context) => const EmployeesScreen(),
-                EmployeeDetailsScreen.routeName: (context) =>
-                    const EmployeeDetailsScreen()
               },
               debugShowCheckedModeBanner: false,
             )),

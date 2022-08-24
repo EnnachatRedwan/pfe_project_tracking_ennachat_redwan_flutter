@@ -25,7 +25,7 @@ class _AuthFormState extends State<AuthForm> {
   final passFocus = FocusNode();
   final formKey = GlobalKey<FormState>();
 
-  void _showSnackBar(String message) {
+  void _showSnackBar(String message, {Color color = Style.red}) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -33,7 +33,7 @@ class _AuthFormState extends State<AuthForm> {
           message,
           textAlign: TextAlign.center,
         ),
-        backgroundColor: Style.red,
+        backgroundColor: color,
       ),
     );
   }
@@ -48,8 +48,9 @@ class _AuthFormState extends State<AuthForm> {
         isLoading = true;
       });
       try {
-        await Provider.of<AuthProvider>(context, listen: false)
+        String fullname =await Provider.of<AuthProvider>(context, listen: false)
             .login(username, password);
+        _showSnackBar('$fullname مرحبا', color: Style.green);
       } catch (err) {
         if (err.toString() == '401') {
           _showSnackBar('اسم المستخدم أو كلمة المرور خاطئة');
@@ -128,7 +129,7 @@ class _AuthFormState extends State<AuthForm> {
                 if (value!.isEmpty) {
                   return 'يرجى تقديم كلمة مرور';
                 }
-                if(value.length<5){
+                if (value.length < 5) {
                   return 'يجب أن لا تقل كلمة المرور عن خمس حروف';
                 }
                 if (value.length > 30) {

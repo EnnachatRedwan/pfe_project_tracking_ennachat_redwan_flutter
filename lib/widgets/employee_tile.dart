@@ -2,33 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/emplyee.dart';
-import '../providers/emplyees.dart';
 import '../style/style.dart';
 import '../screens/employee_details.dart';
 
 class EmployeeTile extends StatelessWidget {
   const EmployeeTile({
     Key? key,
+    required this.delete,
   }) : super(key: key);
+
+  final Function delete;
 
   @override
   Widget build(BuildContext context) {
     final EmployeeProvider employee = Provider.of<EmployeeProvider>(context);
+    final color = employee.isActivated ? Style.greeishYellow : Style.grey;
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-              builder: (context) => ChangeNotifierProvider.value(
-                    value: employee,
-                    child: const EmployeeDetailsScreen(),
-                  ),
-              settings: const RouteSettings(arguments: Style.greeishYellow)),
+            builder: (context) => ChangeNotifierProvider.value(
+              value: employee,
+              child: EmployeeDetailsScreen(
+                delete: delete,
+              ),
+            ),
+          ),
         );
       },
       child: Dismissible(
         onDismissed: (_) {
-          Provider.of<EmployeesProvider>(context, listen: false)
-              .deleteEmployee(employee);
+          delete();
         },
         background: Container(
           decoration: const BoxDecoration(
@@ -51,10 +55,10 @@ class EmployeeTile extends StatelessWidget {
         direction: DismissDirection.endToStart,
         key: Key(DateTime.now().toString()),
         child: ListTile(
-          leading: const CircleAvatar(
-            backgroundColor: Style.greeishYellow,
+          leading: CircleAvatar(
+            backgroundColor: color,
             radius: 30,
-            child: Icon(
+            child: const Icon(
               Icons.person,
               color: Style.backgroundColor,
             ),

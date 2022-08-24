@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/emplyee.dart';
 import '../style/style.dart';
 import '../widgets/appbar.dart';
 import '../widgets/drawer.dart';
@@ -56,15 +57,25 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   }
 
   void _openEmployeeBottomSheet(BuildContext context) {
+    final fullNameNode = FocusNode();
     String fullName = '';
+    String username = '';
     final formKey = GlobalKey<FormState>();
 
-    void save() {
+    void save() async {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
-        Provider.of<EmployeesProvider>(context, listen: false)
-            .addEmployee(fullName);
         Navigator.of(context).pop();
+        try {
+          await Provider.of<EmployeesProvider>(context, listen: false)
+              .addEmployee(username, fullName);
+        } catch (err) {
+          if (err.toString() == '409') {
+            _showSnackBar('اسم مستخدم مستعمل من قبل');
+          } else {
+            _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+          }
+        }
       }
     }
 
@@ -83,18 +94,40 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                   children: [
                     TextFormField(
                       decoration: const InputDecoration(
-                        labelText: 'الاسم الكامل',
+                        labelText: 'اسم االمستخدم',
                       ),
                       textDirection: TextDirection.ltr,
                       autofocus: true,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'يرجى تقديم اسم مستخدم صالح';
+                        }
+                        if (value.length > 30) {
+                          return 'يجب ألا يزيد الاسم عن 30 حرفًا';
+                        }
+                        return null;
+                      },
+                      onFieldSubmitted: (_) {
+                        fullNameNode.requestFocus();
+                      },
+                      onSaved: (value) {
+                        username = value!;
+                      },
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'الاسم الكامل',
+                      ),
+                      textDirection: TextDirection.ltr,
+                      focusNode: fullNameNode,
                       onFieldSubmitted: (_) => save(),
-                      maxLength: 50,
+                      maxLength: 30,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'يرجى تقديم اسم كامل صالح';
                         }
-                        if (value.length > 50) {
-                          return 'يجب ألا يزيد الاسم الكامل عن 50 حرفًا';
+                        if (value.length > 30) {
+                          return 'يجب ألا يزيد الاسم الكامل عن 30 حرفًا';
                         }
                         return null;
                       },
@@ -126,6 +159,15 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   }
 
   String employeesToSearch = '';
+
+  void delete(EmployeeProvider emp) async {
+    try {
+      await Provider.of<EmployeesProvider>(context, listen: false)
+          .deleteEmployee(emp);
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -186,7 +228,10 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
                           value:
                               employeesProvider.employees(employeesToSearch)[i],
-                          child: const EmployeeTile(),
+                          child: EmployeeTile(
+                            delete: () => delete(employeesProvider
+                                .employees(employeesToSearch)[i]),
+                          ),
                         ),
                         itemCount: employeesProvider
                             .employees(employeesToSearch)
