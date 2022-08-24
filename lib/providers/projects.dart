@@ -219,7 +219,9 @@ class ProjectsProvider with ChangeNotifier {
     }
     return _projects
         .where((p) =>
-            !p.isArchived && p.title.toLowerCase().contains(tag.toLowerCase()))
+            !p.isArchived &&
+                p.title.toLowerCase().contains(tag.toLowerCase()) ||
+            p.type.toLowerCase().contains(tag.toLowerCase()))
         .toList();
   }
 
@@ -233,7 +235,8 @@ class ProjectsProvider with ChangeNotifier {
     }
     return _projects
         .where((p) =>
-            p.isArchived && p.title.toLowerCase().contains(tag.toLowerCase()))
+            p.isArchived && p.title.toLowerCase().contains(tag.toLowerCase()) ||
+            p.type.toLowerCase().contains(tag.toLowerCase()))
         .toList();
   }
 
