@@ -1,13 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import './task.dart';
 import '../models/state.dart';
+import '../models/host_ip.dart';
 
 class TasksProvider with ChangeNotifier {
   TasksProvider({
     required this.tasks,
+    required this.token,
+    required this.projectId,
   });
   final List<TaskProvider> tasks;
+  String? token;
+  final int projectId;
 
   double get level {
     if (tasks.isEmpty) {
@@ -21,6 +29,48 @@ class TasksProvider with ChangeNotifier {
   // List<TaskProvider> get notArchivedTasks{
   //   return tasks.where((t) => !t.isArchived).toList();
   // }
+
+  Future<void> fetchTasks() async {
+    tasks.clear();
+    final url = Uri.parse('$host/tasks/$projectId/$token');
+    final response = await http.get(url);
+    final data = jsonDecode(response.body);
+    for (var t in data) {
+      tasks.add(
+        TaskProvider(
+          id: t["id_task"],
+          title: t["title"],
+          state:
+              t["state"] == 1 ? ProgressState.inProgress : ProgressState.done,
+          projectId: t["project_id"],
+          steps: [],
+          employees: [],
+          addedIn: DateTime.parse(t["addingDate"]),
+          startingDate: t["startingDate"],
+          endingDate: t["endingDate"],
+          isStarted: t["isStarted"] == 1,
+        ),
+      );
+    }
+    notifyListeners();
+  }
+
+  Future<void> deleteTask(TaskProvider task) async {
+
+  int index = tasks.indexOf(task);
+    tasks.remove(task);
+    notifyListeners();
+    try {
+      final url = Uri.parse('$host/tasks/$token');
+      final body=jsonEncode({"id":task.id});
+      await http.delete(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      tasks.insert(index, task);
+      notifyListeners();
+      rethrow;
+    }
+  }
 
   List<TaskProvider> notArchivedTasks(String tag) {
     if (tag.isEmpty) {
@@ -46,19 +96,16 @@ class TasksProvider with ChangeNotifier {
         .toList();
   }
 
-  void deleteTask(TaskProvider t) {
-    tasks.remove(t);
-    notifyListeners();
-  }
 
   void addTask(String title, DateTime addedIn) {
     tasks.add(TaskProvider(
-        id: UniqueKey().toString(),
+        id: 1,
         title: title,
         state: ProgressState.inProgress,
         steps: [],
         employees: [],
-        addedIn: addedIn));
+        addedIn: addedIn,
+        projectId: 1));
     notifyListeners();
   }
 

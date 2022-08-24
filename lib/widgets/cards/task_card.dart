@@ -10,9 +10,15 @@ import '../../providers/tasks.dart';
 import '../../screens/task_details_screen.dart';
 import '../../models/period.dart';
 import '../../providers/project.dart';
+import '../../providers/auth.dart';
 
 class TaskCard extends StatelessWidget {
-  const TaskCard({Key? key}) : super(key: key);
+  const TaskCard({
+    Key? key,
+    required this.delete,
+  }) : super(key: key);
+
+  final Function delete;
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +44,11 @@ class TaskCard extends StatelessWidget {
         ),
       ),
       onDismissed: (_) {
-        tasks.deleteTask(task);
+        delete();
       },
-      direction: DismissDirection.startToEnd,
+      direction: Provider.of<AuthProvider>(context).isLeader
+          ? DismissDirection.startToEnd
+          : DismissDirection.none,
       key: Key(DateTime.now().toString()),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -62,7 +70,7 @@ class TaskCard extends StatelessWidget {
                         ChangeNotifierProvider.value(value: tasks),
                         ChangeNotifierProvider.value(value: project),
                       ],
-                      child: const TaskDetailsScreen(),
+                      child:TaskDetailsScreen(delete: delete,),
                     ),
                   ),
                 )

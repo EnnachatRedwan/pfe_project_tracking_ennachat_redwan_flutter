@@ -12,12 +12,12 @@ class ApplicationAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Image.asset(
-        'assets/images/MoroccanKingdom.png',
-        width: 40,
-        height: 40,
-      ),
-      centerTitle: true,
+      // title: Image.asset(
+      //   'assets/images/MoroccanKingdom.png',
+      //   width: 40,
+      //   height: 40,
+      // ),
+      // centerTitle: true,
       actions: [
         if (acts != null) ...acts!.map((act) => act).toList(),
         Center(

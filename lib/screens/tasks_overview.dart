@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_project_tracking_ennachat_redwan/providers/task.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' as intl;
 
+import '../providers/auth.dart';
 import '../widgets/appbar.dart';
 import '../widgets/cards/task_card.dart';
 import '../widgets/search_banner.dart';
@@ -18,6 +20,42 @@ class ProjectTaskScreen extends StatefulWidget {
 }
 
 class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
+  void _showSnackBar(String message, {Color color = Style.red}) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: color,
+      ),
+    );
+  }
+
+  bool isLoading = false;
+  void fetchTasks() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await Provider.of<TasksProvider>(context, listen: false).fetchTasks();
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+      rethrow;
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    fetchTasks();
+    super.initState();
+  }
+
   void _openTaskBottomSheet(BuildContext context) {
     String taskTitle = '';
     DateTime addedIn = DateTime.now();
@@ -123,6 +161,14 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
 
   String taskToSearch = '';
 
+  void deleteTask(TaskProvider task) async {
+    try {
+      await Provider.of<TasksProvider>(context, listen: false).deleteTask(task);
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final TasksProvider tasksProvider = Provider.of<TasksProvider>(context);
@@ -133,8 +179,11 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
     }
 
     return Scaffold(
-      appBar: const ApplicationAppBar(
+      appBar: ApplicationAppBar(
         title: 'المهام',
+        acts: [
+          IconButton(onPressed: fetchTasks, icon: const Icon(Icons.refresh))
+        ],
       ),
       body: Directionality(
         textDirection: TextDirection.rtl,
@@ -143,33 +192,46 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
             SearchBanner(
               search: search,
             ),
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
-                  maxCrossAxisExtent: 650,
-                  childAspectRatio: 3 / 2,
-                ),
-                itemCount: tasksProvider.notArchivedTasks(taskToSearch).length,
-                itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                  value: tasksProvider.notArchivedTasks(taskToSearch)[i],
-                  child: const TaskCard(),
-                ),
-              ),
-            ),
+            isLoading
+                ? const Expanded(
+                    child: Center(child: CircularProgressIndicator()))
+                : Expanded(
+                    child: GridView.builder(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        mainAxisSpacing: 15,
+                        crossAxisSpacing: 15,
+                        maxCrossAxisExtent: 650,
+                        childAspectRatio: 3 / 2,
+                      ),
+                      itemCount:
+                          tasksProvider.notArchivedTasks(taskToSearch).length,
+                      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                        value: tasksProvider.notArchivedTasks(taskToSearch)[i],
+                        child: TaskCard(
+                          delete: () => deleteTask(
+                            tasksProvider.notArchivedTasks(taskToSearch)[i],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _openTaskBottomSheet(context),
-        backgroundColor: Style.primaryColor,
-        child: const Icon(
-          Icons.add,
-          color: Style.secondaryColor,
-        ),
-      ),
+      floatingActionButton:
+          Provider.of<AuthProvider>(context, listen: false).isLeader
+              ? FloatingActionButton(
+                  onPressed: () => _openTaskBottomSheet(context),
+                  backgroundColor: Style.primaryColor,
+                  child: const Icon(
+                    Icons.add,
+                    color: Style.secondaryColor,
+                  ),
+                )
+              : null,
     );
   }
 }

@@ -10,9 +10,15 @@ import '../widgets/level_bar.dart';
 import '../widgets/step_tile.dart';
 import '../providers/tasks.dart';
 import './choose_employee_screen.dart';
+import '../providers/auth.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
-  const TaskDetailsScreen({Key? key}) : super(key: key);
+  const TaskDetailsScreen({
+    Key? key,
+    required this.delete,
+  }) : super(key: key);
+
+  final Function delete;
 
   void _openTaskBottomSheet(BuildContext context) {
     final descNode = FocusNode();
@@ -79,9 +85,9 @@ class TaskDetailsScreen extends StatelessWidget {
                           if (value!.isEmpty) {
                             return 'يرجى تقديم وصف صحيح';
                           }
-                          if(value.length>150){
-                          return 'يجب ألا يزيد وصف الخطوة عن 50 حرفًا';
-                        }
+                          if (value.length > 150) {
+                            return 'يجب ألا يزيد وصف الخطوة عن 50 حرفًا';
+                          }
                           return null;
                         },
                         onFieldSubmitted: (_) {
@@ -123,42 +129,43 @@ class TaskDetailsScreen extends StatelessWidget {
       appBar: ApplicationAppBar(
         title: 'مهمة',
         acts: [
-          PopupMenuButton(
-            itemBuilder: (ctx) => const [
-              PopupMenuItem<int>(
-                value: 0,
-                child: Text('حذف'),
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: Text('إضافة خطوة'),
-              ),
-              PopupMenuItem(
-                value: 2,
-                child: Text('إضافة موظفين'),
-              ),
-            ],
-            onSelected: (val) {
-              switch (val) {
-                case 0:
-                  Provider.of<TasksProvider>(context, listen: false)
-                      .deleteTask(task);
-                  Navigator.of(context).pop();
-                  break;
-                case 1:
-                  _openTaskBottomSheet(context);
-                  break;
-                case 2:
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (ctx) => ChangeNotifierProvider.value(
-                          value: task, child: const ChooseEmployeesScreen()),
-                    ),
-                  );
-                  break;
-              }
-            },
-          )
+          if (Provider.of<AuthProvider>(context).isLeader)
+            PopupMenuButton(
+              itemBuilder: (ctx) => const [
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: Text('حذف'),
+                ),
+                PopupMenuItem(
+                  value: 1,
+                  child: Text('إضافة خطوة'),
+                ),
+                PopupMenuItem(
+                  value: 2,
+                  child: Text('إضافة موظفين'),
+                ),
+              ],
+              onSelected: (val) {
+                switch (val) {
+                  case 0:
+                    Navigator.of(context).pop();
+                    delete();
+
+                    break;
+                  case 1:
+                    _openTaskBottomSheet(context);
+                    break;
+                  case 2:
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => ChangeNotifierProvider.value(
+                            value: task, child: const ChooseEmployeesScreen()),
+                      ),
+                    );
+                    break;
+                }
+              },
+            )
         ],
       ),
       body: Center(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/auth.dart';
 import '../style/style.dart';
 import './button.dart';
 import '../providers/task.dart';
@@ -18,7 +19,8 @@ class TaskButtons extends StatelessWidget {
         Provider.of<ProjectProvider>(context).isStarted;
     return Row(
       children: [
-        if (!task.isStarted)
+        if (!task.isStarted &&
+            Provider.of<AuthProvider>(context, listen: false).isLeader)
           Expanded(
             child: ApplicationButton(
               color: isProjectStarted ? Style.green : Style.grey,
@@ -52,9 +54,10 @@ class TaskButtons extends StatelessWidget {
               verPad: 5,
             ),
           ),
-        const SizedBox(
-          width: 10,
-        ),
+        if (Provider.of<AuthProvider>(context, listen: false).isLeader)
+          const SizedBox(
+            width: 10,
+          ),
         Expanded(
           child: ApplicationButton(
             color: Style.grey,

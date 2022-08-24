@@ -8,6 +8,7 @@ import '../level_bar.dart';
 import '../../providers/project.dart';
 import '../../screens/tasks_overview.dart';
 import '../../models/period.dart';
+import '../../providers/auth.dart';
 
 class ProjectCard extends StatelessWidget {
   const ProjectCard({
@@ -48,7 +49,7 @@ class ProjectCard extends StatelessWidget {
           ],
         ),
       ),
-      direction: DismissDirection.startToEnd,
+      direction: Provider.of<AuthProvider>(context).isLeader? DismissDirection.startToEnd:DismissDirection.none,
       key: Key(project.id.toString()),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

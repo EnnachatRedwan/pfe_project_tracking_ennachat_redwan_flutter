@@ -13,15 +13,19 @@ class TaskProvider with ChangeNotifier {
     required this.steps,
     required this.employees,
     required this.addedIn,
+    required this.projectId,
     this.startingDate,
     this.endingDate,
+    this.isStarted = false,
   });
 
-  final String id;
+  final int id;
 
   final List<EmployeeProvider> employees;
 
   final List<StepProvider> steps;
+
+  final int projectId;
 
   ProgressState state;
 
@@ -35,11 +39,12 @@ class TaskProvider with ChangeNotifier {
 
   bool isArchived = false;
 
-  bool isStarted = false;
+  bool isStarted;
 
   List<EmployeeProvider> getEmployees(EmployeesProvider emp) {
     List<EmployeeProvider> emps = [];
-    emps.addAll(emp.employees('').where((element) => !employees.contains(element)));
+    emps.addAll(
+        emp.employees('').where((element) => !employees.contains(element)));
     for (var element in employees) {
       emps.insert(0, element);
     }
@@ -60,7 +65,7 @@ class TaskProvider with ChangeNotifier {
       endingDate = DateTime.now();
     } else {
       state = ProgressState.inProgress;
-      endingDate=null;
+      endingDate = null;
     }
   }
 
@@ -82,7 +87,7 @@ class TaskProvider with ChangeNotifier {
   }
 
   void addTaskStep(String title, String desc) {
-    steps.add(StepProvider(UniqueKey().toString(),title, desc));
+    steps.add(StepProvider(UniqueKey().toString(), title, desc));
     notifyListeners();
   }
 
@@ -96,20 +101,20 @@ class TaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateStep(String id,String newTitle,String newDesc){
-    final stp=steps.firstWhere((step) => step.id==id);
-    stp.title=newTitle;
-    stp.details=newDesc;
+  void updateStep(String id, String newTitle, String newDesc) {
+    final stp = steps.firstWhere((step) => step.id == id);
+    stp.title = newTitle;
+    stp.details = newDesc;
     notifyListeners();
   }
 
-  void archive(){
-    isArchived=true;
+  void archive() {
+    isArchived = true;
     notifyListeners();
   }
 
-  void unArchive(){
-    isArchived=false;
+  void unArchive() {
+    isArchived = false;
     notifyListeners();
   }
 }

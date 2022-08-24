@@ -14,11 +14,12 @@ class ApplicationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
     return Drawer(
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 30),
         children: [
-          DraweItem(
+          if(auth.isLeader) DraweItem(
             title: 'الموظفين',
             icon: Icons.people,
             action: () => Navigator.of(context)
@@ -39,8 +40,7 @@ class ApplicationDrawer extends StatelessWidget {
           DraweItem(
             title: 'تسجيل خروج',
             icon: Icons.logout,
-            action: () =>
-                Provider.of<AuthProvider>(context, listen: false).logout(),
+            action: () => auth.logout(),
           ),
         ],
       ),

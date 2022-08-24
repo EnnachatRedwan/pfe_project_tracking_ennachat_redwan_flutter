@@ -118,18 +118,22 @@ class ProjectsProvider with ChangeNotifier {
       for (var p in data) {
         _projects.add(
           ProjectProvider(
-            id: p["id_prj"],
-            title: p["title"],
-            isStarted: p["isStarted"]==1,
-            state: p["state"] == 1
-                ? ProgressState.inProgress
-                : ProgressState.done,
-            type: p["type"],
-            tasks: TasksProvider(tasks: []),
-            createdIn: DateTime.parse(p["addingDate"]),
-            startingDate: p["startingDate"]!=null? DateTime.parse(p["startingDate"]):null,
-            endingDate: p["endingDate"]!=null? DateTime.parse(p["endingDate"]):null
-          ),
+              id: p["id_prj"],
+              title: p["title"],
+              isStarted: p["isStarted"] == 1,
+              state: p["state"] == 1
+                  ? ProgressState.inProgress
+                  : ProgressState.done,
+              type: p["type"],
+              tasks: TasksProvider(
+                  token: token, projectId: p["id_prj"], tasks: []),
+              createdIn: DateTime.parse(p["addingDate"]),
+              startingDate: p["startingDate"] != null
+                  ? DateTime.parse(p["startingDate"])
+                  : null,
+              endingDate: p["endingDate"] != null
+                  ? DateTime.parse(p["endingDate"])
+                  : null),
         );
       }
       notifyListeners();
@@ -144,7 +148,7 @@ class ProjectsProvider with ChangeNotifier {
       title: title,
       state: ProgressState.inProgress,
       type: type,
-      tasks: TasksProvider(tasks: []),
+      tasks: TasksProvider(token: token, projectId: 0, tasks: []),
       createdIn: createdIn,
     );
     _projects.add(initialProject);
@@ -167,7 +171,7 @@ class ProjectsProvider with ChangeNotifier {
         title: title,
         state: ProgressState.inProgress,
         type: type,
-        tasks: TasksProvider(tasks: []),
+        tasks: TasksProvider(token: token, projectId: id, tasks: []),
         createdIn: createdIn,
       );
       _projects.remove(initialProject);
