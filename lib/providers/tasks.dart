@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart' as intl;
 
 import './task.dart';
 import '../models/state.dart';
@@ -36,6 +37,7 @@ class TasksProvider with ChangeNotifier {
     final response = await http.get(url);
     final data = jsonDecode(response.body);
     for (var t in data) {
+
       tasks.add(
         TaskProvider(
           id: t["id_task"],
@@ -46,8 +48,11 @@ class TasksProvider with ChangeNotifier {
           steps: [],
           employees: [],
           addedIn: DateTime.parse(t["addingDate"]),
-          startingDate: t["startingDate"],
-          endingDate: t["endingDate"],
+          startingDate: t["startingDate"] != null
+              ? DateTime.parse(t["startingDate"])
+              : null,
+          endingDate:
+              t["endingDate"] != null ? DateTime.parse(t["endingDate"]) : null,
           isStarted: t["isStarted"] == 1,
         ),
       );
@@ -55,19 +60,75 @@ class TasksProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteTask(TaskProvider task) async {
+  Future<void> addTask(String title, DateTime createdIn) async {
+    final TaskProvider initialTask = TaskProvider(
+      id: 0,
+      title: title,
+      state: ProgressState.inProgress,
+      addedIn: createdIn,
+      projectId: projectId,
+      steps: [],
+      employees: [],
+    );
+    tasks.add(initialTask);
+    int index = tasks.indexOf(initialTask);
+    notifyListeners();
 
-  int index = tasks.indexOf(task);
+    final url = Uri.parse('$host/tasks/$token');
+    final body = jsonEncode({
+      "title": title,
+      "addingDate": intl.DateFormat('yyyy-MM-dd').format(createdIn),
+      "projectId": projectId,
+    });
+
+    try {
+      final response = await http.post(url,
+          headers: {'content-type': 'application/json'}, body: body);
+      final id = jsonDecode(response.body)[0]["id"];
+      final TaskProvider t = TaskProvider(
+        id: id,
+        title: title,
+        state: ProgressState.inProgress,
+        addedIn: createdIn,
+        projectId: projectId,
+        steps: [],
+        employees: [],
+      );
+      tasks.remove(initialTask);
+      tasks.insert(index, t);
+    } catch (err) {
+      tasks.remove(initialTask);
+      rethrow;
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteTask(TaskProvider task) async {
+    int index = tasks.indexOf(task);
     tasks.remove(task);
     notifyListeners();
     try {
       final url = Uri.parse('$host/tasks/$token');
-      final body=jsonEncode({"id":task.id});
+      final body = jsonEncode({"id": task.id});
       await http.delete(url,
           headers: {'content-type': 'application/json'}, body: body);
     } catch (err) {
       tasks.insert(index, task);
       notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<void> startProject(TaskProvider task) async {
+    task.start();
+    final url = Uri.parse('$host/tasks/start-task/$token');
+    final body = jsonEncode({"id": task.id});
+    try {
+      await http.post(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      task.rollStartBack();
       rethrow;
     }
   }
@@ -96,18 +157,17 @@ class TasksProvider with ChangeNotifier {
         .toList();
   }
 
-
-  void addTask(String title, DateTime addedIn) {
-    tasks.add(TaskProvider(
-        id: 1,
-        title: title,
-        state: ProgressState.inProgress,
-        steps: [],
-        employees: [],
-        addedIn: addedIn,
-        projectId: 1));
-    notifyListeners();
-  }
+  // void addTask(String title, DateTime addedIn) {
+  //   tasks.add(TaskProvider(
+  //       id: 1,
+  //       title: title,
+  //       state: ProgressState.inProgress,
+  //       steps: [],
+  //       employees: [],
+  //       addedIn: addedIn,
+  //       projectId: 1));
+  //   notifyListeners();
+  // }
 
   void refresh() {
     notifyListeners();

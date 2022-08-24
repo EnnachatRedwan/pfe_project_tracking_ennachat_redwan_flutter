@@ -62,12 +62,16 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
     final dateController = TextEditingController();
     final formKey = GlobalKey<FormState>();
 
-    void save() {
+    void save() async {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
-        Provider.of<TasksProvider>(context, listen: false)
-            .addTask(taskTitle, addedIn);
         Navigator.of(context).pop();
+        try {
+          await Provider.of<TasksProvider>(context, listen: false)
+              .addTask(taskTitle, addedIn);
+        } catch (err) {
+          _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+        }
       }
     }
 

@@ -14,6 +14,19 @@ class TaskButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _showSnackBar(String message) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Style.red,
+        ),
+      );
+    }
+
     final TaskProvider task = Provider.of<TaskProvider>(context);
     final bool isProjectStarted =
         Provider.of<ProjectProvider>(context).isStarted;
@@ -26,9 +39,12 @@ class TaskButtons extends StatelessWidget {
               color: isProjectStarted ? Style.green : Style.grey,
               title: 'بدء',
               isLoading: false,
-              onClick: () {
-                if (isProjectStarted) {
-                  task.start();
+              onClick: () async {
+                try {
+                  await Provider.of<TasksProvider>(context, listen: false)
+                      .startProject(task);
+                } catch (err) {
+                  _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
                 }
               },
               verPad: 5,

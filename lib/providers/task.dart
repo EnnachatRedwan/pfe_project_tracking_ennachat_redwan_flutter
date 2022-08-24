@@ -76,6 +76,13 @@ class TaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
+    void rollStartBack(){
+        isStarted = false;
+    updateState();
+    startingDate=null;
+    notifyListeners();
+  }
+
   void refresh() {
     updateState();
     notifyListeners();
