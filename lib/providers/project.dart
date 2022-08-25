@@ -12,6 +12,7 @@ class ProjectProvider with ChangeNotifier {
     required this.tasks,
     required this.createdIn,
     this.isStarted=false,
+    this.isArchived=false,
     this.startingDate,
     this.endingDate,
   });

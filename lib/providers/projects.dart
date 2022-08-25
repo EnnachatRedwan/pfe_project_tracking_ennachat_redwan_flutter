@@ -125,6 +125,7 @@ class ProjectsProvider with ChangeNotifier {
                   ? ProgressState.inProgress
                   : ProgressState.done,
               type: p["type"],
+              isArchived: p["archived"]==1,
               tasks: TasksProvider(
                   token: token, projectId: p["id_prj"], tasks: []),
               createdIn: DateTime.parse(p["addingDate"]),
