@@ -9,7 +9,12 @@ import '../style/style.dart';
 import 'button.dart';
 
 class ProjectButtons extends StatelessWidget {
-  const ProjectButtons({Key? key}) : super(key: key);
+  const ProjectButtons({
+    Key? key,
+    required this.archive,
+  }) : super(key: key);
+
+  final Function archive;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,8 @@ class ProjectButtons extends StatelessWidget {
     final ProjectProvider project = Provider.of<ProjectProvider>(context);
     return Row(
       children: [
-        if (!project.isStarted&&Provider.of<AuthProvider>(context, listen: false).isLeader)
+        if (!project.isStarted &&
+            Provider.of<AuthProvider>(context, listen: false).isLeader)
           Expanded(
             child: ApplicationButton(
               color: Style.green,
@@ -74,10 +80,7 @@ class ProjectButtons extends StatelessWidget {
             isLoading: false,
             color: Style.grey,
             title: 'أرشيف',
-            onClick: () {
-              project.archive();
-              Provider.of<ProjectsProvider>(context, listen: false).refresh();
-            },
+            onClick: () => archive(),
             verPad: 5,
           ),
         ),

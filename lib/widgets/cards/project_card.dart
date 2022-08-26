@@ -14,13 +14,14 @@ class ProjectCard extends StatelessWidget {
   const ProjectCard({
     Key? key,
     required this.delete,
+    required this.archive,
   }) : super(key: key);
 
   final Function delete;
+  final Function archive;
 
   @override
   Widget build(BuildContext context) {
-
     final ProjectProvider project = Provider.of<ProjectProvider>(context);
     return Dismissible(
       // onDismissed: (_) async {
@@ -31,7 +32,7 @@ class ProjectCard extends StatelessWidget {
       //     _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
       //   }
       // },
-      onDismissed: (_)=>delete(),
+      onDismissed: (_) => delete(),
       background: Container(
         decoration: const BoxDecoration(
           color: Style.red,
@@ -49,7 +50,9 @@ class ProjectCard extends StatelessWidget {
           ],
         ),
       ),
-      direction: Provider.of<AuthProvider>(context).isLeader? DismissDirection.startToEnd:DismissDirection.none,
+      direction: Provider.of<AuthProvider>(context).isLeader
+          ? DismissDirection.startToEnd
+          : DismissDirection.none,
       key: Key(project.id.toString()),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -136,7 +139,7 @@ class ProjectCard extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const ProjectButtons(),
+             ProjectButtons(archive:archive),
             ],
           ),
         ),

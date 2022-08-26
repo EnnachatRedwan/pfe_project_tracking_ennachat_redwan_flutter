@@ -191,6 +191,9 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
   String projectToSearch = '';
 
+  final GlobalKey<ScaffoldMessengerState> _scf =
+      GlobalKey<ScaffoldMessengerState>();
+
   @override
   Widget build(BuildContext context) {
     final ProjectsProvider projectsProvider =
@@ -210,7 +213,17 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       }
     }
 
+    void archive(ProjectProvider project) async {
+      try {
+        await Provider.of<ProjectsProvider>(context, listen: false)
+            .archiveProject(project);
+      } catch (err) {
+        _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+      }
+    }
+
     return Scaffold(
+      key: _scf,
       appBar: ApplicationAppBar(
         title: 'المشاريع',
         acts: [
@@ -245,6 +258,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                             .notArchivedProjects(projectToSearch)[i],
                         child: ProjectCard(
                           delete: () => deleteProject(projectsProvider
+                              .notArchivedProjects(projectToSearch)[i]),
+                          archive: () => archive(projectsProvider
                               .notArchivedProjects(projectToSearch)[i]),
                         ),
                       ),

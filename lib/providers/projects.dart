@@ -125,7 +125,7 @@ class ProjectsProvider with ChangeNotifier {
                   ? ProgressState.inProgress
                   : ProgressState.done,
               type: p["type"],
-              isArchived: p["archived"]==1,
+              isArchived: p["archived"] == 1,
               tasks: TasksProvider(
                   token: token, projectId: p["id_prj"], tasks: []),
               createdIn: DateTime.parse(p["addingDate"]),
@@ -210,6 +210,36 @@ class ProjectsProvider with ChangeNotifier {
           headers: {'content-type': 'application/json'}, body: body);
     } catch (err) {
       p.rollStartBack();
+      rethrow;
+    }
+  }
+
+  Future<void> archiveProject(ProjectProvider p) async {
+    p.archive();
+    notifyListeners();
+    final url = Uri.parse('$host/projects/archive/$token');
+    final body = jsonEncode({"id": p.id});
+    try {
+      await http.post(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      p.unArchive();
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+    Future<void> unarchiveProject(ProjectProvider p) async {
+    p.unArchive();
+    notifyListeners();
+    final url = Uri.parse('$host/projects/unarchive/$token');
+    final body = jsonEncode({"id": p.id});
+    try {
+      await http.post(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      p.archive();
+      notifyListeners();
       rethrow;
     }
   }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../providers/projects.dart';
+import '../providers/project.dart';
 import '../widgets/cards/project_archive_card.dart';
-import 'package:provider/provider.dart';
+import '../style/style.dart';
 
 class ProjectArchiveScreen extends StatelessWidget {
   const ProjectArchiveScreen({
@@ -14,6 +16,28 @@ class ProjectArchiveScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _showSnackBar(String message) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Style.red,
+        ),
+      );
+    }
+
+    void unarchive(ProjectProvider project) async {
+      try {
+        await Provider.of<ProjectsProvider>(context, listen: false)
+            .unarchiveProject(project);
+      } catch (err) {
+        _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+      }
+    }
+
     final projectsProvider = Provider.of<ProjectsProvider>(context);
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -29,7 +53,10 @@ class ProjectArchiveScreen extends StatelessWidget {
         itemCount: projectsProvider.archivedProjects(projectsToSearch).length,
         itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
           value: projectsProvider.archivedProjects(projectsToSearch)[i],
-          child: const ProjectArchiveCard(),
+          child: ProjectArchiveCard(
+            unarchive: () => unarchive(
+                projectsProvider.archivedProjects(projectsToSearch)[i]),
+          ),
         ),
       ),
     );

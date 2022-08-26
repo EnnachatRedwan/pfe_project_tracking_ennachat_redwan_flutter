@@ -66,7 +66,7 @@ class ProjectProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void disArchive(){
+  void unArchive(){
     isArchived=false;
     notifyListeners();
   }

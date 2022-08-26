@@ -5,12 +5,16 @@ import 'package:provider/provider.dart';
 import '../../style/style.dart';
 import '../button.dart';
 import '../level_bar.dart';
-import '../../providers/projects.dart';
 import '../../providers/project.dart';
 import '../../models/period.dart';
 
 class ProjectArchiveCard extends StatelessWidget {
-  const ProjectArchiveCard({Key? key}) : super(key: key);
+  const ProjectArchiveCard({
+    Key? key,
+    required this.unarchive,
+  }) : super(key: key);
+
+  final Function unarchive;
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +86,7 @@ class ProjectArchiveCard extends StatelessWidget {
             color: Style.secondaryColor,
             isLoading: false,
             title: 'إرجاع',
-            onClick: () {
-              project.disArchive();
-              Provider.of<ProjectsProvider>(context, listen: false).refresh();
-            },
+            onClick: () => unarchive(),
             verPad: 5,
           ),
         ],
