@@ -229,7 +229,7 @@ class ProjectsProvider with ChangeNotifier {
     }
   }
 
-    Future<void> unarchiveProject(ProjectProvider p) async {
+  Future<void> unarchiveProject(ProjectProvider p) async {
     p.unArchive();
     notifyListeners();
     final url = Uri.parse('$host/projects/unarchive/$token');
@@ -239,6 +239,21 @@ class ProjectsProvider with ChangeNotifier {
           headers: {'content-type': 'application/json'}, body: body);
     } catch (err) {
       p.archive();
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<void> unarchiveTask(TaskProvider t) async {
+    t.unArchive();
+    notifyListeners();
+    final url = Uri.parse('$host/tasks/unarchive/$token');
+    final body = jsonEncode({"id": t.id});
+    try {
+      await http.post(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      t.archive();
       notifyListeners();
       rethrow;
     }
@@ -256,9 +271,6 @@ class ProjectsProvider with ChangeNotifier {
         .toList();
   }
 
-  // List<ProjectProvider> get archivedProjects {
-  //   return _projects.where((p) => p.isArchived).toList();
-  // }
 
   List<ProjectProvider> archivedProjects(String tag) {
     if (tag.isEmpty) {

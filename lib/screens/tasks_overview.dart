@@ -173,6 +173,15 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
     }
   }
 
+  void archive(TaskProvider task) async {
+    try {
+      await Provider.of<TasksProvider>(context, listen: false)
+          .archiveTask(task);
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final TasksProvider tasksProvider = Provider.of<TasksProvider>(context);
@@ -216,6 +225,9 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
                         value: tasksProvider.notArchivedTasks(taskToSearch)[i],
                         child: TaskCard(
                           delete: () => deleteTask(
+                            tasksProvider.notArchivedTasks(taskToSearch)[i],
+                          ),
+                          archive: () => archive(
                             tasksProvider.notArchivedTasks(taskToSearch)[i],
                           ),
                         ),

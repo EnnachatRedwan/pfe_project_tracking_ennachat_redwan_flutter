@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_project_tracking_ennachat_redwan/providers/task.dart';
+import 'package:pfe_project_tracking_ennachat_redwan/providers/tasks.dart';
 import 'package:pfe_project_tracking_ennachat_redwan/widgets/cards/task_archive_card.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/projects.dart';
+import '../style/style.dart';
 
 class TaskArchiveScreen extends StatelessWidget {
   const TaskArchiveScreen({
@@ -14,6 +17,28 @@ class TaskArchiveScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _showSnackBar(String message) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Style.red,
+        ),
+      );
+    }
+
+    void unarchive(TaskProvider task) async {
+      try {
+        await Provider.of<ProjectsProvider>(context, listen: false)
+            .unarchiveTask(task);
+      } catch (err) {
+        _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+      }
+    }
+
     final projectsProvider = Provider.of<ProjectsProvider>(context);
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -29,7 +54,9 @@ class TaskArchiveScreen extends StatelessWidget {
         itemCount: projectsProvider.archivedProjectTasks(tasksToSearch).length,
         itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
           value: projectsProvider.archivedProjectTasks(tasksToSearch)[i],
-          child: const TaskArchiveCard(),
+          child: TaskArchiveCard(
+              unarchive: () => unarchive(
+                  projectsProvider.archivedProjectTasks(tasksToSearch)[i])),
         ),
       ),
     );

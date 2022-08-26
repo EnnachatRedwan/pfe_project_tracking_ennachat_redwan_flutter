@@ -10,7 +10,12 @@ import '../providers/project.dart';
 import '../models/state.dart';
 
 class TaskButtons extends StatelessWidget {
-  const TaskButtons({Key? key}) : super(key: key);
+  const TaskButtons({
+    Key? key,
+    required this.archive,
+  }) : super(key: key);
+
+  final Function archive;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +44,14 @@ class TaskButtons extends StatelessWidget {
               color: isProjectStarted ? Style.green : Style.grey,
               title: 'بدء',
               isLoading: false,
-              onClick: () async {
+              onClick: isProjectStarted? () async {
                 try {
                   await Provider.of<TasksProvider>(context, listen: false)
-                      .startProject(task);
+                      .startTask(task);
                 } catch (err) {
                   _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
                 }
-              },
+              }:()=>{},
               verPad: 5,
             ),
           ),
@@ -79,10 +84,7 @@ class TaskButtons extends StatelessWidget {
             color: Style.grey,
             isLoading: false,
             title: 'أرشيف',
-            onClick: () {
-              task.archive();
-              Provider.of<TasksProvider>(context, listen: false).refresh();
-            },
+            onClick: () => archive(),
             verPad: 5,
           ),
         ),

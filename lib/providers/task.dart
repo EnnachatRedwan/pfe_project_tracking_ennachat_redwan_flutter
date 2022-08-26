@@ -14,6 +14,7 @@ class TaskProvider with ChangeNotifier {
     required this.employees,
     required this.addedIn,
     required this.projectId,
+    this.isArchived=false,
     this.startingDate,
     this.endingDate,
     this.isStarted = false,

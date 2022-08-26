@@ -13,7 +13,9 @@ class TasksProvider with ChangeNotifier {
     required this.tasks,
     required this.token,
     required this.projectId,
-  });
+  }){
+    fetchTasks();
+  }
   final List<TaskProvider> tasks;
   String? token;
   final int projectId;
@@ -37,7 +39,6 @@ class TasksProvider with ChangeNotifier {
     final response = await http.get(url);
     final data = jsonDecode(response.body);
     for (var t in data) {
-
       tasks.add(
         TaskProvider(
           id: t["id_task"],
@@ -47,6 +48,7 @@ class TasksProvider with ChangeNotifier {
           projectId: t["project_id"],
           steps: [],
           employees: [],
+          isArchived: t["archived"] == 1,
           addedIn: DateTime.parse(t["addingDate"]),
           startingDate: t["startingDate"] != null
               ? DateTime.parse(t["startingDate"])
@@ -120,7 +122,7 @@ class TasksProvider with ChangeNotifier {
     }
   }
 
-  Future<void> startProject(TaskProvider task) async {
+  Future<void> startTask(TaskProvider task) async {
     task.start();
     final url = Uri.parse('$host/tasks/start-task/$token');
     final body = jsonEncode({"id": task.id});
@@ -129,6 +131,21 @@ class TasksProvider with ChangeNotifier {
           headers: {'content-type': 'application/json'}, body: body);
     } catch (err) {
       task.rollStartBack();
+      rethrow;
+    }
+  }
+
+  Future<void> archiveTask(TaskProvider t) async {
+    t.archive();
+    notifyListeners();
+    final url = Uri.parse('$host/tasks/archive/$token');
+    final body = jsonEncode({"id": t.id});
+    try {
+      await http.post(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      t.unArchive();
+      notifyListeners();
       rethrow;
     }
   }

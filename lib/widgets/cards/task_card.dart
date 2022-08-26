@@ -16,9 +16,11 @@ class TaskCard extends StatelessWidget {
   const TaskCard({
     Key? key,
     required this.delete,
+    required this.archive,
   }) : super(key: key);
 
   final Function delete;
+  final Function archive;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,10 @@ class TaskCard extends StatelessWidget {
                         ChangeNotifierProvider.value(value: tasks),
                         ChangeNotifierProvider.value(value: project),
                       ],
-                      child:TaskDetailsScreen(delete: delete,),
+                      child: TaskDetailsScreen(
+                        delete: delete,
+                        archive: archive,
+                      ),
                     ),
                   ),
                 )
@@ -121,7 +126,9 @@ class TaskCard extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const TaskButtons(),
+              TaskButtons(
+                archive: archive,
+              ),
             ],
           ),
         ),

@@ -10,7 +10,12 @@ import '../../providers/projects.dart';
 import '../../models/period.dart';
 
 class TaskArchiveCard extends StatelessWidget {
-  const TaskArchiveCard({Key? key}) : super(key: key);
+  const TaskArchiveCard({
+    Key? key,
+    required this.unarchive,
+  }) : super(key: key);
+
+  final Function unarchive;
 
   @override
   Widget build(BuildContext context) {
@@ -48,15 +53,15 @@ class TaskArchiveCard extends StatelessWidget {
             ),
           ),
           SizedBox(
-                width: double.infinity,
-                child: Text(
-                  'أضيف في ${DateFormat.yMMMd().format(task.addedIn)}',
-                  style: const TextStyle(
-                    color: Style.grey,
-                    fontSize: 15,
-                  ),
-                ),
+            width: double.infinity,
+            child: Text(
+              'أضيف في ${DateFormat.yMMMd().format(task.addedIn)}',
+              style: const TextStyle(
+                color: Style.grey,
+                fontSize: 15,
               ),
+            ),
+          ),
           if (task.isStarted)
             Center(
               child: LevelBar(
@@ -71,10 +76,7 @@ class TaskArchiveCard extends StatelessWidget {
             color: Style.secondaryColor,
             isLoading: false,
             title: 'إرجاع',
-            onClick: () {
-              task.unArchive();
-              Provider.of<ProjectsProvider>(context, listen: false).refresh();
-            },
+            onClick: ()=>unarchive(),
             verPad: 5,
           ),
         ],

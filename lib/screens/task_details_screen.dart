@@ -13,12 +13,12 @@ import './choose_employee_screen.dart';
 import '../providers/auth.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
-  const TaskDetailsScreen({
-    Key? key,
-    required this.delete,
-  }) : super(key: key);
+  const TaskDetailsScreen(
+      {Key? key, required this.delete, required this.archive, ret})
+      : super(key: key);
 
   final Function delete;
+  final Function archive;
 
   void _openTaskBottomSheet(BuildContext context) {
     final descNode = FocusNode();
@@ -223,9 +223,9 @@ class TaskDetailsScreen extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const Directionality(
+              Directionality(
                 textDirection: TextDirection.rtl,
-                child: TaskButtons(),
+                child: TaskButtons(archive: archive),
               ),
             ],
           ),
