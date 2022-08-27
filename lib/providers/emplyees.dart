@@ -10,15 +10,13 @@ import '../models/host_ip.dart';
 class EmployeesProvider with ChangeNotifier {
   final String? token;
 
-  EmployeesProvider({this.token});
+  EmployeesProvider({this.token}){
+    if(token!=null){
+      fetchEmployees();
+    }
+  }
 
-  final List<EmployeeProvider> _employees = [
-    //   EmployeeProvider(
-    //       userID: '1', fullName: 'Ennachat Redwan', secWord: '4DJ8GD'),
-    //   EmployeeProvider(
-    //       userID: '2', fullName: 'Ennachat Meryem', secWord: 'GD6HD6'),
-    //   EmployeeProvider(userID: '3', fullName: 'Abli Nawal', secWord: 'GD7DRS'),
-  ];
+  final List<EmployeeProvider> _employees = [];
 
   Future<void> fetchEmployees() async {
     _employees.clear();
@@ -116,10 +114,4 @@ class EmployeesProvider with ChangeNotifier {
       rethrow;
     }
   }
-
-  // void updateEmployee(String username, String newFullName) {
-  //   _employees.firstWhere((emp) => emp.username == username).fullName =
-  //       newFullName;
-  //   notifyListeners();
-  // }
 }

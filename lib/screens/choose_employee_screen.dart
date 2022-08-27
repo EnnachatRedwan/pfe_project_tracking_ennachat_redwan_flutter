@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pfe_project_tracking_ennachat_redwan/providers/emplyee.dart';
 import 'package:provider/provider.dart';
 
 import '../style/style.dart';
@@ -15,14 +16,66 @@ class ChooseEmployeesScreen extends StatefulWidget {
 }
 
 class _ChooseEmployeesScreenState extends State<ChooseEmployeesScreen> {
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Style.red,
+      ),
+    );
+  }
 
- String employeesToSearch='';
+  bool isLoading = false;
+
+  Future<void> fetchEmployees() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await Provider.of<TaskProvider>(context, listen: false)
+          .fetchEmployees();
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void affectEmployee(EmployeeProvider emp) async {
+    try {
+      await Provider.of<TaskProvider>(context, listen: false).affectTask(emp);
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    }
+  }
+
+    void unaffectEmployee(EmployeeProvider emp) async {
+    try {
+      await Provider.of<TaskProvider>(context, listen: false).unaffectTask(emp);
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    }
+  }
+
+  @override
+  void initState() {
+    fetchEmployees();
+    super.initState();
+  }
+
+  String employeesToSearch = '';
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final employees =
-        Provider.of<EmployeesProvider>(context).employees(employeesToSearch);
+    final employeesProvider =
+        Provider.of<EmployeesProvider>(context);
     final TaskProvider task = Provider.of<TaskProvider>(context);
     return Scaffold(
       appBar: const ApplicationAppBar(title: 'إضافة موظفين'),
@@ -63,21 +116,27 @@ class _ChooseEmployeesScreenState extends State<ChooseEmployeesScreen> {
                 height: 20,
               ),
               Expanded(
-                child: ListView.builder(
-                  itemBuilder: (ctx, i) => MultiProvider(
-                    providers: [
-                      ChangeNotifierProvider.value(
-                        value: employees[i],
+                child: isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        itemBuilder: (ctx, i) => MultiProvider(
+                          providers: [
+                            ChangeNotifierProvider.value(
+                              value: task.getEmployees(employeesProvider, employeesToSearch)[i],
+                            ),
+                            ChangeNotifierProvider.value(
+                              value: task,
+                            ),
+                          ],
+                          child: ChooseEmployeeTile(
+                            affect: () => affectEmployee(task.getEmployees(employeesProvider, employeesToSearch)[i]),
+                            unaffect:()=>unaffectEmployee(task.getEmployees(employeesProvider, employeesToSearch)[i]),
+                          ),
+                        ),
+                        itemCount: task.getEmployees(employeesProvider, employeesToSearch).length,
                       ),
-                      ChangeNotifierProvider.value(
-                        value: task,
-                      ),
-                    ],
-                    child: const ChooseEmployeeTile(
-                    ),
-                  ),
-                  itemCount: employees.length,
-                ),
               )
             ],
           ),

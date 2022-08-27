@@ -6,7 +6,6 @@ import '../../style/style.dart';
 import '../button.dart';
 import '../level_bar.dart';
 import '../../providers/task.dart';
-import '../../providers/projects.dart';
 import '../../models/period.dart';
 
 class TaskArchiveCard extends StatelessWidget {

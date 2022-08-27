@@ -13,7 +13,7 @@ class TasksProvider with ChangeNotifier {
     required this.tasks,
     required this.token,
     required this.projectId,
-  }){
+  }) {
     fetchTasks();
   }
   final List<TaskProvider> tasks;
@@ -43,11 +43,11 @@ class TasksProvider with ChangeNotifier {
         TaskProvider(
           id: t["id_task"],
           title: t["title"],
+          token: token,
           state:
               t["state"] == 1 ? ProgressState.inProgress : ProgressState.done,
           projectId: t["project_id"],
           steps: [],
-          employees: [],
           isArchived: t["archived"] == 1,
           addedIn: DateTime.parse(t["addingDate"]),
           startingDate: t["startingDate"] != null
@@ -65,12 +65,12 @@ class TasksProvider with ChangeNotifier {
   Future<void> addTask(String title, DateTime createdIn) async {
     final TaskProvider initialTask = TaskProvider(
       id: 0,
+      token: token,
       title: title,
       state: ProgressState.inProgress,
       addedIn: createdIn,
       projectId: projectId,
       steps: [],
-      employees: [],
     );
     tasks.add(initialTask);
     int index = tasks.indexOf(initialTask);
@@ -90,11 +90,11 @@ class TasksProvider with ChangeNotifier {
       final TaskProvider t = TaskProvider(
         id: id,
         title: title,
+        token: token,
         state: ProgressState.inProgress,
         addedIn: createdIn,
         projectId: projectId,
         steps: [],
-        employees: [],
       );
       tasks.remove(initialTask);
       tasks.insert(index, t);

@@ -6,33 +6,30 @@ import '../providers/task.dart';
 import '../style/style.dart';
 
 class ChooseEmployeeTile extends StatelessWidget {
-  const ChooseEmployeeTile({Key? key}) : super(key: key);
+  const ChooseEmployeeTile({
+    Key? key,
+    required this.affect,
+    required this.unaffect,
+  }) : super(key: key);
+
+  final Function affect;
+  final Function unaffect;
 
   @override
   Widget build(BuildContext context) {
     final EmployeeProvider employee = Provider.of<EmployeeProvider>(context);
     final TaskProvider task = Provider.of<TaskProvider>(context);
-    bool isSelected = task.employees.contains(employee);
-
-    void toggleSelection() {
-      if (isSelected) {
-        isSelected = false;
-        task.deleteTaskEmployee(employee);
-      } else {
-        isSelected = true;
-        task.addTaskEmployee(employee);
-      }
-    }
+    bool isSelected = task.employeesUsename.contains(employee.username);
 
     return InkWell(
-      onTap: toggleSelection,
+      onTap: () => isSelected ? unaffect() : affect(),
       child: Column(
         children: [
           ListTile(
-            leading: const CircleAvatar(
-              backgroundColor: Style.blue,
+            leading: CircleAvatar(
+              backgroundColor: isSelected? Style.blue:Style.grey,
               radius: 30,
-              child: Icon(
+              child: const Icon(
                 Icons.person,
                 color: Style.backgroundColor,
               ),
@@ -41,7 +38,7 @@ class ChooseEmployeeTile extends StatelessWidget {
             trailing: Checkbox(
               value: isSelected,
               onChanged: (_) {
-                toggleSelection();
+                isSelected ? unaffect() : affect();
               },
             ),
           ),
