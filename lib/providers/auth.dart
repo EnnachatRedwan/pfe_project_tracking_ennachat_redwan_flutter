@@ -1,21 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/http_exception.dart';
 import '../models/host_ip.dart';
 
 class AuthProvider with ChangeNotifier {
   String username = '';
-  bool isLeader=false;
+  bool isLeader = false;
   String? token;
 
-  bool get isAuth{
-    return token!=null;
+  bool get isAuth {
+    return token != null;
   }
 
   Future<String> login(String username, String password) async {
-    String fullname='';
+    String fullname = '';
     final url = Uri.parse('$host/users/login');
     final body = json.encode({"username": username, "password": password});
 
@@ -31,9 +32,11 @@ class AuthProvider with ChangeNotifier {
       final user = result["User"];
       token = result["token"];
       this.username = user["username"];
-      isLeader=user["leader"]=='';
-      fullname=user["fullname"];
+      isLeader = user["leader"] == '';
+      fullname = user["fullname"];
       notifyListeners();
+      final prefs=await SharedPreferences.getInstance();
+      prefs.setString('token', result["token"]);
     }
     return fullname;
   }
@@ -54,9 +57,21 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  void logout(){
-    username='';
-    token=null;
+  Future<bool> tryAutoLogin() async {
+    final prefs=await SharedPreferences.getInstance();
+    if(!prefs.containsKey('token')){
+      return false;
+    }
+    token=prefs.getString('token');
     notifyListeners();
+    return true;
+  }
+
+  void logout() async {
+    username = '';
+    token = null;
+    notifyListeners();
+    final prefs=await SharedPreferences.getInstance();
+    prefs.remove('token');
   }
 }

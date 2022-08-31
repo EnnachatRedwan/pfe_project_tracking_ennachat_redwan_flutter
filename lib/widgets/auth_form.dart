@@ -54,8 +54,9 @@ class _AuthFormState extends State<AuthForm> {
         isLoading = true;
       });
       try {
-        String fullname =await Provider.of<AuthProvider>(context, listen: false)
-            .login(username, password);
+        String fullname =
+            await Provider.of<AuthProvider>(context, listen: false)
+                .login(username, password);
         _showSnackBar('$fullname مرحبا', color: Style.green);
       } catch (err) {
         if (err.toString() == '401') {
@@ -65,10 +66,6 @@ class _AuthFormState extends State<AuthForm> {
         } else {
           _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
         }
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
       }
     }
   }
