@@ -26,6 +26,14 @@ class _ActivationFormState extends State<ActivationForm> {
   final confirmPassFocus = FocusNode();
   final formKey = GlobalKey<FormState>();
 
+  @override
+  void dispose() {
+    password.dispose();
+    passFocus.dispose();
+    confirmPassFocus.dispose();
+    super.dispose();
+  }
+
   void _showSnackBar(String message,{Color color=Style.red}) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(

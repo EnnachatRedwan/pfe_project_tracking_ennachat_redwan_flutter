@@ -59,6 +59,20 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     super.initState();
   }
 
+  // String title = '';
+  // String type = '';
+  // DateTime createdIn = DateTime.now();
+  // final dateController = TextEditingController();
+  // final formKey = GlobalKey<FormState>();
+  // final typeFocusNode = FocusNode();
+
+  // @override
+  // void dispose() {
+  //   dateController.dispose();
+  //   typeFocusNode.dispose();
+  //   super.dispose();
+  // }
+
   void _openProjectBottomSheet(BuildContext context) {
     String title = '';
     String type = '';
@@ -240,27 +254,30 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 ? const Expanded(
                     child: Center(child: CircularProgressIndicator()))
                 : Expanded(
-                    child: GridView.builder(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 20),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        mainAxisSpacing: 15,
-                        crossAxisSpacing: 15,
-                        maxCrossAxisExtent: 650,
-                        childAspectRatio: 3 / 2,
-                      ),
-                      itemCount: projectsProvider
-                          .notArchivedProjects(projectToSearch)
-                          .length,
-                      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                        value: projectsProvider
-                            .notArchivedProjects(projectToSearch)[i],
-                        child: ProjectCard(
-                          delete: () => deleteProject(projectsProvider
-                              .notArchivedProjects(projectToSearch)[i]),
-                          archive: () => archive(projectsProvider
-                              .notArchivedProjects(projectToSearch)[i]),
+                    child: RefreshIndicator(
+                      onRefresh: fetchProjects,
+                      child: GridView.builder(
+                        padding:
+                            const EdgeInsets.only(left: 10, right: 10, top: 20,bottom: 10,),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          mainAxisSpacing: 15,
+                          crossAxisSpacing: 15,
+                          maxCrossAxisExtent: 650,
+                          childAspectRatio: 3 / 2,
+                        ),
+                        itemCount: projectsProvider
+                            .notArchivedProjects(projectToSearch)
+                            .length,
+                        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                          value: projectsProvider
+                              .notArchivedProjects(projectToSearch)[i],
+                          child: ProjectCard(
+                            delete: () => deleteProject(projectsProvider
+                                .notArchivedProjects(projectToSearch)[i]),
+                            archive: () => archive(projectsProvider
+                                .notArchivedProjects(projectToSearch)[i]),
+                          ),
                         ),
                       ),
                     ),

@@ -8,17 +8,66 @@ import '../models/period.dart';
 import '../widgets/task_buttons.dart';
 import '../widgets/level_bar.dart';
 import '../widgets/step_tile.dart';
-import '../providers/tasks.dart';
 import './choose_employee_screen.dart';
 import '../providers/auth.dart';
+import '../providers/step.dart';
 
-class TaskDetailsScreen extends StatelessWidget {
+class TaskDetailsScreen extends StatefulWidget {
   const TaskDetailsScreen(
       {Key? key, required this.delete, required this.archive, ret})
       : super(key: key);
 
   final Function delete;
   final Function archive;
+
+  @override
+  State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
+}
+
+class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
+  bool isLoading = false;
+
+  Future<void> fetchSteps() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await Provider.of<TaskProvider>(context, listen: false).fetchSteps();
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void _deleteStep(StepProvider step) async {
+    try {
+      await Provider.of<TaskProvider>(context, listen: false).deleteStep(step);
+    } catch (err) {
+      _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+    }
+  }
+
+  void _showSnackBar(String message, {Color color = Style.red}) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: color,
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    fetchSteps();
+    super.initState();
+  }
 
   void _openTaskBottomSheet(BuildContext context) {
     final descNode = FocusNode();
@@ -27,13 +76,17 @@ class TaskDetailsScreen extends StatelessWidget {
     String desc = '';
     final formKey = GlobalKey<FormState>();
 
-    void save() {
+    void save() async {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
-        Provider.of<TaskProvider>(context, listen: false)
-            .addTaskStep(title, desc);
-        Provider.of<TasksProvider>(context, listen: false).refresh();
-        Navigator.of(context).pop();
+        try {
+          await Provider.of<TaskProvider>(context, listen: false)
+              .addStep(title, desc);
+        } catch (err) {
+          _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+        } finally {
+          Navigator.of(context).pop();
+        }
       }
     }
 
@@ -149,7 +202,7 @@ class TaskDetailsScreen extends StatelessWidget {
                 switch (val) {
                   case 0:
                     Navigator.of(context).pop();
-                    delete();
+                    widget.delete();
 
                     break;
                   case 1:
@@ -159,7 +212,9 @@ class TaskDetailsScreen extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (ctx) => ChangeNotifierProvider.value(
-                            value: task, child: const ChooseEmployeesScreen()),
+                          value: task,
+                          child: const ChooseEmployeesScreen(),
+                        ),
                       ),
                     );
                     break;
@@ -202,16 +257,22 @@ class TaskDetailsScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  itemCount: task.steps.length,
-                  itemBuilder: (ctx, i) => InkWell(
-                    onTap: () {},
-                    child: ChangeNotifierProvider.value(
-                      value: task.steps[i],
-                      child: const StepTile(),
-                    ),
-                  ),
-                ),
+                child: isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: fetchSteps,
+                        child: ListView.builder(
+                          itemCount: task.steps.length,
+                          itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                            value: task.steps[i],
+                            child: StepTile(
+                              delete: () => _deleteStep(task.steps[i]),
+                            ),
+                          ),
+                        ),
+                      ),
               ),
               if (task.isStarted)
                 Center(
@@ -225,7 +286,7 @@ class TaskDetailsScreen extends StatelessWidget {
               ),
               Directionality(
                 textDirection: TextDirection.rtl,
-                child: TaskButtons(archive: archive),
+                child: TaskButtons(archive: widget.archive),
               ),
             ],
           ),

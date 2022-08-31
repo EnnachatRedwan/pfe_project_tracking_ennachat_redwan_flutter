@@ -36,6 +36,8 @@ class _ChooseEmployeesScreenState extends State<ChooseEmployeesScreen> {
       isLoading = true;
     });
     try {
+      await Provider.of<EmployeesProvider>(context,listen: false).fetchEmployees();
+      if (!mounted) return;
       await Provider.of<TaskProvider>(context, listen: false)
           .fetchEmployees();
     } catch (err) {

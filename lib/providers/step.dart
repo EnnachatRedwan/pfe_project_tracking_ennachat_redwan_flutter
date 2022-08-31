@@ -1,18 +1,24 @@
 import 'package:flutter/cupertino.dart';
 
 class StepProvider with ChangeNotifier {
-  final String id;
+  final int id;
   String title;
   String details;
-  bool isCompleted = false;
-  StepProvider(this.id, this.title, this.details);
+  bool isCompleted;
+  StepProvider({
+    required this.id,
+    required this.title,
+    required this.details,
+    this.isCompleted = false,
+  });
 
-  void toggleState() {
-    isCompleted = !isCompleted;
+  void check() {
+    isCompleted = true;
     notifyListeners();
   }
 
-  void refresh(){
+  void uncheck() {
+    isCompleted = false;
     notifyListeners();
   }
 }

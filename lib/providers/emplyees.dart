@@ -10,11 +10,7 @@ import '../models/host_ip.dart';
 class EmployeesProvider with ChangeNotifier {
   final String? token;
 
-  EmployeesProvider({this.token}){
-    if(token!=null){
-      fetchEmployees();
-    }
-  }
+  EmployeesProvider({this.token});
 
   final List<EmployeeProvider> _employees = [];
 

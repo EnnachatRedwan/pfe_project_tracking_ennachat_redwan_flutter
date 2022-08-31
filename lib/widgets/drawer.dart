@@ -6,6 +6,7 @@ import './drawer_item.dart';
 import '../screens/projects_overview_screen.dart';
 import '../screens/employees_overview_screen.dart';
 import '../screens/archive_screen.dart';
+import './login_layout.dart';
 
 class ApplicationDrawer extends StatelessWidget {
   const ApplicationDrawer({
@@ -19,12 +20,13 @@ class ApplicationDrawer extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 30),
         children: [
-          if(auth.isLeader) DraweItem(
-            title: 'الموظفين',
-            icon: Icons.people,
-            action: () => Navigator.of(context)
-                .pushReplacementNamed(EmployeesScreen.routeName),
-          ),
+          if (auth.isLeader)
+            DraweItem(
+              title: 'الموظفين',
+              icon: Icons.people,
+              action: () => Navigator.of(context)
+                  .pushReplacementNamed(EmployeesScreen.routeName),
+            ),
           DraweItem(
             title: 'المشاريع',
             icon: Icons.work,
@@ -40,7 +42,13 @@ class ApplicationDrawer extends StatelessWidget {
           DraweItem(
             title: 'تسجيل خروج',
             icon: Icons.logout,
-            action: () => auth.logout(),
+            action: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (ctx) => const LoginLayout()),
+                  (route) => false);
+              auth.logout();
+            },
           ),
         ],
       ),

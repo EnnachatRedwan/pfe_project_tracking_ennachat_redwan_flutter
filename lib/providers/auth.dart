@@ -10,6 +10,10 @@ class AuthProvider with ChangeNotifier {
   bool isLeader=false;
   String? token;
 
+  bool get isAuth{
+    return token!=null;
+  }
+
   Future<String> login(String username, String password) async {
     String fullname='';
     final url = Uri.parse('$host/users/login');

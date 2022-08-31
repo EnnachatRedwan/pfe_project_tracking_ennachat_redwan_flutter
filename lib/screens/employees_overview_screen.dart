@@ -224,20 +224,23 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                     ? const Center(
                         child: CircularProgressIndicator(),
                       )
-                    : ListView.separated(
-                        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                          value:
-                              employeesProvider.employees(employeesToSearch)[i],
-                          child: EmployeeTile(
-                            delete: () => delete(employeesProvider
-                                .employees(employeesToSearch)[i]),
+                    : RefreshIndicator(
+                      onRefresh: fetchEmployees,
+                      child: ListView.separated(
+                          itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                            value:
+                                employeesProvider.employees(employeesToSearch)[i],
+                            child: EmployeeTile(
+                              delete: () => delete(employeesProvider
+                                  .employees(employeesToSearch)[i]),
+                            ),
                           ),
+                          itemCount: employeesProvider
+                              .employees(employeesToSearch)
+                              .length,
+                          separatorBuilder: (ctx, i) => const Divider(),
                         ),
-                        itemCount: employeesProvider
-                            .employees(employeesToSearch)
-                            .length,
-                        separatorBuilder: (ctx, i) => const Divider(),
-                      ),
+                    ),
               )
             ],
           ),

@@ -8,7 +8,12 @@ import '../widgets/button.dart';
 import '../providers/task.dart';
 
 class StepDetailsScreen extends StatelessWidget {
-  const StepDetailsScreen({Key? key}) : super(key: key);
+  const StepDetailsScreen({
+    Key? key,
+    required this.delete,
+  }) : super(key: key);
+
+  final Function delete;
 
   static const String routeName = '/emplyee-Details';
 
@@ -19,13 +24,30 @@ class StepDetailsScreen extends StatelessWidget {
     String desc = step.details;
     final formKey = GlobalKey<FormState>();
 
-    void save() {
+    void _showSnackBar(String message, {Color color = Style.red}) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: color,
+        ),
+      );
+    }
+
+    void save() async {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
-        Provider.of<TaskProvider>(context, listen: false)
-            .updateStep(step.id, title, desc);
-        step.refresh();
-        Navigator.of(context).pop();
+        try {
+          Provider.of<TaskProvider>(context, listen: false)
+              .editStep(step, title, desc);
+        } catch (err) {
+          _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+        } finally {
+          Navigator.of(context).pop();
+        }
       }
     }
 
@@ -122,6 +144,27 @@ class StepDetailsScreen extends StatelessWidget {
     final StepProvider step = Provider.of<StepProvider>(context);
     final task = Provider.of<TaskProvider>(context);
 
+    void _showSnackBar(String message, {Color color = Style.red}) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: color,
+        ),
+      );
+    }
+
+    void _toggleStep() async {
+      try {
+        await task.toggleStep(step);
+      } catch (err) {
+        _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+      }
+    }
+
     return Scaffold(
       appBar: const ApplicationAppBar(title: 'خطوة'),
       body: Center(
@@ -175,7 +218,7 @@ class StepDetailsScreen extends StatelessWidget {
                     value: step.isCompleted,
                     onChanged: (_) {
                       if (task.isStarted) {
-                        step.toggleState();
+                        _toggleStep();
                       }
                     },
                   )
@@ -192,7 +235,7 @@ class StepDetailsScreen extends StatelessWidget {
                       color: Style.red,
                       title: 'حذف',
                       onClick: () {
-                        task.deleteTaskStep(step);
+                        delete();
                         Navigator.of(context).pop();
                       },
                       verPad: 5,

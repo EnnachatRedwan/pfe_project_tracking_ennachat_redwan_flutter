@@ -34,7 +34,7 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
   }
 
   bool isLoading = false;
-  void fetchTasks() async {
+  Future<void> fetchTasks() async {
     setState(() {
       isLoading = true;
     });
@@ -209,26 +209,29 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
                 ? const Expanded(
                     child: Center(child: CircularProgressIndicator()))
                 : Expanded(
-                    child: GridView.builder(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 20),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        mainAxisSpacing: 15,
-                        crossAxisSpacing: 15,
-                        maxCrossAxisExtent: 650,
-                        childAspectRatio: 3 / 2,
-                      ),
-                      itemCount:
-                          tasksProvider.notArchivedTasks(taskToSearch).length,
-                      itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                        value: tasksProvider.notArchivedTasks(taskToSearch)[i],
-                        child: TaskCard(
-                          delete: () => deleteTask(
-                            tasksProvider.notArchivedTasks(taskToSearch)[i],
-                          ),
-                          archive: () => archive(
-                            tasksProvider.notArchivedTasks(taskToSearch)[i],
+                    child: RefreshIndicator(
+                      onRefresh: fetchTasks,
+                      child: GridView.builder(
+                        padding:
+                            const EdgeInsets.only(left: 10, right: 10, top: 20,bottom: 10,),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          mainAxisSpacing: 15,
+                          crossAxisSpacing: 15,
+                          maxCrossAxisExtent: 650,
+                          childAspectRatio: 3 / 2,
+                        ),
+                        itemCount:
+                            tasksProvider.notArchivedTasks(taskToSearch).length,
+                        itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
+                          value: tasksProvider.notArchivedTasks(taskToSearch)[i],
+                          child: TaskCard(
+                            delete: () => deleteTask(
+                              tasksProvider.notArchivedTasks(taskToSearch)[i],
+                            ),
+                            archive: () => archive(
+                              tasksProvider.notArchivedTasks(taskToSearch)[i],
+                            ),
                           ),
                         ),
                       ),

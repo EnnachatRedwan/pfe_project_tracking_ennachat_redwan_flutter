@@ -25,6 +25,12 @@ class _AuthFormState extends State<AuthForm> {
   final passFocus = FocusNode();
   final formKey = GlobalKey<FormState>();
 
+  @override
+  void dispose() {
+    passFocus.dispose();
+    super.dispose();
+  }
+
   void _showSnackBar(String message, {Color color = Style.red}) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(

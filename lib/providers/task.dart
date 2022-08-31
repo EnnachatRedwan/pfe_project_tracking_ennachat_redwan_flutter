@@ -93,7 +93,127 @@ class TaskProvider with ChangeNotifier {
     }
   }
 
-  List<EmployeeProvider> getEmployees(EmployeesProvider emp,String tag) {
+  Future<void> fetchSteps() async {
+    steps.clear();
+    final url = Uri.parse('$host/steps/$token/$id');
+    try {
+      final response = await http.get(url);
+      final data = jsonDecode(response.body);
+      for (var record in data) {
+        steps.add(
+          StepProvider(
+            id: record["id_step"],
+            title: record["title"],
+            details: record["description"],
+            isCompleted: record["isDone"] == 1,
+          ),
+        );
+      }
+      updateState();
+    } catch (err) {
+      rethrow;
+    }
+  }
+
+  Future<void> addStep(String title, String desc) async {
+    final StepProvider initialStep = StepProvider(
+      id: 0,
+      title: title,
+      details: desc,
+    );
+    steps.add(initialStep);
+    int index = steps.indexOf(initialStep);
+    updateState();
+
+    final url = Uri.parse('$host/steps/$token');
+    final body = jsonEncode({
+      "taskId": id,
+      "title": title,
+      "desc": desc,
+    });
+
+    try {
+      final response = await http.post(url,
+          headers: {'content-type': 'application/json'}, body: body);
+      final id = jsonDecode(response.body)[0]["id"];
+      final StepProvider s = StepProvider(id: id, title: title, details: desc);
+      steps.remove(initialStep);
+      steps.insert(index, s);
+    } catch (err) {
+      steps.remove(initialStep);
+      rethrow;
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> toggleStep(StepProvider step) async {
+    if (step.isCompleted) {
+      step.uncheck();
+      updateState();
+      final url = Uri.parse('$host/steps/uncheck/$token/${step.id}');
+      try {
+        await http.post(url);
+      } catch (err) {
+        step.check();
+        updateState();
+        rethrow;
+      }
+    } else {
+      step.check();
+      updateState();
+      final url = Uri.parse('$host/steps/check/$token/${step.id}');
+      try {
+        await http.post(url);
+      } catch (err) {
+        step.uncheck();
+        updateState();
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> deleteStep(StepProvider step) async {
+    int index = steps.indexOf(step);
+    steps.remove(step);
+    updateState();
+    try {
+      final url = Uri.parse('$host/steps/$token');
+      final body = jsonEncode({"id": step.id});
+      await http.delete(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      steps.insert(index, step);
+      updateState();
+      rethrow;
+    }
+  }
+
+  Future<void> editStep(StepProvider step, String title, String desc) async {
+    final String oldTitle = step.title;
+    final String oldDesc = step.details;
+
+    step.title = title;
+    step.details = desc;
+    updateState();
+    try {
+      final url = Uri.parse('$host/steps/$token');
+      final body = jsonEncode({
+        "id": step.id,
+        "title": title,
+        "desc": desc,
+      });
+      await http.put(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      step.title = oldTitle;
+      step.details = oldDesc;
+      updateState();
+      rethrow;
+    }
+  }
+
+  List<EmployeeProvider> getEmployees(EmployeesProvider emp, String tag) {
     List<EmployeeProvider> emps = [
       ...emp
           .employees(tag)
@@ -126,13 +246,13 @@ class TaskProvider with ChangeNotifier {
       state = ProgressState.inProgress;
       endingDate = null;
     }
+    notifyListeners();
   }
 
   void start() {
     isStarted = true;
     startingDate = DateTime.now();
     updateState();
-    notifyListeners();
   }
 
   void rollStartBack() {
@@ -153,8 +273,8 @@ class TaskProvider with ChangeNotifier {
   }
 
   void addTaskStep(String title, String desc) {
-    steps.add(StepProvider(UniqueKey().toString(), title, desc));
-    notifyListeners();
+    // steps.add(StepProvider(UniqueKey().toString(), title, desc));
+    // notifyListeners();
   }
 
   void addTaskEmployee(EmployeeProvider emp) {
@@ -167,11 +287,11 @@ class TaskProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateStep(String id, String newTitle, String newDesc) {
-    final stp = steps.firstWhere((step) => step.id == id);
-    stp.title = newTitle;
-    stp.details = newDesc;
-    notifyListeners();
+  void updateStep(int id, String newTitle, String newDesc) {
+    // final stp = steps.firstWhere((step) => step.id == id);
+    // stp.title = newTitle;
+    // stp.details = newDesc;
+    // notifyListeners();
   }
 
   void archive() {
