@@ -148,6 +148,7 @@ class TaskProvider with ChangeNotifier {
   }
 
   Future<void> toggleStep(StepProvider step) async {
+    print('toggling step');
     if (step.isCompleted) {
       step.uncheck();
       updateState();

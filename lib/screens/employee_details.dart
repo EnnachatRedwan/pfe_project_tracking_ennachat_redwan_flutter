@@ -40,7 +40,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final EmployeeProvider employee = Provider.of<EmployeeProvider>(context);
-    final color = employee.isActivated ? Style.greeishYellow : Style.grey;
+    final color = employee.isActivated ? Style.greenishYellow : Style.grey;
 
     void _openEmployeeBottomSheet(BuildContext context) {
       String fullName = '';

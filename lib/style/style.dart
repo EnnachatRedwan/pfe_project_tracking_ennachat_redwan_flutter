@@ -9,5 +9,5 @@ class Style{
   static const Color blue=Color.fromRGBO(20, 207, 207, 1);
   static const Color shadowColor=Color.fromRGBO(0, 0, 0, .25);
   static const Color grey=Color.fromRGBO(97, 97, 97,1);
-  static const Color greeishYellow=Color.fromARGB(255, 170, 197, 49);
+  static const Color greenishYellow=Color.fromARGB(255, 170, 197, 49);
 }

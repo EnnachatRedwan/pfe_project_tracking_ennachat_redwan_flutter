@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/auth.dart';
 import '../style/style.dart';
 import '../widgets/appbar.dart';
 import '../providers/step.dart';
@@ -227,36 +228,37 @@ class StepDetailsScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ApplicationButton(
-                      isLoading: false,
-                      color: Style.red,
-                      title: 'حذف',
-                      onClick: () {
-                        delete();
-                        Navigator.of(context).pop();
-                      },
-                      verPad: 5,
+              if (Provider.of<AuthProvider>(context, listen: false).isLeader)
+                Row(
+                  children: [
+                    Expanded(
+                      child: ApplicationButton(
+                        isLoading: false,
+                        color: Style.red,
+                        title: 'حذف',
+                        onClick: () {
+                          delete();
+                          Navigator.of(context).pop();
+                        },
+                        verPad: 5,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: ApplicationButton(
-                      color: Style.green,
-                      title: 'تعديل',
-                      isLoading: false,
-                      onClick: () {
-                        _openStepBottomSheet(context, step);
-                      },
-                      verPad: 5,
+                    const SizedBox(
+                      width: 10,
                     ),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      child: ApplicationButton(
+                        color: Style.green,
+                        title: 'تعديل',
+                        isLoading: false,
+                        onClick: () {
+                          _openStepBottomSheet(context, step);
+                        },
+                        verPad: 5,
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
         ),

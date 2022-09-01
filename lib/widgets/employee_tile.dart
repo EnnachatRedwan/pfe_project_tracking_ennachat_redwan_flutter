@@ -16,7 +16,7 @@ class EmployeeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EmployeeProvider employee = Provider.of<EmployeeProvider>(context);
-    final color = employee.isActivated ? Style.greeishYellow : Style.grey;
+    final color = employee.isActivated ? Style.greenishYellow : Style.grey;
     return InkWell(
       onTap: () {
         Navigator.of(context).push(

@@ -35,8 +35,10 @@ class AuthProvider with ChangeNotifier {
       isLeader = user["leader"] == '';
       fullname = user["fullname"];
       notifyListeners();
-      final prefs=await SharedPreferences.getInstance();
+      final prefs = await SharedPreferences.getInstance();
       prefs.setString('token', result["token"]);
+      prefs.setBool('isleader', user["leader"] == '');
+      prefs.setString('username', user["username"]);
     }
     return fullname;
   }
@@ -58,11 +60,13 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async {
-    final prefs=await SharedPreferences.getInstance();
-    if(!prefs.containsKey('token')){
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('token')) {
       return false;
     }
-    token=prefs.getString('token');
+    token = prefs.getString('token');
+    isLeader = prefs.getBool('isleader') ?? false;
+    username=prefs.getString('username') ?? '';
     notifyListeners();
     return true;
   }
@@ -71,7 +75,7 @@ class AuthProvider with ChangeNotifier {
     username = '';
     token = null;
     notifyListeners();
-    final prefs=await SharedPreferences.getInstance();
-    prefs.remove('token');
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 }

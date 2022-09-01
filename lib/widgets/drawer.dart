@@ -7,6 +7,7 @@ import '../screens/projects_overview_screen.dart';
 import '../screens/employees_overview_screen.dart';
 import '../screens/archive_screen.dart';
 import './login_layout.dart';
+import '../style/style.dart';
 
 class ApplicationDrawer extends StatelessWidget {
   const ApplicationDrawer({
@@ -20,6 +21,15 @@ class ApplicationDrawer extends StatelessWidget {
       child: ListView(
         padding: const EdgeInsets.symmetric(vertical: 30),
         children: [
+          ListTile(
+            
+            leading: Container(
+              color: auth.isLeader ? Style.secondaryColor : Style.primaryColor,
+              width: 10,
+            ),
+            title: Text(auth.username,style: const TextStyle(fontSize: 18),),
+          ),
+          const Divider(),
           if (auth.isLeader)
             DraweItem(
               title: 'الموظفين',
