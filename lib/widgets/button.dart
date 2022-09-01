@@ -20,6 +20,7 @@ class ApplicationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return InkWell(
       onTap: isLoading ? null : onClick,
       child: Container(
@@ -35,7 +36,8 @@ class ApplicationButton extends StatelessWidget {
                 )
               : Text(
                   title,
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                  style: TextStyle(
+                      color: Colors.white, fontSize: width < 400 ? 15 : 20),
                 ),
         ),
       ),

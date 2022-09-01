@@ -236,6 +236,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       }
     }
 
+    final width=MediaQuery.of(context).size.width;
+
     return Scaffold(
       key: _scf,
       appBar: ApplicationAppBar(
@@ -257,14 +259,18 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                     child: RefreshIndicator(
                       onRefresh: fetchProjects,
                       child: GridView.builder(
-                        padding:
-                            const EdgeInsets.only(left: 10, right: 10, top: 20,bottom: 10,),
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                          top: 20,
+                          bottom: 10,
+                        ),
                         gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                         SliverGridDelegateWithMaxCrossAxisExtent(
                           mainAxisSpacing: 15,
                           crossAxisSpacing: 15,
-                          maxCrossAxisExtent: 650,
-                          childAspectRatio: 3 / 2,
+                          maxCrossAxisExtent: width<780? 800: 600,
+                          childAspectRatio: width<350? 1: 3 / 2,
                         ),
                         itemCount: projectsProvider
                             .notArchivedProjects(projectToSearch)

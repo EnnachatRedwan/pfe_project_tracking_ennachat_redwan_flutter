@@ -23,6 +23,7 @@ class LevelBar extends StatelessWidget {
     else{
       color=Style.green;
     }
+    final width = MediaQuery.of(context).size.width;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SizedBox(
@@ -30,6 +31,7 @@ class LevelBar extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if(width>400)
             Text(
               '${(level * 100).toStringAsFixed(2)}%',
               style: TextStyle(color: color, fontSize: 17),
