@@ -96,14 +96,14 @@ class StepDetailsScreen extends StatelessWidget {
                       initialValue: desc,
                       textDirection: TextDirection.ltr,
                       focusNode: descNode,
-                      maxLength: 150,
+                      maxLength: 1000,
                       maxLines: 3,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'يرجى تقديم وصف صحيح';
                         }
-                        if (value.length > 150) {
-                          return 'يجب ألا يزيد وصف الخطوة عن 50 حرفًا';
+                        if (value.length > 1000) {
+                          return 'يجب ألا يزيد وصف الخطوة عن 1000 حرف';
                         }
                         return null;
                       },

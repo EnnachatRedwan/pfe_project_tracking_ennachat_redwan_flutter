@@ -72,6 +72,7 @@ class ProjectButtons extends StatelessWidget {
               verPad: 5,
             ),
           ),
+          
         const SizedBox(
           width: 10,
         ),

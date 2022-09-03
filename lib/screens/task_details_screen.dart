@@ -72,7 +72,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     super.initState();
   }
 
-  void _openAddTaskBottomSheet(BuildContext context) {
+  void _openAddStepBottomSheet(BuildContext context) {
     final descNode = FocusNode();
 
     String title = '';
@@ -136,13 +136,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         textDirection: TextDirection.ltr,
                         focusNode: descNode,
                         maxLines: 3,
-                        maxLength: 150,
+                        maxLength: 1000,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'يرجى تقديم وصف صحيح';
                           }
-                          if (value.length > 150) {
-                            return 'يجب ألا يزيد وصف الخطوة عن 50 حرفًا';
+                          if (value.length > 1000) {
+                            return 'يجب ألا يزيد وصف الخطوة عن 1000 حرف';
                           }
                           return null;
                         },
@@ -325,7 +325,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     _openEditTaskBottomSheet(context, task);
                     break;
                   case 2:
-                    _openAddTaskBottomSheet(context);
+                    _openAddStepBottomSheet(context);
                     break;
                   case 3:
                     Navigator.of(context).push(
@@ -364,7 +364,17 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+              // Directionality(
+              //   textDirection: TextDirection.rtl,
+              //   child: Text(
+              //     getPeriod(task.startingDate, task.endingDate),
+              //     style: const TextStyle(
+              //       color: Style.grey,
+              //       fontSize: 15,
+              //     ),
+              //     textAlign: TextAlign.right,
+              //   ),
+              // ),
               Expanded(
                 child: isLoading
                     ? const Center(
@@ -383,6 +393,20 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         ),
                       ),
               ),
+              // if (task.isStarted)
+              //   Center(
+              //     child: LevelBar(
+              //       level: task.level,
+              //       width: 300,
+              //     ),
+              //   ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
+              // Directionality(
+              //   textDirection: TextDirection.rtl,
+              //   child: TaskButtons(archive: widget.archive),
+              // ),
             ],
           ),
         ),

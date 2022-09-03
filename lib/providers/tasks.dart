@@ -13,7 +13,9 @@ class TasksProvider with ChangeNotifier {
     required this.tasks,
     required this.token,
     required this.projectId,
-  });
+  }) {
+    fetchTasks();
+  }
   final List<TaskProvider> tasks;
   String? token;
   final int projectId;
