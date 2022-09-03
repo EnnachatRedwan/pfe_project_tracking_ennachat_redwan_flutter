@@ -72,7 +72,9 @@ class ProjectButtons extends StatelessWidget {
               verPad: 5,
             ),
           ),
-          
+          if (!(Provider.of<AuthProvider>(context, listen: false).isLeader ==
+                false &&
+            !project.isStarted))
         const SizedBox(
           width: 10,
         ),

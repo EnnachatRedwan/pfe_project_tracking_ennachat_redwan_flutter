@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/confirm.dart';
 import '../../style/style.dart';
 import '../project_buttons.dart';
 import '../level_bar.dart';
@@ -35,6 +36,12 @@ class ProjectCard extends StatelessWidget {
       //   }
       // },
       onDismissed: (_) => delete(),
+      confirmDismiss: (_) async {
+        final bool confirmed =
+            await Confirm.confirmDelete(context, project.title) ??
+                false;
+        return confirmed;
+      },
       background: Container(
         decoration: const BoxDecoration(
           color: Style.red,

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/emplyee.dart';
 import '../style/style.dart';
 import '../screens/employee_details.dart';
+import '../models/confirm.dart';
 
 class EmployeeTile extends StatelessWidget {
   const EmployeeTile({
@@ -33,6 +34,11 @@ class EmployeeTile extends StatelessWidget {
       child: Dismissible(
         onDismissed: (_) {
           delete();
+        },
+        confirmDismiss: (_) async {
+          final bool confirmed =
+              await Confirm.confirmDelete(context, employee.fullName) ?? false;
+          return confirmed;
         },
         background: Container(
           decoration: const BoxDecoration(

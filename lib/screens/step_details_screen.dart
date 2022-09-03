@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/confirm.dart';
 import '../providers/auth.dart';
 import '../style/style.dart';
 import '../widgets/appbar.dart';
@@ -8,7 +9,7 @@ import '../providers/step.dart';
 import '../widgets/button.dart';
 import '../providers/task.dart';
 
-class StepDetailsScreen extends StatelessWidget {
+class StepDetailsScreen extends StatefulWidget {
   const StepDetailsScreen({
     Key? key,
     required this.delete,
@@ -18,6 +19,11 @@ class StepDetailsScreen extends StatelessWidget {
 
   static const String routeName = '/emplyee-Details';
 
+  @override
+  State<StepDetailsScreen> createState() => _StepDetailsScreenState();
+}
+
+class _StepDetailsScreenState extends State<StepDetailsScreen> {
   void _openStepBottomSheet(BuildContext context, StepProvider step) {
     final descNode = FocusNode();
 
@@ -236,9 +242,14 @@ class StepDetailsScreen extends StatelessWidget {
                         isLoading: false,
                         color: Style.red,
                         title: 'حذف',
-                        onClick: () {
-                          delete();
-                          Navigator.of(context).pop();
+                        onClick: () async {
+                          final bool confirmed = await Confirm.confirmDelete(
+                                  context, step.title) ??
+                              false;
+                          if (confirmed && mounted) {
+                            widget.delete();
+                            Navigator.of(context).pop();
+                          }
                         },
                         verPad: 5,
                       ),

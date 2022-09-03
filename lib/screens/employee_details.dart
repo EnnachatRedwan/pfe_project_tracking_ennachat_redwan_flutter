@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/confirm.dart';
 import '../style/style.dart';
 import '../widgets/appbar.dart';
 import '../providers/emplyee.dart';
@@ -226,9 +227,14 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                   color: Style.red,
                   title: 'حذف الموظف',
                   isLoading: false,
-                  onClick: () {
-                    widget.delete();
-                    Navigator.of(context).pop();
+                  onClick: () async {
+                    final bool confirmed = await Confirm.confirmDelete(
+                            context, employee.fullName) ??
+                        false;
+                    if (confirmed && mounted) {
+                      widget.delete();
+                      Navigator.of(context).pop();
+                    }
                   },
                   verPad: 5,
                 ),

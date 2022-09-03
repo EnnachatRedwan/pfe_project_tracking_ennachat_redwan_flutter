@@ -44,14 +44,17 @@ class TaskButtons extends StatelessWidget {
               color: isProjectStarted ? Style.green : Style.grey,
               title: 'بدء',
               isLoading: false,
-              onClick: isProjectStarted? () async {
-                try {
-                  await Provider.of<TasksProvider>(context, listen: false)
-                      .startTask(task);
-                } catch (err) {
-                  _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
-                }
-              }:()=>{},
+              onClick: isProjectStarted
+                  ? () async {
+                      try {
+                        await Provider.of<TasksProvider>(context, listen: false)
+                            .startTask(task);
+                      } catch (err) {
+                        _showSnackBar(
+                            'حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+                      }
+                    }
+                  : () => {},
               verPad: 5,
             ),
           ),
@@ -75,7 +78,9 @@ class TaskButtons extends StatelessWidget {
               verPad: 5,
             ),
           ),
-        if (Provider.of<AuthProvider>(context, listen: false).isLeader)
+        if (!(Provider.of<AuthProvider>(context, listen: false).isLeader ==
+                false &&
+            !task.isStarted))
           const SizedBox(
             width: 10,
           ),

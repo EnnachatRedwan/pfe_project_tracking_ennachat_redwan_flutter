@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/confirm.dart';
 import '../providers/step.dart';
 import '../style/style.dart';
 import '../providers/task.dart';
@@ -61,6 +62,11 @@ class StepTile extends StatelessWidget {
       child: Dismissible(
         onDismissed: (_) {
           delete();
+        },
+        confirmDismiss: (_) async {
+          final bool confirmed =
+              await Confirm.confirmDelete(context, step.title) ?? false;
+          return confirmed;
         },
         background: Container(
           decoration: const BoxDecoration(

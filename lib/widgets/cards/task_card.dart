@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:pfe_project_tracking_ennachat_redwan/widgets/task_buttons.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/confirm.dart';
 import '../../style/style.dart';
 import '../level_bar.dart';
 import '../../providers/task.dart';
@@ -50,6 +51,11 @@ class TaskCard extends StatelessWidget {
       onDismissed: (_) {
         delete();
       },
+      confirmDismiss: (_) async {
+          final bool confirmed =
+              await Confirm.confirmDelete(context, task.title) ?? false;
+          return confirmed;
+        },
       direction: Provider.of<AuthProvider>(context).isLeader
           ? DismissDirection.startToEnd
           : DismissDirection.none,
