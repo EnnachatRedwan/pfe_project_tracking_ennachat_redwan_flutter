@@ -43,7 +43,7 @@ class StepDetailsScreen extends StatelessWidget {
         formKey.currentState!.save();
         try {
           Provider.of<TaskProvider>(context, listen: false)
-              .editStep(step, title, desc);
+              .editStep(step, title.trim(), desc.trim());
         } catch (err) {
           _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
         } finally {

@@ -17,10 +17,12 @@ class TaskCard extends StatelessWidget {
     Key? key,
     required this.delete,
     required this.archive,
+    required this.fetchTasks,
   }) : super(key: key);
 
   final Function delete;
   final Function archive;
+  final Function fetchTasks;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +81,7 @@ class TaskCard extends StatelessWidget {
                     ),
                   ),
                 )
-                .then((value) => task.refresh());
+                .then((value) => fetchTasks());
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

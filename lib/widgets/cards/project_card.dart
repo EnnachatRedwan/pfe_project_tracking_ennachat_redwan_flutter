@@ -15,10 +15,12 @@ class ProjectCard extends StatelessWidget {
     Key? key,
     required this.delete,
     required this.archive,
+    required this.fetchProjects,
   }) : super(key: key);
 
   final Function delete;
   final Function archive;
+  final Function fetchProjects;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,7 @@ class ProjectCard extends StatelessWidget {
                     ),
                   ),
                 )
-                .then((value) => project.refresh());
+                .then((value) => fetchProjects());
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,14 +134,14 @@ class ProjectCard extends StatelessWidget {
               if (project.isStarted)
                 Center(
                   child: LevelBar(
-                    level: project.tasks.level,
+                    level: project.level,
                     width: 300,
                   ),
                 ),
               const SizedBox(
                 height: 10,
               ),
-             ProjectButtons(archive:archive),
+              ProjectButtons(archive: archive),
             ],
           ),
         ),

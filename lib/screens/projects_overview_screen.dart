@@ -46,6 +46,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
           .fetchProjects();
     } catch (err) {
       _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+      rethrow;
     } finally {
       setState(() {
         isLoading = false;
@@ -283,6 +284,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                 .notArchivedProjects(projectToSearch)[i]),
                             archive: () => archive(projectsProvider
                                 .notArchivedProjects(projectToSearch)[i]),
+                                fetchProjects: ()=> fetchProjects(),
                           ),
                         ),
                       ),

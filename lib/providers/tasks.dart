@@ -13,21 +13,10 @@ class TasksProvider with ChangeNotifier {
     required this.tasks,
     required this.token,
     required this.projectId,
-  }) {
-    fetchTasks();
-  }
+  });
   final List<TaskProvider> tasks;
   String? token;
   final int projectId;
-
-  double get level {
-    if (tasks.isEmpty) {
-      return 0;
-    }
-    int completedTasks =
-        tasks.where((t) => t.state == ProgressState.done).length;
-    return completedTasks / tasks.length;
-  }
 
   // List<TaskProvider> get notArchivedTasks{
   //   return tasks.where((t) => !t.isArchived).toList();
@@ -49,6 +38,7 @@ class TasksProvider with ChangeNotifier {
           projectId: t["project_id"],
           steps: [],
           isArchived: t["archived"] == 1,
+          level: double.parse(t["percentage"].toString()),
           addedIn: DateTime.parse(t["addingDate"]),
           startingDate: t["startingDate"] != null
               ? DateTime.parse(t["startingDate"])
@@ -71,6 +61,7 @@ class TasksProvider with ChangeNotifier {
       addedIn: createdIn,
       projectId: projectId,
       steps: [],
+      level: 0.0,
     );
     tasks.add(initialTask);
     int index = tasks.indexOf(initialTask);
@@ -95,6 +86,7 @@ class TasksProvider with ChangeNotifier {
         addedIn: createdIn,
         projectId: projectId,
         steps: [],
+        level: 0.0,
       );
       tasks.remove(initialTask);
       tasks.insert(index, t);
@@ -103,6 +95,25 @@ class TasksProvider with ChangeNotifier {
       rethrow;
     } finally {
       notifyListeners();
+    }
+  }
+
+  Future<void> editTask(
+      String newTitle, DateTime newCreatedIn, TaskProvider task) async {
+    final String oldTitle = task.title;
+    final DateTime oldDate = task.addedIn;
+    task.editTask(newTitle, newCreatedIn);
+    try {
+      final url = Uri.parse('$host/tasks/$token');
+      final body = jsonEncode({
+        "id": task.id,
+        "title": task.title,
+        "addingDate": intl.DateFormat('yyyy-MM-dd').format(newCreatedIn),
+      });
+      await http.patch(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      task.editTask(oldTitle, oldDate);
     }
   }
 

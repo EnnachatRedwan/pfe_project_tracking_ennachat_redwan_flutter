@@ -75,7 +75,7 @@ class ProjectArchiveCard extends StatelessWidget {
           if (project.isStarted)
             Center(
               child: LevelBar(
-                level: project.tasks.level,
+                level: project.level,
                 width: 300,
               ),
             ),

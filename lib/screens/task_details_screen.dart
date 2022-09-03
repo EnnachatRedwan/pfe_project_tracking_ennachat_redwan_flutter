@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart' as intl;
 
+import '../providers/project.dart';
 import '../style/style.dart';
 import '../widgets/appbar.dart';
 import '../providers/task.dart';
@@ -11,6 +13,7 @@ import '../widgets/step_tile.dart';
 import './choose_employee_screen.dart';
 import '../providers/auth.dart';
 import '../providers/step.dart';
+import '../providers/tasks.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   const TaskDetailsScreen(
@@ -69,7 +72,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     super.initState();
   }
 
-  void _openTaskBottomSheet(BuildContext context) {
+  void _openAddTaskBottomSheet(BuildContext context) {
     final descNode = FocusNode();
 
     String title = '';
@@ -174,6 +177,116 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         });
   }
 
+  void _openEditTaskBottomSheet(BuildContext context, TaskProvider task) {
+    String taskTitle = task.title;
+    DateTime addedIn = task.addedIn;
+    final dateController = TextEditingController(
+        text: intl.DateFormat.yMMMd().format(addedIn).toString());
+    final formKey = GlobalKey<FormState>();
+
+    void save() async {
+      if (formKey.currentState!.validate()) {
+        formKey.currentState!.save();
+        Navigator.of(context).pop();
+        try {
+          await Provider.of<TasksProvider>(context, listen: false)
+              .editTask(taskTitle, addedIn, task);
+        } catch (err) {
+          _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+        }
+      }
+    }
+
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) {
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  padding: const EdgeInsets.all(20),
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'عنوان المهمة',
+                      ),
+                      textDirection: TextDirection.ltr,
+                      autofocus: true,
+                      onFieldSubmitted: (_) => save(),
+                      maxLength: 50,
+                      initialValue: task.title,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'يرجى تقديم عنوان مهمة صالح';
+                        }
+                        if (value.length > 50) {
+                          return 'يجب ألا يزيد عنوان المهمة عن 50 حرفًا';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        taskTitle = value!;
+                      },
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'أضيف في',
+                      ),
+                      textAlign: TextAlign.end,
+                      controller: dateController,
+                      readOnly: true,
+                      textDirection: TextDirection.ltr,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (ctx) {
+                            return DatePickerDialog(
+                                initialDate: DateTime.now(),
+                                firstDate: Provider.of<ProjectProvider>(context,
+                                        listen: false)
+                                    .createdIn,
+                                lastDate: DateTime.now()
+                                    .add(const Duration(days: 365)));
+                          },
+                        ).then(
+                          (value) {
+                            if (value != null) {
+                              addedIn = DateTime.tryParse(value.toString())!;
+                              dateController.text = intl.DateFormat.yMMMd()
+                                  .format(addedIn)
+                                  .toString();
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: save,
+                      icon: const Icon(Icons.save),
+                      label: const Text('حفظ'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Style.secondaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -189,12 +302,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   value: 0,
                   child: Text('حذف'),
                 ),
-                PopupMenuItem(
+                PopupMenuItem<int>(
                   value: 1,
-                  child: Text('إضافة خطوة'),
+                  child: Text('تعديل'),
                 ),
                 PopupMenuItem(
                   value: 2,
+                  child: Text('إضافة خطوة'),
+                ),
+                PopupMenuItem(
+                  value: 3,
                   child: Text('إضافة موظفين'),
                 ),
               ],
@@ -203,12 +320,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   case 0:
                     Navigator.of(context).pop();
                     widget.delete();
-
                     break;
                   case 1:
-                    _openTaskBottomSheet(context);
+                    _openEditTaskBottomSheet(context, task);
                     break;
                   case 2:
+                    _openAddTaskBottomSheet(context);
+                    break;
+                  case 3:
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (ctx) => ChangeNotifierProvider.value(
@@ -245,17 +364,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: Text(
-                  getPeriod(task.startingDate, task.endingDate),
-                  style: const TextStyle(
-                    color: Style.grey,
-                    fontSize: 15,
-                  ),
-                  textAlign: TextAlign.right,
-                ),
-              ),
+              
               Expanded(
                 child: isLoading
                     ? const Center(
@@ -273,20 +382,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           ),
                         ),
                       ),
-              ),
-              if (task.isStarted)
-                Center(
-                  child: LevelBar(
-                    level: task.level,
-                    width: 300,
-                  ),
-                ),
-              const SizedBox(
-                height: 20,
-              ),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: TaskButtons(archive: widget.archive),
               ),
             ],
           ),

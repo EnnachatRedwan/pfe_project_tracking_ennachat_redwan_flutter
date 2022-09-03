@@ -18,6 +18,7 @@ class TaskProvider with ChangeNotifier {
     required this.steps,
     required this.addedIn,
     required this.projectId,
+    required this.level,
     this.isArchived = false,
     this.startingDate,
     this.endingDate,
@@ -34,19 +35,27 @@ class TaskProvider with ChangeNotifier {
 
   final int projectId;
 
+  final double level;
+
   ProgressState state;
 
   DateTime? startingDate;
 
   DateTime? endingDate;
 
-  final DateTime addedIn;
+  DateTime addedIn;
 
-  final String title;
+  String title;
 
   bool isArchived = false;
 
   bool isStarted;
+
+  void editTask(String title, DateTime addedIn) {
+    this.title = title;
+    this.addedIn = addedIn;
+    notifyListeners();
+  }
 
   Future<void> fetchEmployees() async {
     final url = Uri.parse('$host/tasks/employees/$token/$id');
@@ -228,14 +237,6 @@ class TaskProvider with ChangeNotifier {
       emps.insert(0, e);
     }
     return emps;
-  }
-
-  double get level {
-    if (steps.isEmpty) {
-      return 0;
-    }
-    int completedTasks = steps.where((t) => t.isCompleted).length;
-    return completedTasks / steps.length;
   }
 
   void updateState() {

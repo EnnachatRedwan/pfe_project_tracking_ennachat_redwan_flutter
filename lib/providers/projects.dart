@@ -125,6 +125,7 @@ class ProjectsProvider with ChangeNotifier {
                   ? ProgressState.inProgress
                   : ProgressState.done,
               type: p["type"],
+              level: double.parse(p["percentage"].toString()),
               isArchived: p["archived"] == 1,
               tasks: TasksProvider(
                   token: token, projectId: p["id_prj"], tasks: []),
@@ -151,6 +152,7 @@ class ProjectsProvider with ChangeNotifier {
       type: type,
       tasks: TasksProvider(token: token, projectId: 0, tasks: []),
       createdIn: createdIn,
+      level: 0.0,
     );
     _projects.add(initialProject);
     int index = _projects.indexOf(initialProject);
@@ -174,6 +176,7 @@ class ProjectsProvider with ChangeNotifier {
         type: type,
         tasks: TasksProvider(token: token, projectId: id, tasks: []),
         createdIn: createdIn,
+        level: 0.0,
       );
       _projects.remove(initialProject);
       _projects.insert(index, p);
@@ -182,6 +185,27 @@ class ProjectsProvider with ChangeNotifier {
       rethrow;
     } finally {
       notifyListeners();
+    }
+  }
+
+  Future<void> editProject(String newTitle, DateTime newCreatedIn,
+      String newType, ProjectProvider project) async {
+    final String oldTitle = project.title;
+    final DateTime oldDate = project.createdIn;
+    final String oldType = project.type;
+    project.editTask(newTitle, newCreatedIn, newType);
+    try {
+      final url = Uri.parse('$host/projects/$token');
+      final body = jsonEncode({
+        "id": project.id,
+        "title": project.title,
+        "addingDate": intl.DateFormat('yyyy-MM-dd').format(newCreatedIn),
+        "type": newType,
+      });
+      await http.patch(url,
+          headers: {'content-type': 'application/json'}, body: body);
+    } catch (err) {
+      project.editTask(oldTitle, oldDate, oldType);
     }
   }
 
@@ -270,7 +294,6 @@ class ProjectsProvider with ChangeNotifier {
             p.type.toLowerCase().contains(tag.toLowerCase()))
         .toList();
   }
-
 
   List<ProjectProvider> archivedProjects(String tag) {
     if (tag.isEmpty) {

@@ -66,7 +66,12 @@ class _AuthFormState extends State<AuthForm> {
         } else {
           _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
         }
-        rethrow;
+      } finally {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     }
   }

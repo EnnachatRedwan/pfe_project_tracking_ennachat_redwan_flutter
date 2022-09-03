@@ -11,8 +11,9 @@ class ProjectProvider with ChangeNotifier {
     required this.type,
     required this.tasks,
     required this.createdIn,
-    this.isStarted=false,
-    this.isArchived=false,
+    required this.level,
+    this.isStarted = false,
+    this.isArchived = false,
     this.startingDate,
     this.endingDate,
   });
@@ -23,51 +24,60 @@ class ProjectProvider with ChangeNotifier {
 
   DateTime? endingDate;
 
-  final String title;
+  String title;
 
   final int id;
 
-  final String type;
+  final double level;
 
-  final DateTime createdIn;
+  String type;
 
-  bool isStarted=false;
+  DateTime createdIn;
+
+  bool isStarted = false;
 
   bool isArchived = false;
 
   final TasksProvider tasks;
 
   void updateState() {
-    if (tasks.level == 1) {
+    if (level == 1) {
       state = ProgressState.done;
-      endingDate=DateTime.now();
+      endingDate = DateTime.now();
     } else {
       state = ProgressState.inProgress;
-      endingDate=null;
+      endingDate = null;
     }
+  }
+
+  void editTask(String title, DateTime createdIn, String type) {
+    this.title = title;
+    this.createdIn = createdIn;
+    this.type = type;
+    notifyListeners();
   }
 
   void start() {
     isStarted = true;
     updateState();
-    startingDate=DateTime.now();
+    startingDate = DateTime.now();
     notifyListeners();
   }
 
-  void rollStartBack(){
-        isStarted = false;
+  void rollStartBack() {
+    isStarted = false;
     updateState();
-    startingDate=null;
+    startingDate = null;
     notifyListeners();
   }
 
-  void archive(){
-    isArchived=true;
+  void archive() {
+    isArchived = true;
     notifyListeners();
   }
 
-  void unArchive(){
-    isArchived=false;
+  void unArchive() {
+    isArchived = false;
     notifyListeners();
   }
 
