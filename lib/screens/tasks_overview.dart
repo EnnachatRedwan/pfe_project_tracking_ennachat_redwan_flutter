@@ -334,9 +334,10 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
         title: 'المهام',
         acts: [
           IconButton(onPressed: fetchTasks, icon: const Icon(Icons.refresh)),
-          IconButton(
-              onPressed: () => _openEditProjectBottomSheet(context, project),
-              icon: const Icon(Icons.edit))
+          if (Provider.of<AuthProvider>(context, listen: false).isLeader)
+            IconButton(
+                onPressed: () => _openEditProjectBottomSheet(context, project),
+                icon: const Icon(Icons.edit))
         ],
       ),
       body: Directionality(
