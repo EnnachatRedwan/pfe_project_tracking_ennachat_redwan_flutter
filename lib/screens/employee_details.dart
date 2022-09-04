@@ -61,17 +61,25 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
       }
 
       showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
         context: context,
+        isScrollControlled: true,
         builder: (ctx) {
           return Directionality(
             textDirection: TextDirection.rtl,
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Form(
-                  key: formKey,
-                  child: ListView(
-                    padding: const EdgeInsets.all(20),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Form(
+                key: formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
                         decoration: const InputDecoration(
@@ -79,7 +87,6 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                         ),
                         textDirection: TextDirection.ltr,
                         initialValue: employee.fullName,
-                        autofocus: true,
                         maxLength: 50,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -109,6 +116,10 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                             Style.secondaryColor,
                           ),
                         ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
                       ),
                     ],
                   ),
@@ -190,20 +201,25 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                   title: 'إعادة تعيين كلمة المرور',
                   isLoading: isLoadingReset,
                   onClick: () async {
-                    setState(() {
-                      isLoadingReset = true;
-                    });
-                    try {
-                      await Provider.of<EmployeesProvider>(context,
-                              listen: false)
-                          .resetKey(employee);
-                    } catch (err) {
-                      _showSnackBar(
-                          'حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
-                    } finally {
+                    final bool confirmed = await Confirm.confirmDelete(
+                            context, 'إعادة تعيين كلمة المرور', null) ??
+                        false;
+                    if (confirmed && mounted) {
                       setState(() {
-                        isLoadingReset = false;
+                        isLoadingReset = true;
                       });
+                      try {
+                        await Provider.of<EmployeesProvider>(context,
+                                listen: false)
+                            .resetKey(employee);
+                      } catch (err) {
+                        _showSnackBar(
+                            'حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
+                      } finally {
+                        setState(() {
+                          isLoadingReset = false;
+                        });
+                      }
                     }
                   },
                   verPad: 5,
@@ -229,7 +245,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                   isLoading: false,
                   onClick: () async {
                     final bool confirmed = await Confirm.confirmDelete(
-                            context, employee.fullName) ??
+                            context, 'الحذف', employee.fullName) ??
                         false;
                     if (confirmed && mounted) {
                       widget.delete();

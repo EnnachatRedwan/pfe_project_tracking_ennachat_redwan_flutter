@@ -105,7 +105,6 @@ class _ActivationFormState extends State<ActivationForm> {
             TextFormField(
               decoration: const InputDecoration(labelText: 'القن السري'),
               textDirection: TextDirection.ltr,
-              autofocus: true,
               validator: (value) {
                 if (value!.isEmpty) {
                   return ' يرجى تقديم قن السري';

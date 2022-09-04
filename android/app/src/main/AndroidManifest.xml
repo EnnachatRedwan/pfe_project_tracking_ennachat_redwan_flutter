@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pfe_project_tracking_ennachat_redwan">
    <application
-        android:label="pfe_project_tracking_ennachat_redwan"
+        android:label="ENNACHAT TRACKING"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

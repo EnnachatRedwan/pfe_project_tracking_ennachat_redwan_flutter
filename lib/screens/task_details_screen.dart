@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' as intl;
 
+import '../models/confirm.dart';
 import '../providers/project.dart';
 import '../style/style.dart';
 import '../widgets/appbar.dart';
@@ -91,24 +92,31 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     }
 
     showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
         context: context,
+        isScrollControlled: true,
         builder: (ctx) {
           return Directionality(
             textDirection: TextDirection.rtl,
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Form(
-                  key: formKey,
-                  child: ListView(
-                    padding: const EdgeInsets.all(20),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Form(
+                key: formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'عنوان الخطوة',
                         ),
                         textDirection: TextDirection.ltr,
-                        autofocus: true,
                         maxLength: 50,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -165,6 +173,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                      ),
                     ],
                   ),
                 ),
@@ -195,24 +207,31 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     }
 
     showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
       context: context,
+      isScrollControlled: true,
       builder: (ctx) {
         return Directionality(
           textDirection: TextDirection.rtl,
-          child: Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Form(
-                key: formKey,
-                child: ListView(
-                  padding: const EdgeInsets.all(20),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'عنوان المهمة',
                       ),
                       textDirection: TextDirection.ltr,
-                      autofocus: true,
                       onFieldSubmitted: (_) => save(),
                       maxLength: 50,
                       initialValue: task.title,
@@ -274,6 +293,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         ),
                       ),
                     ),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                      ),
                   ],
                 ),
               ),
@@ -282,6 +305,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         );
       },
     );
+  }
+
+  void delete(TaskProvider task) async {
+    final bool confirmed =
+        await Confirm.confirmDelete(context, 'الحذف', task.title) ??
+            false;
+    if (confirmed && mounted) {
+      widget.delete();
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -315,8 +348,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               onSelected: (val) {
                 switch (val) {
                   case 0:
-                    Navigator.of(context).pop();
-                    widget.delete();
+                    delete(task);
                     break;
                   case 1:
                     _openEditTaskBottomSheet(context, task);

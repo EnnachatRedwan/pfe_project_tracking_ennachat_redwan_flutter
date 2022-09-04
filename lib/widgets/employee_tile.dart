@@ -36,8 +36,9 @@ class EmployeeTile extends StatelessWidget {
           delete();
         },
         confirmDismiss: (_) async {
-          final bool confirmed =
-              await Confirm.confirmDelete(context, employee.fullName) ?? false;
+          final bool confirmed = await Confirm.confirmDelete(
+                  context, 'الحذف', employee.fullName) ??
+              false;
           return confirmed;
         },
         background: Container(

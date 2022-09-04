@@ -52,10 +52,10 @@ class TaskCard extends StatelessWidget {
         delete();
       },
       confirmDismiss: (_) async {
-          final bool confirmed =
-              await Confirm.confirmDelete(context, task.title) ?? false;
-          return confirmed;
-        },
+        final bool confirmed =
+            await Confirm.confirmDelete(context, 'الحذف', task.title) ?? false;
+        return confirmed;
+      },
       direction: Provider.of<AuthProvider>(context).isLeader
           ? DismissDirection.startToEnd
           : DismissDirection.none,

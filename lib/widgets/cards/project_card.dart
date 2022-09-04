@@ -38,7 +38,7 @@ class ProjectCard extends StatelessWidget {
       onDismissed: (_) => delete(),
       confirmDismiss: (_) async {
         final bool confirmed =
-            await Confirm.confirmDelete(context, project.title) ??
+            await Confirm.confirmDelete(context, 'الحذف', project.title) ??
                 false;
         return confirmed;
       },

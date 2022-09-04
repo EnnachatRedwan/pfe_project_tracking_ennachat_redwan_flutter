@@ -80,24 +80,31 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
     }
 
     showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
       context: context,
+      isScrollControlled: true,
       builder: (ctx) {
-        return Center(
-          child: Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Form(
-                key: formKey,
-                child: ListView(
-                  padding: const EdgeInsets.all(20),
+        return Directionality(
+          textDirection: TextDirection.rtl,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'اسم االمستخدم',
                       ),
                       textDirection: TextDirection.ltr,
-                      autofocus: true,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'يرجى تقديم اسم مستخدم صالح';
@@ -147,6 +154,10 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                           Style.secondaryColor,
                         ),
                       ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
                     ),
                   ],
                 ),
@@ -225,11 +236,11 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         child: CircularProgressIndicator(),
                       )
                     : RefreshIndicator(
-                      onRefresh: fetchEmployees,
-                      child: ListView.separated(
+                        onRefresh: fetchEmployees,
+                        child: ListView.separated(
                           itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-                            value:
-                                employeesProvider.employees(employeesToSearch)[i],
+                            value: employeesProvider
+                                .employees(employeesToSearch)[i],
                             child: EmployeeTile(
                               delete: () => delete(employeesProvider
                                   .employees(employeesToSearch)[i]),
@@ -240,7 +251,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                               .length,
                           separatorBuilder: (ctx, i) => const Divider(),
                         ),
-                    ),
+                      ),
               )
             ],
           ),

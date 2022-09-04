@@ -27,7 +27,7 @@ class LevelBar extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SizedBox(
-        width: width,
+        width: 300,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -47,7 +47,7 @@ class LevelBar extends StatelessWidget {
                   child: Container(
                     height: 3,
                     color: color,
-                    width: width*level,
+                    width: 300*level,
                   ),
                 ),
               ],

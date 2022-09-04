@@ -108,7 +108,7 @@ class _AuthFormState extends State<AuthForm> {
                 labelText: 'اسم االمستخدم',
               ),
               textDirection: TextDirection.ltr,
-              autofocus: true,
+              textInputAction: TextInputAction.next,
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'يرجى تقديم اسم مستخدم صالح';
@@ -130,10 +130,10 @@ class _AuthFormState extends State<AuthForm> {
                 labelText: 'كلمة مرور',
               ),
               textDirection: TextDirection.ltr,
-              autofocus: true,
               focusNode: passFocus,
               obscureText: true,
               autocorrect: false,
+              textInputAction: TextInputAction.done,
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'يرجى تقديم كلمة مرور';

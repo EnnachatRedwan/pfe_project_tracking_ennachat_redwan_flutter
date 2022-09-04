@@ -96,24 +96,31 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     }
 
     showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+        isScrollControlled: true,
         context: context,
         builder: (ctx) {
           return Directionality(
             textDirection: TextDirection.rtl,
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Form(
-                  key: formKey,
-                  child: ListView(
-                    padding: const EdgeInsets.all(20),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Form(
+                key: formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'عنوان المشروع',
                         ),
                         textDirection: TextDirection.ltr,
-                        autofocus: true,
                         onFieldSubmitted: (_) {
                           typeFocusNode.requestFocus();
                         },
@@ -195,6 +202,10 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                      ),
                     ],
                   ),
                 ),
@@ -232,12 +243,13 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       try {
         await Provider.of<ProjectsProvider>(context, listen: false)
             .archiveProject(project);
+        fetchProjects();
       } catch (err) {
         _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
       }
     }
 
-    final width=MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       key: _scf,
@@ -266,12 +278,11 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                           top: 20,
                           bottom: 10,
                         ),
-                        gridDelegate:
-                         SliverGridDelegateWithMaxCrossAxisExtent(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                           mainAxisSpacing: 15,
                           crossAxisSpacing: 15,
-                          maxCrossAxisExtent: width<780? 800: 600,
-                          childAspectRatio: width<350? 1: 3 / 2,
+                          maxCrossAxisExtent: width < 780 ? 800 : 600,
+                          childAspectRatio: width < 350 ? 1 : 3 / 2,
                         ),
                         itemCount: projectsProvider
                             .notArchivedProjects(projectToSearch)
@@ -284,7 +295,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                 .notArchivedProjects(projectToSearch)[i]),
                             archive: () => archive(projectsProvider
                                 .notArchivedProjects(projectToSearch)[i]),
-                                fetchProjects: ()=> fetchProjects(),
+                            fetchProjects: () => fetchProjects(),
                           ),
                         ),
                       ),

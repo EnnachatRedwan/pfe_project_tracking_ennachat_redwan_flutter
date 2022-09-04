@@ -59,17 +59,25 @@ class _StepDetailsScreenState extends State<StepDetailsScreen> {
     }
 
     showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
       context: context,
+      isScrollControlled: true,
       builder: (ctx) {
         return Directionality(
           textDirection: TextDirection.rtl,
-          child: Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Form(
-                key: formKey,
-                child: ListView(
-                  padding: const EdgeInsets.all(20),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
                       decoration: const InputDecoration(
@@ -77,7 +85,6 @@ class _StepDetailsScreenState extends State<StepDetailsScreen> {
                       ),
                       initialValue: title,
                       textDirection: TextDirection.ltr,
-                      autofocus: true,
                       maxLength: 50,
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -135,6 +142,10 @@ class _StepDetailsScreenState extends State<StepDetailsScreen> {
                         ),
                       ),
                     ),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                      ),
                   ],
                 ),
               ),
@@ -244,7 +255,7 @@ class _StepDetailsScreenState extends State<StepDetailsScreen> {
                         title: 'حذف',
                         onClick: () async {
                           final bool confirmed = await Confirm.confirmDelete(
-                                  context, step.title) ??
+                                  context,'الحذف', step.title) ??
                               false;
                           if (confirmed && mounted) {
                             widget.delete();

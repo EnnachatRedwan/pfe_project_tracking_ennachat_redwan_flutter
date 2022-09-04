@@ -51,7 +51,7 @@ class StepTile extends StatelessWidget {
                     ChangeNotifierProvider.value(value: step),
                     ChangeNotifierProvider.value(value: task),
                   ],
-                  child: StepDetailsScreen(delete:delete),
+                  child: StepDetailsScreen(delete: delete),
                 ),
               ),
             )
@@ -65,7 +65,8 @@ class StepTile extends StatelessWidget {
         },
         confirmDismiss: (_) async {
           final bool confirmed =
-              await Confirm.confirmDelete(context, step.title) ?? false;
+              await Confirm.confirmDelete(context, 'الحذف', step.title) ??
+                  false;
           return confirmed;
         },
         background: Container(

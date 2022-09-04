@@ -78,24 +78,31 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
     }
 
     showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+      ),
       context: context,
+      isScrollControlled: true,
       builder: (ctx) {
         return Directionality(
           textDirection: TextDirection.rtl,
-          child: Center(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Form(
-                key: formKey,
-                child: ListView(
-                  padding: const EdgeInsets.all(20),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     TextFormField(
                       decoration: const InputDecoration(
                         labelText: 'عنوان المهمة',
                       ),
                       textDirection: TextDirection.ltr,
-                      autofocus: true,
                       onFieldSubmitted: (_) => save(),
                       maxLength: 50,
                       validator: (value) {
@@ -156,6 +163,10 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
                         ),
                       ),
                     ),
+                    Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                      ),
                   ],
                 ),
               ),
@@ -190,24 +201,31 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
     }
 
     showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
         context: context,
+        isScrollControlled: true,
         builder: (ctx) {
           return Directionality(
             textDirection: TextDirection.rtl,
-            child: Center(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Form(
-                  key: formKey,
-                  child: ListView(
-                    padding: const EdgeInsets.all(20),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: Form(
+                key: formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'عنوان المشروع',
                         ),
                         textDirection: TextDirection.ltr,
-                        autofocus: true,
                         initialValue: project.title,
                         onFieldSubmitted: (_) {
                           typeFocusNode.requestFocus();
@@ -291,6 +309,10 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                      ),
                     ],
                   ),
                 ),
@@ -314,6 +336,7 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
     try {
       await Provider.of<TasksProvider>(context, listen: false)
           .archiveTask(task);
+      fetchTasks();
     } catch (err) {
       _showSnackBar('حصل خطأ ،المرجو التحقق من الإتصال بالإنترنت');
     }
