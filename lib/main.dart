@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:window_size/window_size.dart';
 import 'dart:io';
 
 import 'screens/auth_screen.dart';
@@ -7,7 +8,7 @@ import './screens/projects_overview_screen.dart';
 import 'screens/tasks_overview.dart';
 import './screens/employees_overview_screen.dart';
 import './screens/archive_screen.dart';
-import 'package:window_size/window_size.dart';
+import './screens/developper.dart';
 
 import './widgets/login_layout.dart';
 
@@ -74,6 +75,8 @@ class MyApp extends StatelessWidget {
           ArchiveScreen.routeName: (context) => const ArchiveScreen(),
           ProjectTaskScreen.routeName: (context) => const ProjectTaskScreen(),
           EmployeesScreen.routeName: (context) => const EmployeesScreen(),
+          DeveloperDetailsScreen.routeName: (context) =>
+              const DeveloperDetailsScreen()
         },
         debugShowCheckedModeBanner: false,
       ),

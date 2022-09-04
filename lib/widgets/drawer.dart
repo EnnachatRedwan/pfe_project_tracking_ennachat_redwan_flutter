@@ -6,13 +6,12 @@ import './drawer_item.dart';
 import '../screens/projects_overview_screen.dart';
 import '../screens/employees_overview_screen.dart';
 import '../screens/archive_screen.dart';
+import '../screens/developper.dart';
 import './login_layout.dart';
 import '../style/style.dart';
 
 class ApplicationDrawer extends StatelessWidget {
-  const ApplicationDrawer({
-    Key? key,
-  }) : super(key: key);
+  const ApplicationDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +21,22 @@ class ApplicationDrawer extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 30),
         children: [
           ListTile(
-            
             leading: Container(
               color: auth.isLeader ? Style.secondaryColor : Style.primaryColor,
               width: 10,
             ),
-            title: Text(auth.username,style: const TextStyle(fontSize: 18),),
+            title: Text(
+              auth.username,
+              style: const TextStyle(fontSize: 18),
+            ),
           ),
           const Divider(),
+          DraweItem(
+            title: 'المشاريع',
+            icon: Icons.work,
+            action: () => Navigator.of(context)
+                .pushReplacementNamed(ProjectsScreen.routeName),
+          ),
           if (auth.isLeader)
             DraweItem(
               title: 'الموظفين',
@@ -38,16 +45,16 @@ class ApplicationDrawer extends StatelessWidget {
                   .pushReplacementNamed(EmployeesScreen.routeName),
             ),
           DraweItem(
-            title: 'المشاريع',
-            icon: Icons.work,
-            action: () => Navigator.of(context)
-                .pushReplacementNamed(ProjectsScreen.routeName),
-          ),
-          DraweItem(
             title: 'الأرشيف',
             icon: Icons.archive,
             action: () => Navigator.of(context)
                 .pushReplacementNamed(ArchiveScreen.routeName),
+          ),
+          DraweItem(
+            title: 'المطور',
+            icon: Icons.developer_mode,
+            action: () => Navigator.of(context)
+                .pushReplacementNamed(DeveloperDetailsScreen.routeName),
           ),
           DraweItem(
             title: 'تسجيل خروج',
