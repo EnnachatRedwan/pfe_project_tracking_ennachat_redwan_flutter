@@ -103,6 +103,7 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
                         labelText: 'عنوان المهمة',
                       ),
                       textDirection: TextDirection.ltr,
+                      textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) => save(),
                       maxLength: 50,
                       validator: (value) {
@@ -227,6 +228,7 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
                         ),
                         textDirection: TextDirection.ltr,
                         initialValue: project.title,
+                        textInputAction: TextInputAction.next,
                         onFieldSubmitted: (_) {
                           typeFocusNode.requestFocus();
                         },
@@ -251,6 +253,7 @@ class _ProjectTaskScreenState extends State<ProjectTaskScreen> {
                         textDirection: TextDirection.ltr,
                         initialValue: project.type,
                         focusNode: typeFocusNode,
+                        textInputAction: TextInputAction.next,
                         onFieldSubmitted: (_) => save(),
                         maxLength: 50,
                         validator: (value) {

@@ -85,6 +85,7 @@ class _StepDetailsScreenState extends State<StepDetailsScreen> {
                       ),
                       initialValue: title,
                       textDirection: TextDirection.ltr,
+                      textInputAction: TextInputAction.next,
                       maxLength: 50,
                       validator: (value) {
                         if (value!.isEmpty) {

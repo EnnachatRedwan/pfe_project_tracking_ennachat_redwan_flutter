@@ -105,6 +105,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                         labelText: 'اسم االمستخدم',
                       ),
                       textDirection: TextDirection.ltr,
+                      textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'يرجى تقديم اسم مستخدم صالح';
@@ -127,6 +128,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
                       ),
                       textDirection: TextDirection.ltr,
                       focusNode: fullNameNode,
+                      textInputAction: TextInputAction.done,
                       onFieldSubmitted: (_) => save(),
                       maxLength: 30,
                       validator: (value) {

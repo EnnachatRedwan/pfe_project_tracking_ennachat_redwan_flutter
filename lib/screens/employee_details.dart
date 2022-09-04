@@ -87,6 +87,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                         ),
                         textDirection: TextDirection.ltr,
                         initialValue: employee.fullName,
+                        textInputAction: TextInputAction.done,
                         maxLength: 50,
                         validator: (value) {
                           if (value!.isEmpty) {

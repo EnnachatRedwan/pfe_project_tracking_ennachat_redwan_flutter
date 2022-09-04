@@ -121,6 +121,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                           labelText: 'عنوان المشروع',
                         ),
                         textDirection: TextDirection.ltr,
+                        textInputAction: TextInputAction.next,
                         onFieldSubmitted: (_) {
                           typeFocusNode.requestFocus();
                         },
@@ -144,6 +145,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                         ),
                         textDirection: TextDirection.ltr,
                         focusNode: typeFocusNode,
+                        textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => save(),
                         maxLength: 50,
                         validator: (value) {

@@ -117,6 +117,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           labelText: 'عنوان الخطوة',
                         ),
                         textDirection: TextDirection.ltr,
+                        textInputAction: TextInputAction.next,
                         maxLength: 50,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -235,6 +236,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       onFieldSubmitted: (_) => save(),
                       maxLength: 50,
                       initialValue: task.title,
+                      textInputAction: TextInputAction.done,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'يرجى تقديم عنوان مهمة صالح';
