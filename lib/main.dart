@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 import 'screens/auth_screen.dart';
 import './screens/projects_overview_screen.dart';
 import 'screens/tasks_overview.dart';
 import './screens/employees_overview_screen.dart';
 import './screens/archive_screen.dart';
+import 'package:window_size/window_size.dart';
 
 import './widgets/login_layout.dart';
 
@@ -16,6 +18,12 @@ import './providers/projects.dart';
 import './providers/auth.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowTitle('ENNACHAT TRACKING');
+    setWindowMinSize(const Size(400, 500));
+    setWindowMaxSize(Size.infinite);
+  }
   runApp(const MyApp());
 }
 
