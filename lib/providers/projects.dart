@@ -291,7 +291,7 @@ class ProjectsProvider with ChangeNotifier {
         .where((p) =>
             !p.isArchived &&
                 p.title.toLowerCase().contains(tag.toLowerCase()) ||
-            p.type.toLowerCase().contains(tag.toLowerCase()))
+            !p.isArchived && p.type.toLowerCase().contains(tag.toLowerCase()))
         .toList();
   }
 
