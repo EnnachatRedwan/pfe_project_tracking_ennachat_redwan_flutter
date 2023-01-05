@@ -1,16 +1,9 @@
 # pfe_project_tracking_ennachat_redwan
 
-A new Flutter project.
+Is a flutter app works on Mobile, Desktop and the Web.
 
-## Getting Started
+It is a project i created in my last internship where I did all the mockup and the software engineering.
 
-This project is a starting point for a Flutter application.
+## All the product details are in the above pdf file ()
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Note: this is the flutter (Front-end) app, you find the backend and the database in the server repo.
